@@ -17,7 +17,7 @@ The conference theme “Geographic Information Science responding to Global Chal
 [Source: AGILE 2015 Call for Papers](https://agile-gi.eu/conference-2025/call-for-papers-2025)
 
 # Timeline
-Next steps
-- [] Establish 1h weekly progress meeting. Total 3h. From 2024-11-02 to 2024-11-20
-- [] When a more robust draft is done, decide if there is time to invite colleagues from Rio Grande do Sul as coauthor. This idea was suggested by Monika Kuffer. Total: 15-45h. From 2025-11-02 (min), 2025-11-06 (max) 
-- []  
+- [ ] Establish 1h weekly progress meeting. Total 3h. From 2024-11-02 to 2024-11-20
+- [ ] When a more robust draft is done, decide if there is time to invite colleagues from Rio Grande do Sul as coauthor. This idea was suggested by Monika Kuffer. Total: 15-45h. From 2025-11-02 (min), 2025-11-06 (max) 
+- [ ] Upload data to repository to fullfill requirement [Reproducible Paper Guideline](https://osf.io/numa5)
+  - [ ] E.g.: Document the detailed steps i a text file and/or flowchar (every action/click). For this, upload Rmarkdown file we are writting, including R project with libraries required (use renv).
