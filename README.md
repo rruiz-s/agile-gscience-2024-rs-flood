@@ -4,7 +4,7 @@ The conference theme “Geographic Information Science responding to Global Chal
 
 | Task      | Deadline        |
 |------------------|-----------------|
-| Full paper submission | 	20 December 2024  |
+| Full paper submission | 	15 January 2025  |
 | Notification of full paper acceptance | 27 February 2025   |
 | Camera-ready full paper copies due| 10 April 2025 |
 | Reproducibility Review| 03 March - 31 March 2025 |
