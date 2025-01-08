@@ -1,4 +1,4 @@
-# agile-gscience-2024-rs-flood
+# agile-gscience-2024-rs-flood (to be removed on the 15th January)
 
 The conference theme “Geographic Information Science responding to Global Challenges” recognizes the pivotal role of geospatial data and analysis in informing decision-making for current global issues affecting humanity, the environment, and global resilience. 
 
@@ -16,6 +16,25 @@ The conference theme “Geographic Information Science responding to Global Chal
 
 [Source: AGILE 2015 Call for Papers](https://agile-gi.eu/conference-2025/call-for-papers-2025)
 
-# Timeline
-- [ ] Upload data to repository to fullfill requirement [Reproducible Paper Guideline](https://osf.io/numa5)
-  - [ ] E.g.: Document the detailed steps i a text file and/or flowchar (every action/click). For this, upload Rmarkdown file we are writting, including R project with libraries required (use renv).
+
+# Centrality analysis of Rio grande do Sul
+
+_A reproducible analysis of environmental data_
+
+The analysis can be explored in two ways.
+1. Final results
+2. From scratch: Intermediate results
+
+## Final results
+1. Download the data from the [zenodo repository](https://zenodo.org/records/14478478):  https://zenodo.org/records/14478478
+2. Download the database backup using the following command:
+3. Run the rmarkdown file
+
+
+## From scratch
+Follow the wiki workflow 
+
+# Contact
+Ricardo Ruiz Sánchez (ricardo.ruiz.sanchez@gmail.com)
+# License
+This project is licensed under , see file LICENSE.
