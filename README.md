@@ -1,5 +1,6 @@
-# agile-gscience-2024-rs-flood (to be removed on the 15th January)
+# agile-gscience-2024-rs-flood 
 
+# Introduction (to be removed on the 15th of january)
 The conference theme “Geographic Information Science responding to Global Challenges” recognizes the pivotal role of geospatial data and analysis in informing decision-making for current global issues affecting humanity, the environment, and global resilience. 
 
 | Task      | Deadline        |
@@ -37,4 +38,4 @@ Follow the wiki workflow
 # Contact
 Ricardo Ruiz Sánchez (ricardo.ruiz.sanchez@gmail.com)
 # License
-This project is licensed under , see file LICENSE.
+This project is licensed under Creative Commons Attribution 4.0 International Public License, see file LICENSE.
