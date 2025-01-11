@@ -1,4 +1,26 @@
-# agile-gscience-2024-rs-flood 
+# agile-gscience-2024-rs-flood
+
+# Overview
+
+project
+|- doc/            # documentation for the study
+|  +- paper/       # manuscript(s), whether generated or not
+|
+|- data            # raw and primary data, are not changed once created 
+|  |- raw/         # raw data, will not be altered
+|  +- clean/       # cleaned data, will not be altered once created
+|
+|- code/           # any programmatic code
+|- results         # all output from workflows and analyses
+|  |- figures/     # graphs, likely designated for manuscript figures
+|  +- pictures/    # diagrams, images, and other non-graph graphics
+|
+|- scratch/        # temporary files that can be safely deleted or lost
+|- README          # the top level description of content
+|- study.Rmd       # executable Rmarkdown for this study, if applicable
+|- Makefile        # executable Makefile for this study, if applicable
+|- study.Rproj     # RStudio project for this study, if applicable
+|- datapackage.json # metadata for the (input and output) data files 
 
 # Introduction (to be removed on the 15th of january)
 The conference theme “Geographic Information Science responding to Global Challenges” recognizes the pivotal role of geospatial data and analysis in informing decision-making for current global issues affecting humanity, the environment, and global resilience. 
