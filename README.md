@@ -2,6 +2,7 @@
 
 # Overview
 
+```
 project
 |- doc/            # documentation for the study
 |  +- paper/       # manuscript(s), whether generated or not
@@ -20,7 +21,10 @@ project
 |- study.Rmd       # executable Rmarkdown for this study, if applicable
 |- Makefile        # executable Makefile for this study, if applicable
 |- study.Rproj     # RStudio project for this study, if applicable
-|- datapackage.json # metadata for the (input and output) data files 
+|- datapackage.json # metadata for the (input and output) data files
+
+```
+
 
 # Introduction (to be removed on the 15th of january)
 The conference theme “Geographic Information Science responding to Global Challenges” recognizes the pivotal role of geospatial data and analysis in informing decision-making for current global issues affecting humanity, the environment, and global resilience. 
