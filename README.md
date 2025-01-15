@@ -3,7 +3,7 @@
 
 The Association of Geographic Information Laboratories in Europe (AGILE) has held annual conferences focused on Geographic Information Science since 1998. The next AGILE 2025 conference will be held in Dresden, Germany, on 10-13 June 2025.
 
-The conference theme “Geographic Information Science responding to Global Challenges” recognizes the pivotal role of geospatial data and analysis in informing decision-making for current global issues affecting humanity, the environment, and global resilience. We particularly welcome innovations in interdisciplinary geospatial research data management, integration and analysis. ([more information about AGILE 2025](https://agile-gi.eu/conference-2025/call-for-papers-2025).
+The conference theme “Geographic Information Science responding to Global Challenges” recognizes the pivotal role of geospatial data and analysis in informing decision-making for current global issues affecting humanity, the environment, and global resilience ([more information about AGILE 2025](https://agile-gi.eu/conference-2025/call-for-papers-2025).
 
 # Centrality and Resilience in the Face of Flooding: A Case Study of Rio Grande do Sul
 
@@ -21,9 +21,11 @@ project
 |  +- paper/       # manuscript(s)
 |
 |- data            # raw and primary data, are not changed once created 
-|  |- source_data/  # raw data, will not be altered
-|  +- A/       # data
-|
+|  |- source_data/  # raw data
+|  |- results_data/ # final data
+|    + - select_area_of_interest/
+|    + - obtain_routable_networks/
+|    + - analyse_centrality_and_resilience
 |- code/                           
 |  |- results                      # main output from workflows and analyses
 |  |- paper/                       # Reproducible paper using Quarto includes code
@@ -31,7 +33,6 @@ project
 |  |- figures/                     # diagrams, images, and other non-graph graphics
 |
 |- README                          # the top level description of content
-|- study.Rproj                     # RStudio project for this study
 ```
 
 
