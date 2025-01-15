@@ -8,26 +8,31 @@ project
 |  +- paper/       # manuscript(s), whether generated or not
 |
 |- data            # raw and primary data, are not changed once created 
-|  |- raw/         # raw data, will not be altered
-|  +- clean/       # cleaned data, will not be altered once created
+|  |- source_data/  # raw data, will not be altered
+|  +- results_data/       # cleaned data, will not be altered once created
 |
 |- code/           # any programmatic code
 |- results         # all output from workflows and analyses
-|  |- figures/     # graphs, likely designated for manuscript figures
-|  +- pictures/    # diagrams, images, and other non-graph graphics
+|  |- quarto.Rmd/     # graphs, likely designated for manuscript figures
+|  +- figures/    # diagrams, images, and other non-graph graphics
 |
-|- scratch/        # temporary files that can be safely deleted or lost
 |- README          # the top level description of content
-|- study.Rmd       # executable Rmarkdown for this study, if applicable
-|- Makefile        # executable Makefile for this study, if applicable
 |- study.Rproj     # RStudio project for this study, if applicable
-|- datapackage.json # metadata for the (input and output) data files
 
 ```
+# Centrality and Resilience in the Face of Flooding: A Case Study of Rio Grande do Sul
 
+## Datasets
+- [x] Is provided in a non-propietary format:
 
-# Introduction (to be removed on the 15th of january)
-The conference theme “Geographic Information Science responding to Global Challenges” recognizes the pivotal role of geospatial data and analysis in informing decision-making for current global issues affecting humanity, the environment, and global resilience. 
+This github repository contains the data in non-propietary format. Spreadsheets are in ".csv" format, geospatial data in geopackage.  
+
+-[ ] Is documented for third parties to reuse:
+
+The datasets are included in the references including links and doi when available.
+-[ ] The public repository has an OPEN C4 open license.
+
+Pending to acceptance of the full paper submission on the 27th of February according to [AGILE 2025 call for papers](https://agile-gi.eu/conference-2025/call-for-papers-2025), we will include   
 
 | Task      | Deadline        |
 |------------------|-----------------|
@@ -41,7 +46,7 @@ The conference theme “Geographic Information Science responding to Global Chal
 | Early-bird registration ends	| 15 April 2025 |
 | Conference	| 11-13 June 2025 | 
 
-[Source: AGILE 2015 Call for Papers](https://agile-gi.eu/conference-2025/call-for-papers-2025)
+
 
 
 # Centrality analysis of Rio grande do Sul
@@ -62,6 +67,6 @@ The analysis can be explored in two ways.
 Follow the wiki workflow 
 
 # Contact
-Ricardo Ruiz Sánchez (ricardo.ruiz.sanchez@gmail.com)
+X (x@xxx.com)
 # License
 This project is licensed under Creative Commons Attribution 4.0 International Public License, see file LICENSE.
