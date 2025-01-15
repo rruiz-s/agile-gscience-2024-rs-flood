@@ -4,17 +4,18 @@
 
 ```
 project
-|- doc/            # documentation for the study
+|- doc/            # documentation for AGILE 2025 full paper
 |  +- paper/       # manuscript(s)
 |
 |- data            # raw and primary data, are not changed once created 
 |  |- source_data/  # raw data, will not be altered
-|  +- results_data/       # data
+|  +- A/       # data
 |
-|- code/                           # any programmatic code
-|- results                         # main output from workflows and analyses
-|  |- quarto_script_rs_paper.Rmd/  # graphs, likely designated for manuscript figures
-|  +- figures/                     # diagrams, images, and other non-graph graphics
+|- code/                           
+|  |- results                      # main output from workflows and analyses
+|  |- paper/                       # Reproducible paper using Quarto includes code
+|  | + quarto_script_rs_paper_v0.Rmd  # Quarto file
+|  |- figures/                     # diagrams, images, and other non-graph graphics
 |
 |- README                          # the top level description of content
 |- study.Rproj                     # RStudio project for this study
@@ -36,39 +37,21 @@ Is accessible in a public repository and has an open data licence:
 Pending to acceptance of the full paper submission on the 27th of February according to [AGILE 2025 call for papers](https://agile-gi.eu/conference-2025/call-for-papers-2025), we will include additional documentation.
 - [x] Reproduction steps are explained in a README (plain text file), flowchart, or script:
 
+The quarto_script_rs_paper_v0.Rmd includes the flowchart and script to reproduce results of the paper.
 
+- [x] Computational environements (including hardware) are documented or provided :
+- [x] Versions of relevant software components (libraries, packages) are provided:
+- [x] All parameters and expected execution times for the computational workflow are provided:
 
-| Task      | Deadline        |
-|------------------|-----------------|
-| Full paper submission | 	15 January 2025  |
-| Notification of full paper acceptance | 27 February 2025   |
-| Camera-ready full paper copies due| 10 April 2025 |
-| Reproducibility Review| 03 March - 31 March 2025 |
-| Camera-ready full paper copies due| 10 April 2025 |
-| Grant application submission |	28 March 2025 |
-| Notification of grant application acceptance	| 10 April 2025 |
-| Early-bird registration ends	| 15 April 2025 |
-| Conference	| 11-13 June 2025 | 
+The section 2.4 Data and Software Availability Section includes this information. A detailed view of is provided after full paper acceptance.
 
+- [x]  Software developed by the authors is available in a public repository and has an open licence:
 
+The software OpenRouteService is available in the follwoing [public repository](https://github.com/GIScience/openrouteservice) (https://github.com/GIScience/openrouteservice)
 
+- [x] There is a clear connection between tables, figures, maps, and statistical values and the data and code that they are based on, e.g., using file names or documentation in README:
 
-# Centrality analysis of Rio grande do Sul
-
-_A reproducible analysis of environmental data_
-
-The analysis can be explored in two ways.
-1. Final results
-2. From scratch: Intermediate results
-
-## Final results
-1. Download the data from the [zenodo repository](https://zenodo.org/records/14478478):  https://zenodo.org/records/14478478
-2. Download the database backup using the following command:
-3. Run the rmarkdown file
-
-
-## From scratch
-Follow the wiki workflow 
+Results are named according to the flowchart shown as Figure 2 in the section 2.1. Pre-processing.
 
 # Contact
 X (x@xxx.com)
