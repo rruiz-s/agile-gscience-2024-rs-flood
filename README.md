@@ -1,4 +1,15 @@
-# agile-gscience-2024-rs-flood
+# AGILE 2025 - Call for Papers
+**Call for papers for the 28th AGILE conference, Geographic Information Science responding to Global Challenges, Dresden, Germany on 10-13 June 2025**
+
+The Association of Geographic Information Laboratories in Europe (AGILE) has held annual conferences focused on Geographic Information Science since 1998. The next AGILE 2025 conference will be held in Dresden, Germany, on 10-13 June 2025.
+
+The conference theme “Geographic Information Science responding to Global Challenges” recognizes the pivotal role of geospatial data and analysis in informing decision-making for current global issues affecting humanity, the environment, and global resilience. We particularly welcome innovations in interdisciplinary geospatial research data management, integration and analysis. ([more information about AGILE 2025](https://agile-gi.eu/conference-2025/call-for-papers-2025).
+
+# Centrality and Resilience in the Face of Flooding: A Case Study of Rio Grande do Sul
+
+The topic of this study includes __Open Spatial Data, Open Science, Open-source Geospatial Tools and Applications__ , __Disaster and Risk Management__, __Way Finding, Routing and Indoor Navigation__ or __Spatial Databases and Data Management__. We used open-ssource data and software including OpenRouteService (ORS),Pgrouting, PostGIS, R or QGIS. In addition, we mainly used the open-source data from OpenStreetMap (OSM). Based on centrality metrics and alternative paths, we compared the centrality of the road network in the core of the metropolitan area of Rio Grande do Sul before and after the flood event that took place on the 29th of April of 2024. The methodology is mainly conducted in SQL using PostGIS to handle geospatial data and Pgrouting to analyze road networks.
+
+The submission type is _use case_.
 
 # Overview
 
@@ -20,7 +31,7 @@ project
 |- README                          # the top level description of content
 |- study.Rproj                     # RStudio project for this study
 ```
-# Centrality and Resilience in the Face of Flooding: A Case Study of Rio Grande do Sul
+
 
 ## Datasets
 - [x] Is provided in a non-propietary format:
