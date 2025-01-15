@@ -27,7 +27,6 @@ project
 |    + - obtain_routable_networks/
 |    + - analyse_centrality_and_resilience
 |- code/                           
-|  |- results                      # main output from workflows and analyses
 |  |- paper/                       # Reproducible paper using Quarto includes code
 |  | + quarto_script_rs_paper_v0.Rmd  # Quarto file
 |  |- figures/                     # diagrams, images, and other non-graph graphics
