@@ -5,20 +5,19 @@
 ```
 project
 |- doc/            # documentation for the study
-|  +- paper/       # manuscript(s), whether generated or not
+|  +- paper/       # manuscript(s)
 |
 |- data            # raw and primary data, are not changed once created 
 |  |- source_data/  # raw data, will not be altered
-|  +- results_data/       # cleaned data, will not be altered once created
+|  +- results_data/       # data
 |
-|- code/           # any programmatic code
-|- results         # all output from workflows and analyses
-|  |- quarto.Rmd/     # graphs, likely designated for manuscript figures
-|  +- figures/    # diagrams, images, and other non-graph graphics
+|- code/                           # any programmatic code
+|- results                         # main output from workflows and analyses
+|  |- quarto_script_rs_paper.Rmd/  # graphs, likely designated for manuscript figures
+|  +- figures/                     # diagrams, images, and other non-graph graphics
 |
-|- README          # the top level description of content
-|- study.Rproj     # RStudio project for this study, if applicable
-
+|- README                          # the top level description of content
+|- study.Rproj                     # RStudio project for this study
 ```
 # Centrality and Resilience in the Face of Flooding: A Case Study of Rio Grande do Sul
 
@@ -27,12 +26,17 @@ project
 
 This github repository contains the data in non-propietary format. Spreadsheets are in ".csv" format, geospatial data in geopackage.  
 
--[ ] Is documented for third parties to reuse:
+- [x] Is documented for third parties to reuse:
 
-The datasets are included in the references including links and doi when available.
--[ ] The public repository has an OPEN C4 open license.
+Is accessible in a public repository and has an open data licence:
+- [x] The github and zenodo repository are public and licensed under Creative Commons Attribution 4.0 International Public License.
 
-Pending to acceptance of the full paper submission on the 27th of February according to [AGILE 2025 call for papers](https://agile-gi.eu/conference-2025/call-for-papers-2025), we will include   
+## Software tools libraries packages and computational workflows
+
+Pending to acceptance of the full paper submission on the 27th of February according to [AGILE 2025 call for papers](https://agile-gi.eu/conference-2025/call-for-papers-2025), we will include additional documentation.
+- [x] Reproduction steps are explained in a README (plain text file), flowchart, or script:
+
+
 
 | Task      | Deadline        |
 |------------------|-----------------|
