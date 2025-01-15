@@ -7,7 +7,9 @@ The conference theme “Geographic Information Science responding to Global Chal
 
 # Centrality and Resilience in the Face of Flooding: A Case Study of Rio Grande do Sul
 
-The topic of this study includes _Open Spatial Data, Open Science, Open-source Geospatial Tools and Applications_ , _Disaster and Risk Management_, _Way Finding, Routing and Indoor Navigation_ or _Spatial Databases and Data Management_. We used open-ssource data and software including OpenRouteService (ORS),Pgrouting, PostGIS, R or QGIS. In addition, we mainly used the open-source data from OpenStreetMap (OSM). Based on centrality metrics and alternative paths, we compared the centrality of the road network in the core of the metropolitan area of Rio Grande do Sul before and after the flood event that took place on the 29th of April of 2024. The methodology is mainly conducted in SQL using PostGIS to handle geospatial data and Pgrouting to analyze road networks.
+The topic of this study includes _Open Spatial Data, Open Science, Open-source Geospatial Tools and Applications_ , _Disaster and Risk Management_, _Way Finding, Routing and Indoor Navigation_ or _Spatial Databases and Data Management_. 
+
+We used open-ssource data and software including OpenRouteService (ORS),Pgrouting, PostGIS, R or QGIS. In addition, we mainly used the open-source data from OpenStreetMap (OSM). Based on centrality metrics and alternative paths, we compared the centrality of the road network in the core of the metropolitan area of Rio Grande do Sul before and after the flood event that took place on the 29th of April of 2024. The methodology is mainly conducted in SQL using PostGIS to handle geospatial data and Pgrouting to analyze road networks.
 
 The submission type is _use case_.
 
