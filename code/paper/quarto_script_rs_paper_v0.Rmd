@@ -229,7 +229,15 @@ knitr::include_graphics("figures/snapping_point_isochrone_v5.png")
 ## Centrality on the road network
 
 The quantitative analysis of road connectivity before and after the flood revealed an overall connectivity decrease in the analysed `r   units::drop_units(round(sum(st_length(centrality_pre$geom))/1000))` km of urban roads and surrounding `units::drop_units(round(st_area(flood_extent$st_union)/10000))` ha of flood extent.
-We present our findings considering both core metropolitan connectivity (CMC) and intracity connectivity (IC).
+We present our findings considering both core metropolitan connectivity (CMC) and intracity connectivity (IC)
+
+```{r}
+#| eval: false
+#| echo: false
+
+natural_jenks_breaks_cmc_pre <- BAMMtools::getJenksBreaks(centrality_both_sankey_v3$centrality_pre, k=5)
+```
+
 
 Figure 5 illustrates the change in centrality values on a core metropolitan scale before and in the aftermath of the flood.
 A total of `r units::drop_units(round(sum(st_length(filter(centrality_pre, centrality >= natural_jenks_breaks_cmc_pre[4])$geom))/1000))` km of roads, representing urban arteries with edge betweenness values between `r natural_jenks_breaks_cmc_pre[4]` and `r natural_jenks_breaks_cmc_pre[5]`, experienced a `r round((units::drop_units(sum(st_length(filter(centrality_pre, centrality >= natural_jenks_breaks_cmc_pre[4])$geom))) - units::drop_units(sum(st_length(centrality_post[centrality_post$Id %in% filter(centrality_pre, centrality >= natural_jenks_breaks_cmc_pre[4])$Id,]$geom)))) / units::drop_units(sum(st_length(filter(centrality_pre, centrality >= natural_jenks_breaks_cmc_pre[4])$geom))),2)*100`% (`r units::drop_units(round(sum(st_length(filter(centrality_pre, centrality >= natural_jenks_breaks_cmc_pre[4])$geom))/1000)) - units::drop_units(round(sum(st_length(centrality_post[centrality_post$Id %in% filter(centrality_pre, centrality >= natural_jenks_breaks_cmc_pre[4])$Id,]$geom))/1000))` km ) loss in length.

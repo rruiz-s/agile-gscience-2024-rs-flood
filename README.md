@@ -20,18 +20,19 @@ project
 |- doc/            # documentation for AGILE 2025 full paper
 |  +- paper/       # manuscript(s)
 |
-|- data            # raw and primary data, are not changed once created 
-|  |- source_data/  # raw data
-|  |- results_data/ # final data
+|- data            	            
+|  |- source_data/  		      # raw data
+|  |- results_data/ 		      # final data
 |    + - select_area_of_interest/
 |    + - obtain_routable_networks/
 |    + - analyse_centrality_and_resilience
+|  |- temp_data/                      # temp data  	
 |- code/                           
-|  |- paper/                       # Reproducible paper using Quarto includes code
+|  |- paper/                          # Reproducible paper using Quarto includes code
 |  | + quarto_script_rs_paper_v0.Rmd  # Quarto file
-|  |- figures/                     # diagrams, images, and other non-graph graphics
+|  |- figures/                        # diagrams, images, and other non-graph graphics
 |
-|- README                          # the top level description of content
+|- README                             # the top level description of content
 ```
 
 
