@@ -1,0 +1,5 @@
+# Calculate redundancy
+
+## RQ3
+
+Work in progress, waiting for acceptance.

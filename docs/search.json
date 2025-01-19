@@ -4,27 +4,111 @@
     "href": "index.html",
     "title": "Centrality analysis on Rio Grande do Sul",
     "section": "",
-    "text": "Preface\nThis is a Quarto book.\nTo learn more about Quarto books visit https://quarto.org/docs/books."
+    "text": "Data and Software Availability\nThis document is written following the Reproducibiltiy paper guidelines for the AGILE conference 2025 (Belliard et al. 2019) .The following flowchart explains the methodology to analyse the centrality and resilience of the road network and healthcare facilities in the core metropolitan area of Rio Grande do Sul."
+  },
+  {
+    "objectID": "index.html#datasets",
+    "href": "index.html#datasets",
+    "title": "Centrality analysis on Rio Grande do Sul",
+    "section": "Datasets",
+    "text": "Datasets\nThe table 1 summaries the initial data from which intermediate and final results are derived. The section link includes the origin of the data, so third parties to reuse. In addition, the public github repository with open data license also provide the data of the study.\nThe total built-up volume weighted the sampling of the origin and destination and is accessible via the following DOI:10.2905/AB2F107A-03CD-47A3-85E5-139D8EC63283. The degree of urbanization determined the urban dense settlement analysed contained the 9 municipalities that comprises the studied area named core metropolitan area and is accessible via the following DOI:10.2905/A0DF7A6F-49DE-46EA-9BDE-563437A6E2BA.Similarly, the subset of the flood is derived from the cheias_rhguaiba_2024_db_v11.gpkg accesible in the DOI:10.5281/zenodo.11164049. For the hospitals, we used the dataset Hospitais_com_Leitos_de_UTIs_no_RS.geojson that included the bed capacity and is accessible via the DOI:10.7303/syn32211006.1. The location of the healthcare facility is obtained using the WFS provided by “Secretaria Estadual da Saúde/DGTI”\n\nTable 1: Original raw datasets\n\n\nData\nDescription\nLink\n\n\n\n\nGHSL-Built-V\ntotal built-up volume in m³\nGHSL-Built-V\n\n\nGHSL-SMOD\nDegree of Urbanisation\nGHSL-SMOD\n\n\ncheias_rhguaiba_2024_db_v11.gpkg\nFlood extent obtained on the 29th April, 2024\nFlood extent\n\n\nETLCNES_SR_RS_21_12_t.csv\nIt includes ICU beds of healthcare facilities\nHospital data\n\n\nHospitais_com_Leitos_de_UTIs_no_RS.geojson\nIt includes healthcare facilities with ICU\nHospitals\n\n\ngeoBoundaries-BRA-ADM2\nIt contains subnational administrative boundaries in Brazil\nAdmiministrative units\n\n\nOpenStreetMap data\nIt represents the road network in the region of Sul, in Brazil\nOSM data"
+  },
+  {
+    "objectID": "index.html#computational-workflows",
+    "href": "index.html#computational-workflows",
+    "title": "Centrality analysis on Rio Grande do Sul",
+    "section": "Computational workflows",
+    "text": "Computational workflows\n\n\n\n\n\n\n\n\nLane\nActivity\nTime\n\n\n\n\nSelect Area of Interest (AOI)\nFlood extent:\nXs\n\n\nSelect Area of Interest (AOI)\nObtain road network\nXs\n\n\nObtain routable network\nTransform into graph: Convert into graph\nXs\n\n\nObtain routable network\nTransform into graph: Export geometry\nXs\n\n\nObtain routable network\nExtract difference: Subset flood extent\nXs\n\n\nObtain routable network\nExtract difference: Post-disaster network\nXs\n\n\nAnalyse centrality and resilience\nWeighted OD\nXs\n\n\nAnalyse centrality and resilience\nRegular OD\nXs\n\n\nAnalyse centrality and resilience\nCalculate connectivity: RQ1: C.Metropolitan scale\nXs\n\n\nAnalyse centrality and resilience\nCalculate connectivity: RQ2: Intracity Scale\nXs\n\n\nAnalyse centrality and resilience\nCalculate resilience: RQ3: Resilience-lack of redundancy\nXs\n\n\n\n\nComputational environment\n\nPostgreSQL 15.3 is used from the docker file container that includes the extension PostGIS 16-3.4-v2024.03.17 and pgrouting 3.5.\nThe libraries that includes the study analysis, visualization and creation of this documentation is available with the renv file.\nThe study required a CPU Intel(R) Core(TM) i5-4300U CPU @ 1.90 GHz with 15 Gi model HP EliteBook 820 G1.\nQGIS Version 3.38 ‘Grenoble’\nRStudio 2023.06.1+524 “Mountain Hydrangea”\nopenrouteservice:v8.0.0 used following the described docker file container instructions\n\n\n\nComputation steps\nThis Quarto book describes the detailed steps carried out for this use case in three chapters that contains the workflow described in the Fig 1 with 8 activities.\n\n\n\n\nBelliard, Frederique, Rusne Sileryte, Anita Graser, Karl Broman, Marta Teperek, Carlos Granell, Barbara Hofer, et al. 2019. “AGILE Reproducible Paper Guidelines.” https://doi.org/10.17605/OSF.IO/CB7Z8."
   },
   {
     "objectID": "intro.html",
     "href": "intro.html",
-    "title": "1  Introduction",
+    "title": "Select AoI",
     "section": "",
-    "text": "This is a book created from markdown and executable code.\nSee Knuth (1984) for additional discussion of literate programming.\nasdasd\n\n\n\n\nKnuth, Donald E. 1984. “Literate Programming.” Comput. J. 27 (2): 97–111. https://doi.org/10.1093/comjnl/27.2.97."
+    "text": "Work in progress, waiting for acceptance."
   },
   {
-    "objectID": "summary.html",
-    "href": "summary.html",
-    "title": "2  Summary",
+    "objectID": "detect_flood.html",
+    "href": "detect_flood.html",
+    "title": "1  Detect flood",
     "section": "",
-    "text": "In summary, this book has no content whatsoever."
+    "text": "Work in progress, waiting for acceptance."
+  },
+  {
+    "objectID": "obtain_road_network.html",
+    "href": "obtain_road_network.html",
+    "title": "2  Obtain road network",
+    "section": "",
+    "text": "Work in progress, waiting for acceptance."
+  },
+  {
+    "objectID": "obtain_routable_network.html",
+    "href": "obtain_routable_network.html",
+    "title": "Obtain routable network",
+    "section": "",
+    "text": "Work in progress, waiting for acceptance."
+  },
+  {
+    "objectID": "transform_into_graph.html",
+    "href": "transform_into_graph.html",
+    "title": "3  Transform into graph",
+    "section": "",
+    "text": "Work in progress, waiting for acceptance."
+  },
+  {
+    "objectID": "extract_difference.html",
+    "href": "extract_difference.html",
+    "title": "4  Extract difference",
+    "section": "",
+    "text": "Work in progress, waiting for acceptance."
+  },
+  {
+    "objectID": "analyse_centrality_resilience.html",
+    "href": "analyse_centrality_resilience.html",
+    "title": "Analysis Centrality and Resilience",
+    "section": "",
+    "text": "Work in progress, waiting for acceptance."
+  },
+  {
+    "objectID": "od.html",
+    "href": "od.html",
+    "title": "5  Origin-Destination matrix",
+    "section": "",
+    "text": "Work in progress, waiting for acceptance."
+  },
+  {
+    "objectID": "calculate_short_path.html",
+    "href": "calculate_short_path.html",
+    "title": "6  Calculate short path",
+    "section": "",
+    "text": "Work in progress, waiting for acceptance."
+  },
+  {
+    "objectID": "calculate_connectivity.html#rq1",
+    "href": "calculate_connectivity.html#rq1",
+    "title": "7  Calculate connectivity",
+    "section": "7.1 RQ1",
+    "text": "7.1 RQ1"
+  },
+  {
+    "objectID": "calculate_connectivity.html#rq2",
+    "href": "calculate_connectivity.html#rq2",
+    "title": "7  Calculate connectivity",
+    "section": "7.2 RQ2",
+    "text": "7.2 RQ2\nWork in progress, waiting for acceptance."
+  },
+  {
+    "objectID": "calculate_redundancy.html#rq3",
+    "href": "calculate_redundancy.html#rq3",
+    "title": "8  Calculate redundancy",
+    "section": "8.1 RQ3",
+    "text": "8.1 RQ3\nWork in progress, waiting for acceptance."
   },
   {
     "objectID": "references.html",
     "href": "references.html",
     "title": "References",
     "section": "",
-    "text": "Knuth, Donald E. 1984. “Literate Programming.” Comput.\nJ. 27 (2): 97–111. https://doi.org/10.1093/comjnl/27.2.97."
+    "text": "Belliard, Frederique, Rusne Sileryte, Anita Graser, Karl Broman, Marta\nTeperek, Carlos Granell, Barbara Hofer, et al. 2019. “AGILE\nReproducible Paper Guidelines.” https://doi.org/10.17605/OSF.IO/CB7Z8."
   }
 ]

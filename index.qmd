@@ -1,5 +1,58 @@
-# Preface {.unnumbered}
+# Data and Software Availability {.unnumbered}
 
-This is a Quarto book.
+This document is written following the [Reproducibiltiy paper guidelines](https://osf.io/numa5) for the AGILE conference 2025 [@https://doi.org/10.17605/osf.io/cb7z8] .The following flowchart explains the methodology to analyse the centrality and resilience of the road network and healthcare facilities in the core metropolitan area of Rio Grande do Sul.
 
-To learn more about Quarto books visit <https://quarto.org/docs/books>.
+1. <p> <span class= "font-color">**Select Area of Interest (AOI)**</span> includes importing the flood extent, municipalities and the road network affecting the core metropolitan area of Porto Alegre. We name core metropolitan area to the 9 municipalities in the urban dense human settlement that intersects with the municipality of Porto Alegre.</p> 
+2. <p> <span class= "font-color">**Obtain routable network**</span> created the two output post-disaster and pre-disaster network. Firstly, OpenRouteService is used to transform the OpenStreetMap data into a routable graph named pre-disaster network. Extracting the difference between the flood extent obtained in the previous lane with the pre-disaster network generated the post-disaster network. Both road networks are graphs, which allow to use the extension pgrotuing.
+3.  <p> <span class= "font-color">**Analysis centrality** and resilience</span> is carried out calculating shortest paths with the inputs weighted and regular origin-destination. While calculating connectivity using the edge betweenness indicator provides results to answer the 1st and 2nd research question, calculating the lack of redundancy with alternative paths provides results to answer the third research question.
+
+![Fig.1 Flowchart](data/figures/research_design_v6.png)
+
+## Datasets
+
+The table 1 summaries the initial data from which intermediate and final results are derived. The section link includes the origin of the data, so third parties to reuse. In addition, the public [github repository](https://github.com/rruiz-s/agile-gscience-2024-rs-flood) with open data license also provide the data of the study.
+
+The total built-up volume weighted the sampling of the origin and destination and is accessible via the following DOI:[10.2905/AB2F107A-03CD-47A3-85E5-139D8EC63283](https://human-settlement.emergency.copernicus.eu/ghs_buV2023.php). The degree of urbanization determined the urban dense settlement analysed contained the 9 municipalities that comprises the studied area named core metropolitan area and is accessible via the following DOI:[10.2905/A0DF7A6F-49DE-46EA-9BDE-563437A6E2BA](https://doi.org/10.2905/A0DF7A6F-49DE-46EA-9BDE-563437A6E2BA).Similarly, the subset of the flood is derived from the cheias_rhguaiba_2024_db_v11.gpkg accesible in the [DOI:10.5281/zenodo.11164049](https://doi.org/10.5281/zenodo.11164049). For the hospitals, we used the dataset   Hospitais_com_Leitos_de_UTIs_no_RS.geojson that included the bed capacity and is accessible via the DOI:[10.7303/syn32211006.1](https://doi.org/10.7303/syn32211006.1). The location of the healthcare facility is obtained using the [WFS](https://iede.rs.gov.br/server/rest/services/SES/Hospitais_Leitos_UTI_RS/FeatureServer) provided by "Secretaria Estadual da Saúde/DGTI"
+
+
+| Data            |Description        |        Link |
+|-----------------|:------------------|:-----------:|
+| GHSL-Built-V      |  total built-up volume  in m³  |       [GHSL-Built-V](https://human-settlement.emergency.copernicus.eu/download.php?ds=builtV)   |
+| GHSL-SMOD     | Degree of Urbanisation  |   [GHSL-SMOD](https://human-settlement.emergency.copernicus.eu/download.php?ds=smod) | 
+| cheias_rhguaiba_2024_db_v11.gpkg       | Flood extent obtained on the 29th April, 2024    |     [Flood extent](https://zenodo.org/records/12593168) |
+| ETLCNES_SR_RS_21_12_t.csv| It includes ICU beds of healthcare facilities   |[Hospital data](https://www.synapse.org/Synapse:syn32211006)       |
+| Hospitais_com_Leitos_de_UTIs_no_RS.geojson| It includes healthcare facilities with ICU |   [Hospitals](https://iede.rs.gov.br/server/rest/services/SES/Hospitais_Leitos_UTI_RS/FeatureServer)        |
+| geoBoundaries-BRA-ADM2 | It contains subnational administrative boundaries in Brazil | [Admiministrative units](https://data.humdata.org/dataset/geoboundaries-admin-boundaries-for-brazil) |
+|OpenStreetMap data | It represents the road network in the region of Sul, in Brazil | [OSM data](https://download.geofabrik.de/south-america/brazil/sul.html#) |
+
+: Table 1: Original raw datasets
+
+## Computational workflows
+
+|Lane | Activity | Time |
+|:----|:---------|:-----|
+| Select Area of Interest (AOI)    | Flood extent:          |  Xs     |
+| Select Area of Interest (AOI)    | Obtain road network    | Xs   |
+| Obtain routable network    | Transform into graph:  Convert into graph        |   Xs    |
+| Obtain routable network    | Transform into graph:  Export geometry        |    Xs  |
+| Obtain routable network    | Extract difference: Subset flood extent          |  Xs    |
+| Obtain routable network    |Extract difference: Post-disaster network        | Xs      |
+| Analyse centrality and resilience    |  Weighted OD        |  Xs    |
+| Analyse centrality and resilience    |  Regular OD        |   Xs   |
+| Analyse centrality and resilience   | Calculate connectivity: RQ1: C.Metropolitan scale                  |  Xs      |
+| Analyse centrality and resilience | Calculate connectivity: RQ2: Intracity Scale | Xs |
+| Analyse centrality and resilience | Calculate resilience: RQ3: Resilience-lack of redundancy| Xs |
+
+
+### Computational environment
+
+* PostgreSQL 15.3 is used from the [docker file container](https://github.com/kartoza/docker-postgis?tab=readme-ov-file) that includes the extension PostGIS 16-3.4-v2024.03.17 and pgrouting 3.5.
+* The libraries that includes the study analysis, visualization and creation of this documentation is available with the renv file.
+* The study required a CPU Intel(R) Core(TM) i5-4300U CPU @ 1.90 GHz with 15 Gi model HP EliteBook 820 G1. 
+* QGIS Version 3.38 ‘Grenoble’ 
+* RStudio 2023.06.1+524 "Mountain Hydrangea"
+* openrouteservice:v8.0.0 used following the described [docker file container](https://giscience.github.io/openrouteservice/run-instance/running-with-docker) instructions
+
+### Computation steps
+
+This Quarto book describes the detailed steps carried out for this use case in three chapters that contains the workflow described in the Fig 1 with 8 activities.

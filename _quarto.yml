@@ -8,8 +8,20 @@ book:
   date: "2025/01/01"
   chapters:
     - index.qmd
-    - intro.qmd
-    - summary.qmd
+    - part: intro.qmd
+      chapters:
+       - detect_flood.qmd
+       - obtain_road_network.qmd
+    - part: obtain_routable_network.qmd
+      chapters:
+        - transform_into_graph.qmd
+        - extract_difference.qmd
+    - part: analyse_centrality_resilience.qmd
+      chapters:
+        - od.qmd
+        - calculate_short_path.qmd
+        - calculate_connectivity.qmd
+        - calculate_redundancy.qmd
     - references.qmd
   navbar:
     right:
@@ -26,7 +38,7 @@ book:
         href: https://zenodo.org/records/14662897
         text: Zenodo repository
   page-footer: 
-    left: CC4 License, HeiGIT
+    left: CC-By Attribution 4.0 International, HeiGIT
     right: This website is built with [{{< fa brands github title="GitHub octocat logo" >}}](https://github.com/samanthacsik/samanthacsik.github.io){target=_blank}, [{{< fa brands r-project title="R Project" >}}](https://www.r-project.org/about.html){target=_blank} and [Quarto](https://quarto.org/){target=_blank}
 
 bibliography: references.bib

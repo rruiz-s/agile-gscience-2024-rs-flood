@@ -22,7 +22,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -70,6 +89,7 @@ ul.task-list li input[type="checkbox"] {
 
 <body class="nav-sidebar floating nav-fixed">
 
+
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg navbar-dark ">
@@ -115,7 +135,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Preface</a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Data and Software Availability</a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -138,21 +158,90 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Preface</span></a>
+ <span class="menu-text">Data and Software Availability</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Select AoI</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  <a href="./detect_flood.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Detect flood</span></span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./summary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+  <a href="./obtain_road_network.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Obtain road network</span></span></a>
   </div>
 </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./obtain_routable_network.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Obtain routable network</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./transform_into_graph.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Transform into graph</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./extract_difference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Extract difference</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./analyse_centrality_resilience.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Analysis Centrality and Resilience</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./od.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Origin-Destination matrix</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./calculate_short_path.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Calculate short path</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./calculate_connectivity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Calculate connectivity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./calculate_redundancy.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Calculate redundancy</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
@@ -169,7 +258,15 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#preface" id="toc-preface" class="nav-link active" data-scroll-target="#preface">Preface</a></li>
+  <li><a href="#data-and-software-availability" id="toc-data-and-software-availability" class="nav-link active" data-scroll-target="#data-and-software-availability">Data and Software Availability</a>
+  <ul class="collapse">
+  <li><a href="#datasets" id="toc-datasets" class="nav-link" data-scroll-target="#datasets">Datasets</a></li>
+  <li><a href="#computational-workflows" id="toc-computational-workflows" class="nav-link" data-scroll-target="#computational-workflows">Computational workflows</a>
+  <ul class="collapse">
+  <li><a href="#computational-environment" id="toc-computational-environment" class="nav-link" data-scroll-target="#computational-environment">Computational environment</a></li>
+  <li><a href="#computation-steps" id="toc-computation-steps" class="nav-link" data-scroll-target="#computation-steps">Computation steps</a></li>
+  </ul></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -205,12 +302,172 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="preface" class="level1 unnumbered">
-<h1 class="unnumbered">Preface</h1>
-<p>This is a Quarto book.</p>
-<p>To learn more about Quarto books visit <a href="https://quarto.org/docs/books" class="uri">https://quarto.org/docs/books</a>.</p>
+<section id="data-and-software-availability" class="level1 unnumbered">
+<h1 class="unnumbered">Data and Software Availability</h1>
+<p>This document is written following the <a href="https://osf.io/numa5">Reproducibiltiy paper guidelines</a> for the AGILE conference 2025 <span class="citation" data-cites="https://doi.org/10.17605/osf.io/cb7z8">(<a href="references.html#ref-https://doi.org/10.17605/osf.io/cb7z8" role="doc-biblioref">Belliard et al. 2019</a>)</span> .The following flowchart explains the methodology to analyse the centrality and resilience of the road network and healthcare facilities in the core metropolitan area of Rio Grande do Sul.</p>
+<ol type="1">
+<li><p>
+<span class="font-color"><strong>Select Area of Interest (AOI)</strong></span> includes importing the flood extent, municipalities and the road network affecting the core metropolitan area of Porto Alegre. We name core metropolitan area to the 9 municipalities in the urban dense human settlement that intersects with the municipality of Porto Alegre.
+</p></li>
+<li><p>
+<span class="font-color"><strong>Obtain routable network</strong></span> created the two output post-disaster and pre-disaster network. Firstly, OpenRouteService is used to transform the OpenStreetMap data into a routable graph named pre-disaster network. Extracting the difference between the flood extent obtained in the previous lane with the pre-disaster network generated the post-disaster network. Both road networks are graphs, which allow to use the extension pgrotuing.</p></li>
+<li><p>
+<span class="font-color"><strong>Analysis centrality</strong> and resilience</span> is carried out calculating shortest paths with the inputs weighted and regular origin-destination. While calculating connectivity using the edge betweenness indicator provides results to answer the 1st and 2nd research question, calculating the lack of redundancy with alternative paths provides results to answer the third research question.</p></li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="data/figures/research_design_v6.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Fig.1 Flowchart</figcaption>
+</figure>
+</div>
+<section id="datasets" class="level2">
+<h2 class="anchored" data-anchor-id="datasets">Datasets</h2>
+<p>The table 1 summaries the initial data from which intermediate and final results are derived. The section link includes the origin of the data, so third parties to reuse. In addition, the public <a href="https://github.com/rruiz-s/agile-gscience-2024-rs-flood">github repository</a> with open data license also provide the data of the study.</p>
+<p>The total built-up volume weighted the sampling of the origin and destination and is accessible via the following DOI:<a href="https://human-settlement.emergency.copernicus.eu/ghs_buV2023.php">10.2905/AB2F107A-03CD-47A3-85E5-139D8EC63283</a>. The degree of urbanization determined the urban dense settlement analysed contained the 9 municipalities that comprises the studied area named core metropolitan area and is accessible via the following DOI:<a href="https://doi.org/10.2905/A0DF7A6F-49DE-46EA-9BDE-563437A6E2BA">10.2905/A0DF7A6F-49DE-46EA-9BDE-563437A6E2BA</a>.Similarly, the subset of the flood is derived from the cheias_rhguaiba_2024_db_v11.gpkg accesible in the <a href="https://doi.org/10.5281/zenodo.11164049">DOI:10.5281/zenodo.11164049</a>. For the hospitals, we used the dataset Hospitais_com_Leitos_de_UTIs_no_RS.geojson that included the bed capacity and is accessible via the DOI:<a href="https://doi.org/10.7303/syn32211006.1">10.7303/syn32211006.1</a>. The location of the healthcare facility is obtained using the <a href="https://iede.rs.gov.br/server/rest/services/SES/Hospitais_Leitos_UTI_RS/FeatureServer">WFS</a> provided by “Secretaria Estadual da Saúde/DGTI”</p>
+<table class="table">
+<caption>Table 1: Original raw datasets</caption>
+<thead>
+<tr class="header">
+<th>Data</th>
+<th style="text-align: left;">Description</th>
+<th style="text-align: center;">Link</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>GHSL-Built-V</td>
+<td style="text-align: left;">total built-up volume in m³</td>
+<td style="text-align: center;"><a href="https://human-settlement.emergency.copernicus.eu/download.php?ds=builtV">GHSL-Built-V</a></td>
+</tr>
+<tr class="even">
+<td>GHSL-SMOD</td>
+<td style="text-align: left;">Degree of Urbanisation</td>
+<td style="text-align: center;"><a href="https://human-settlement.emergency.copernicus.eu/download.php?ds=smod">GHSL-SMOD</a></td>
+</tr>
+<tr class="odd">
+<td>cheias_rhguaiba_2024_db_v11.gpkg</td>
+<td style="text-align: left;">Flood extent obtained on the 29th April, 2024</td>
+<td style="text-align: center;"><a href="https://zenodo.org/records/12593168">Flood extent</a></td>
+</tr>
+<tr class="even">
+<td>ETLCNES_SR_RS_21_12_t.csv</td>
+<td style="text-align: left;">It includes ICU beds of healthcare facilities</td>
+<td style="text-align: center;"><a href="https://www.synapse.org/Synapse:syn32211006">Hospital data</a></td>
+</tr>
+<tr class="odd">
+<td>Hospitais_com_Leitos_de_UTIs_no_RS.geojson</td>
+<td style="text-align: left;">It includes healthcare facilities with ICU</td>
+<td style="text-align: center;"><a href="https://iede.rs.gov.br/server/rest/services/SES/Hospitais_Leitos_UTI_RS/FeatureServer">Hospitals</a></td>
+</tr>
+<tr class="even">
+<td>geoBoundaries-BRA-ADM2</td>
+<td style="text-align: left;">It contains subnational administrative boundaries in Brazil</td>
+<td style="text-align: center;"><a href="https://data.humdata.org/dataset/geoboundaries-admin-boundaries-for-brazil">Admiministrative units</a></td>
+</tr>
+<tr class="odd">
+<td>OpenStreetMap data</td>
+<td style="text-align: left;">It represents the road network in the region of Sul, in Brazil</td>
+<td style="text-align: center;"><a href="https://download.geofabrik.de/south-america/brazil/sul.html#">OSM data</a></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="computational-workflows" class="level2">
+<h2 class="anchored" data-anchor-id="computational-workflows">Computational workflows</h2>
+<table class="table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 47%">
+<col style="width: 28%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Lane</th>
+<th style="text-align: left;">Activity</th>
+<th style="text-align: left;">Time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Select Area of Interest (AOI)</td>
+<td style="text-align: left;">Flood extent:</td>
+<td style="text-align: left;">Xs</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Select Area of Interest (AOI)</td>
+<td style="text-align: left;">Obtain road network</td>
+<td style="text-align: left;">Xs</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Obtain routable network</td>
+<td style="text-align: left;">Transform into graph: Convert into graph</td>
+<td style="text-align: left;">Xs</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Obtain routable network</td>
+<td style="text-align: left;">Transform into graph: Export geometry</td>
+<td style="text-align: left;">Xs</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Obtain routable network</td>
+<td style="text-align: left;">Extract difference: Subset flood extent</td>
+<td style="text-align: left;">Xs</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Obtain routable network</td>
+<td style="text-align: left;">Extract difference: Post-disaster network</td>
+<td style="text-align: left;">Xs</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Analyse centrality and resilience</td>
+<td style="text-align: left;">Weighted OD</td>
+<td style="text-align: left;">Xs</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Analyse centrality and resilience</td>
+<td style="text-align: left;">Regular OD</td>
+<td style="text-align: left;">Xs</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Analyse centrality and resilience</td>
+<td style="text-align: left;">Calculate connectivity: RQ1: C.Metropolitan scale</td>
+<td style="text-align: left;">Xs</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Analyse centrality and resilience</td>
+<td style="text-align: left;">Calculate connectivity: RQ2: Intracity Scale</td>
+<td style="text-align: left;">Xs</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Analyse centrality and resilience</td>
+<td style="text-align: left;">Calculate resilience: RQ3: Resilience-lack of redundancy</td>
+<td style="text-align: left;">Xs</td>
+</tr>
+</tbody>
+</table>
+<section id="computational-environment" class="level3">
+<h3 class="anchored" data-anchor-id="computational-environment">Computational environment</h3>
+<ul>
+<li>PostgreSQL 15.3 is used from the <a href="https://github.com/kartoza/docker-postgis?tab=readme-ov-file">docker file container</a> that includes the extension PostGIS 16-3.4-v2024.03.17 and pgrouting 3.5.</li>
+<li>The libraries that includes the study analysis, visualization and creation of this documentation is available with the renv file.</li>
+<li>The study required a CPU Intel(R) Core(TM) i5-4300U CPU @ 1.90 GHz with 15 Gi model HP EliteBook 820 G1.</li>
+<li>QGIS Version 3.38 ‘Grenoble’</li>
+<li>RStudio 2023.06.1+524 “Mountain Hydrangea”</li>
+<li>openrouteservice:v8.0.0 used following the described <a href="https://giscience.github.io/openrouteservice/run-instance/running-with-docker">docker file container</a> instructions</li>
+</ul>
+</section>
+<section id="computation-steps" class="level3">
+<h3 class="anchored" data-anchor-id="computation-steps">Computation steps</h3>
+<p>This Quarto book describes the detailed steps carried out for this use case in three chapters that contains the workflow described in the Fig 1 with 8 activities.</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-https://doi.org/10.17605/osf.io/cb7z8" class="csl-entry" role="listitem">
+Belliard, Frederique, Rusne Sileryte, Anita Graser, Karl Broman, Marta Teperek, Carlos Granell, Barbara Hofer, et al. 2019. <span>“AGILE Reproducible Paper Guidelines.”</span> <a href="https://doi.org/10.17605/OSF.IO/CB7Z8">https://doi.org/10.17605/OSF.IO/CB7Z8</a>.
+</div>
+</div>
+</section>
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -452,14 +709,14 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
   <div class="nav-page nav-page-next">
       <a href="./intro.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text">Select AoI</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
-    <div class="nav-footer-left">CC4 License, HeiGIT</div>   
+    <div class="nav-footer-left">CC-By Attribution 4.0 International, HeiGIT</div>   
     <div class="nav-footer-center">
       &nbsp;
     </div>
