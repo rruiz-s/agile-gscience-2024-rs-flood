@@ -21,11 +21,18 @@
     "text": "Computational workflows\n\n\n\n\n\n\n\n\nLane\nActivity\nTime\n\n\n\n\nSelect Area of Interest (AOI)\nFlood extent:\nXs\n\n\nSelect Area of Interest (AOI)\nObtain road network\nXs\n\n\nObtain routable network\nTransform into graph: Convert into graph\nXs\n\n\nObtain routable network\nTransform into graph: Export geometry\nXs\n\n\nObtain routable network\nExtract difference: Subset flood extent\nXs\n\n\nObtain routable network\nExtract difference: Post-disaster network\nXs\n\n\nAnalyse centrality and resilience\nWeighted OD\nXs\n\n\nAnalyse centrality and resilience\nRegular OD\nXs\n\n\nAnalyse centrality and resilience\nCalculate connectivity: RQ1: C.Metropolitan scale\nXs\n\n\nAnalyse centrality and resilience\nCalculate connectivity: RQ2: Intracity Scale\nXs\n\n\nAnalyse centrality and resilience\nCalculate resilience: RQ3: Resilience-lack of redundancy\nXs\n\n\n\n\nComputational environment\n\nPostgreSQL 15.3 is used from the docker file container that includes the extension PostGIS 16-3.4-v2024.03.17 and pgrouting 3.5.\nThe libraries that includes the study analysis, visualization and creation of this documentation is available with the renv file.\nThe study required a CPU Intel(R) Core(TM) i5-4300U CPU @ 1.90 GHz with 15 Gi model HP EliteBook 820 G1.\nQGIS Version 3.38 ‘Grenoble’\nRStudio 2023.06.1+524 “Mountain Hydrangea”\nopenrouteservice:v8.0.0 used following the described docker file container instructions\n\n\n\nComputation steps\nThis Quarto book describes the detailed steps carried out for this use case in three chapters that contains the workflow described in the Fig 1 with 8 activities.\n\n\n\n\nBelliard, Frederique, Rusne Sileryte, Anita Graser, Karl Broman, Marta Teperek, Carlos Granell, Barbara Hofer, et al. 2019. “AGILE Reproducible Paper Guidelines.” https://doi.org/10.17605/OSF.IO/CB7Z8."
   },
   {
-    "objectID": "intro.html",
-    "href": "intro.html",
+    "objectID": "intro.html#importing-data-into-postgresql",
+    "href": "intro.html#importing-data-into-postgresql",
     "title": "Select AoI",
-    "section": "",
-    "text": "Work in progress, waiting for acceptance."
+    "section": "Importing data into PostgreSQL",
+    "text": "Importing data into PostgreSQL"
+  },
+  {
+    "objectID": "intro.html#connecting-r-with-postgresql",
+    "href": "intro.html#connecting-r-with-postgresql",
+    "title": "Select AoI",
+    "section": "Connecting R with PostgreSQL",
+    "text": "Connecting R with PostgreSQL"
   },
   {
     "objectID": "detect_flood.html",

@@ -1,3 +1,7 @@
 # Select AoI
 
 Work in progress, waiting for acceptance.
+
+## Importing data into PostgreSQL
+
+## Connecting R with PostgreSQL
