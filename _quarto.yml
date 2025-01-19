@@ -3,22 +3,40 @@ project:
   output-dir: docs
 
 book:
-  title: "agile-gscience-2024-rs-flood"
-  author: "Norah Jones"
-  date: "20/01/2025"
+  title: "Centrality analysis on Rio Grande do Sul"
+  author: "Ricardo Ruiz Sánchez"
+  date: "2025/01/01"
   chapters:
     - index.qmd
     - intro.qmd
     - summary.qmd
     - references.qmd
+  navbar:
+    right:
+      - href: /data/AGILE_porto_alegre_study_anonymised.pdf
+        text: Full paper
+      - icon: github
+        href: https://github.com/rruiz-s/agile-gscience-2024-rs-flood
+        text: GitHub
+        target: _blank
+      - icon: linkedin
+        text: Linkedin
+        href: https://www.linkedin.com/in/ricardo-r-s/
+      - icon: folder
+        href: https://zenodo.org/records/14662897
+        text: Zenodo repository
+  page-footer: 
+    left: CC4 License, HeiGIT
+    right: This website is built with [{{< fa brands github title="GitHub octocat logo" >}}](https://github.com/samanthacsik/samanthacsik.github.io){target=_blank}, [{{< fa brands r-project title="R Project" >}}](https://www.r-project.org/about.html){target=_blank} and [Quarto](https://quarto.org/){target=_blank}
 
 bibliography: references.bib
 
 format:
   html:
-    theme: cosmo
+    theme: [cosmo, styles_general.scss]
+    css: styles.css
+    code-fold: true
+    code-summary: "Show the code"
   pdf:
     documentclass: scrreprt
-
-
 

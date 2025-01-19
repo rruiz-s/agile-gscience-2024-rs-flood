@@ -1,0 +1,16 @@
+/* css styles */
+/*-- scss:defaults --*/
+// Colors
+$heigit: #d50038;
+$heigit-dark: #950a40;
+$white:#ffffff ;
+// Base document colors
+$link-color: $heigit;
+$navbar-bg: $white; // navbar
+$navbar-hl: $heigit;
+// Code blocks
+$code-block-bg-alpha: -.8;
+// fonts
+.font-color{
+	color: $heigit-dark
+}
