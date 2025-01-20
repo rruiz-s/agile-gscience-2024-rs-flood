@@ -4,7 +4,7 @@ project:
 
 book:
   title: "Centrality analysis on Rio Grande do Sul"
-  author: "Ricardo Ruiz Sánchez"
+  author: "AA"
   date: "2025/01/01"
   chapters:
     - index.qmd

@@ -32,7 +32,14 @@
     "href": "intro.html#connecting-r-with-postgresql",
     "title": "Select AoI",
     "section": "Connecting R with PostgreSQL",
-    "text": "Connecting R with PostgreSQL"
+    "text": "Connecting R with PostgreSQL\n\n\n\n\nPCDaS. 2022. “ETLCNES_SR.zip.” Synapse. https://doi.org/10.7303/SYN32211006.1.\n\n\nPossantti, Iporã, Ana Aguirre, Camila Alberti, Laura Azeredo, Mariana Barcelos, Fernando Becker, Mateus Camana, et al. 2024. “Banco de Dados Das Cheias Na Região Hidrográfica Do Lago Guaíba Em Maio de 2024.” Zenodo. https://doi.org/10.5281/ZENODO.13999016.\n\n\nRunfola, Daniel, Austin Anderson, Heather Baier, Matt Crittenden, Elizabeth Dowker, Sydney Fuhrig, Seth Goodman, et al. 2020. “geoBoundaries: A Global Database of Political Administrative Boundaries.” Edited by Wenwu Tang. PLOS ONE 15 (4): e0231866. https://doi.org/10.1371/journal.pone.0231866.\n\n\nSchiavina, Marcello, Michele Melchiorri, and Martino Pesaresi. 2023. “GHS-SMOD R2023A - GHS Settlement Layers, Application of the Degree of Urbanisation Methodology (Stage i) to GHS-POP R2023A and GHS-BUILT-s R2023A, Multitemporal (1975-2030).” European Commission, Joint Research Centre (JRC). https://doi.org/10.2905/A0DF7A6F-49DE-46EA-9BDE-563437A6E2BA."
+  },
+  {
+    "objectID": "intro.html#footnotes",
+    "href": "intro.html#footnotes",
+    "title": "Select AoI",
+    "section": "",
+    "text": "https://download.geofabrik.de/south-america/brazil/sul.html#↩︎"
   },
   {
     "objectID": "detect_flood.html",
@@ -116,6 +123,6 @@
     "href": "references.html",
     "title": "References",
     "section": "",
-    "text": "Belliard, Frederique, Rusne Sileryte, Anita Graser, Karl Broman, Marta\nTeperek, Carlos Granell, Barbara Hofer, et al. 2019. “AGILE\nReproducible Paper Guidelines.” https://doi.org/10.17605/OSF.IO/CB7Z8."
+    "text": "Belliard, Frederique, Rusne Sileryte, Anita Graser, Karl Broman, Marta\nTeperek, Carlos Granell, Barbara Hofer, et al. 2019. “AGILE\nReproducible Paper Guidelines.” https://doi.org/10.17605/OSF.IO/CB7Z8.\n\n\nPCDaS. 2022. “ETLCNES_SR.zip.” Synapse. https://doi.org/10.7303/SYN32211006.1.\n\n\nPossantti, Iporã, Ana Aguirre, Camila Alberti, Laura Azeredo, Mariana\nBarcelos, Fernando Becker, Mateus Camana, et al. 2024. “Banco de\nDados Das Cheias Na Região Hidrográfica Do Lago Guaíba Em Maio de\n2024.” Zenodo. https://doi.org/10.5281/ZENODO.13999016.\n\n\nRunfola, Daniel, Austin Anderson, Heather Baier, Matt Crittenden,\nElizabeth Dowker, Sydney Fuhrig, Seth Goodman, et al. 2020.\n“geoBoundaries: A Global Database of Political Administrative\nBoundaries.” Edited by Wenwu Tang. PLOS ONE 15 (4):\ne0231866. https://doi.org/10.1371/journal.pone.0231866.\n\n\nSchiavina, Marcello, Michele Melchiorri, and Martino Pesaresi. 2023.\n“GHS-SMOD R2023A - GHS Settlement Layers, Application of the\nDegree of Urbanisation Methodology (Stage i) to GHS-POP R2023A and\nGHS-BUILT-s R2023A, Multitemporal (1975-2030).” European\nCommission, Joint Research Centre (JRC). https://doi.org/10.2905/A0DF7A6F-49DE-46EA-9BDE-563437A6E2BA."
   }
 ]

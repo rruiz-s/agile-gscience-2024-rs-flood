@@ -20,7 +20,60 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -263,7 +316,95 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p>Work in progress, waiting for acceptance.</p>
+<p>The main objects of the research were the administrative boundaries from the municipalities, the flood extent, road network and hospitals.</p>
+<ul>
+<li><p>
+geoBoundaries provided the <span class="font-color"><strong>administrative units (ADM2)</strong></span> of Brazil <span class="citation" data-cites="Runfola2020">(<a href="references.html#ref-Runfola2020" role="doc-biblioref">Runfola et al. 2020</a>)</span>. We subset the data using 9 municipalities defined as the core metropolitan area of Rio Grande do Sul. The reason why we selected these municipalities is that they intersected with the dense urban center 1210 from the Global Human Settlement Layer <span class="citation" data-cites="https://doi.org/10.2905/a0df7a6f-49de-46ea-9bde-563437a6e2ba">(<a href="references.html#ref-https://doi.org/10.2905/a0df7a6f-49de-46ea-9bde-563437a6e2ba" role="doc-biblioref">Schiavina, Melchiorri, and Pesaresi 2023</a>)</span>.
+</p></li>
+<li><p>
+The Federal University of Rio Grande do Sul published the <span class="font-color"><strong>flood extent</strong></span> observed from the Skystat, Planet and WorldView-2 satellites and also validated through field surveys <span class="citation" data-cites="https://doi.org/10.5281/zenodo.13999016">(<a href="references.html#ref-https://doi.org/10.5281/zenodo.13999016" role="doc-biblioref">Possantti et al. 2024</a>)</span>.
+</p></li>
+<li><p>
+The <span class="font-color"><strong>road network</strong></span> is downloaded from GeoFabrik<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.
+</p></li>
+<li>The State Health Department shared the capacity of Intense Care Units (ICU) beds <span class="citation" data-cites="https://doi.org/10.7303/syn32211006.1">(<a href="references.html#ref-https://doi.org/10.7303/syn32211006.1" role="doc-biblioref">PCDaS 2022</a>)</span>, while the “Secretaria Estadual da Saúde/DGTI” published the <span class="font-color"><strong>healthcare facilities</strong></span> in Rio Grande do Sul with ICU beds using a <a href="https://iede.rs.gov.br/server/rest/services/SES/Hospitais_Leitos_UTI_RS/FeatureServer">WFS</a>.</li>
+</ul>
+<iframe width="780" height="500" src="data/media/import_data_v0.html" title="Quarto Documentation"></iframe>
+<div class="cell">
+<details>
+<summary>R code to create interactive map based on leaflet</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaflet.extras)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaflet)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">leaflet</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addTiles</span>()  <span class="sc">|&gt;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addProviderTiles</span>(<span class="st">"OpenStreetMap"</span>, <span class="at">group =</span> <span class="st">"OpenStreetMap"</span>)  <span class="sc">|&gt;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addProviderTiles</span>(<span class="st">"Esri.WorldImagery"</span>, <span class="at">group =</span> <span class="st">"Esri.WorldImagery"</span>)  <span class="sc">|&gt;</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addPolygons</span>(<span class="at">data=</span>municipalities_ghs_leaflet,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>                      <span class="at">weight =</span> <span class="dv">2</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>                      <span class="at">color =</span> <span class="st">"black"</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>                      <span class="at">fillOpacity =</span> <span class="dv">0</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>                      <span class="at">dashArray =</span> <span class="st">"3"</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>                      <span class="at">popup =</span> <span class="sc">~</span><span class="fu">paste0</span>( <span class="st">"&lt;b&gt;Municipality: &lt;/b&gt;"</span>, shapename, <span class="st">"&lt;br/&gt;"</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">"&lt;b&gt;Population affected: &lt;/b&gt;"</span>, Pop.Aff, <span class="st">"&lt;br/&gt;"</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">"&lt;b&gt;PIB per capita: &lt;/b&gt;"</span>, GDP, <span class="st">"&lt;br/&gt;"</span>),</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">group=</span> <span class="st">"Municipalities (CMA)"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addPolygons</span>(<span class="at">data=</span>urban_center_4326_core,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                    <span class="at">fillColor =</span> <span class="st">"yellow"</span>,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>                    <span class="at">opacity =</span> <span class="fl">0.2</span>,</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>                    <span class="at">weight =</span> <span class="dv">2</span>,</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>                    <span class="at">color =</span> <span class="st">"black"</span>,</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>                    <span class="at">dashArray =</span> <span class="st">"1"</span>,</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>                    <span class="at">group=</span> <span class="st">"Dense Urban Center Settlment"</span>,</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>                    <span class="at">popup =</span> <span class="sc">~</span><span class="fu">paste0</span>( <span class="st">"&lt;b&gt;Settlment ID: &lt;/b&gt;"</span>, gid, <span class="st">"&lt;br/&gt;"</span>,</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"&lt;b&gt;Population: &lt;/b&gt;"</span>, <span class="fu">round</span>(pop_2020), <span class="st">"&lt;br/&gt;"</span>,</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"&lt;b&gt;Building Surface (m2): &lt;/b&gt;"</span>, <span class="fu">round</span>(bu_m2_2020))) <span class="sc">|&gt;</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">addPolygons</span>(<span class="at">data=</span>flooding_simplified_porto_united,</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>                    <span class="at">fillColor =</span> <span class="st">"#dec8b7ff"</span>,</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>                    <span class="at">fillOpacity =</span> <span class="fl">0.6</span>,</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>                    <span class="at">weight =</span> <span class="dv">1</span>,</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>                    <span class="at">color =</span> <span class="st">"#4b2609"</span>,</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>                    <span class="at">dashArray =</span> <span class="st">"1"</span>,</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>                    <span class="at">group=</span> <span class="st">"Flood extent"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addCircles</span>(<span class="at">data=</span><span class="fu">filter</span>(hospital_bed_aux_leaflet, nat_jur_cat<span class="sc">==</span><span class="st">"Public"</span>),</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>                    <span class="at">radius=</span><span class="dv">10</span>,</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>                    <span class="at">weight=</span><span class="dv">15</span>,</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>                    <span class="at">opacity =</span> <span class="fl">0.6</span>,</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>                    <span class="at">color =</span> <span class="st">"#6da991ff"</span>,</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>                    <span class="at">popup=</span> <span class="sc">~</span><span class="fu">paste0</span>(<span class="st">"&lt;b&gt;Hospital: &lt;/b&gt;"</span>, stringr<span class="sc">::</span><span class="fu">str_to_title</span>(ds_cnes), <span class="st">"&lt;br/&gt;"</span>,</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"&lt;b&gt;Type Jur: &lt;/b&gt;"</span>, nat_jur_cat, <span class="st">"&lt;br/&gt;"</span>,</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"&lt;b&gt;Nature Jur: &lt;/b&gt;"</span>, stringr<span class="sc">::</span><span class="fu">str_to_title</span>(nm_razao_s), <span class="st">"&lt;br/&gt;"</span>,</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"&lt;b&gt;UCI Beds: &lt;/b&gt;"</span>, beds,<span class="st">"&lt;br/&gt;"</span>,</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"&lt;b&gt;Risk: &lt;/b&gt;"</span>, tp_risco),</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>                    <span class="at">group=</span><span class="st">"Hospital (public)"</span>)  <span class="sc">|&gt;</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addCircles</span>(<span class="at">data=</span><span class="fu">filter</span>(hospital_bed_aux_leaflet, nat_jur_cat<span class="sc">==</span><span class="st">"Private"</span>),</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>                    <span class="at">radius=</span><span class="dv">10</span>,</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>                    <span class="at">weight=</span><span class="dv">15</span>,</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>                    <span class="at">opacity =</span> <span class="fl">0.6</span>,</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>                    <span class="at">color =</span> <span class="st">"#3f98c3ff"</span>,</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>                    <span class="at">popup=</span> <span class="sc">~</span><span class="fu">paste0</span>(<span class="st">"&lt;b&gt;Hospital: &lt;/b&gt;"</span>, stringr<span class="sc">::</span><span class="fu">str_to_title</span>(ds_cnes), <span class="st">"&lt;br/&gt;"</span>,</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"&lt;b&gt;Type Jur: &lt;/b&gt;"</span>, nat_jur_cat, <span class="st">"&lt;br/&gt;"</span>,</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"&lt;b&gt;Nature Jur: &lt;/b&gt;"</span>, stringr<span class="sc">::</span><span class="fu">str_to_title</span>(nm_razao_s), <span class="st">"&lt;br/&gt;"</span>,</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"&lt;b&gt;UCI Beds: &lt;/b&gt;"</span>, beds,<span class="st">"&lt;br/&gt;"</span>,</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"&lt;b&gt;Risk: &lt;/b&gt;"</span>, tp_risco),</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>                    <span class="at">group=</span><span class="st">"Hospital (private)"</span>)   <span class="sc">|&gt;</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addRasterImage</span>(build_masked,</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>                    <span class="at">colors =</span> pal,</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>                    <span class="at">opacity =</span> <span class="fl">0.5</span>,</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>                    <span class="at">group=</span><span class="st">"Building density"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">addLayersControl</span>(</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>                    <span class="at">baseGroups =</span> <span class="fu">c</span>(<span class="st">"OpenStreetMap"</span>,</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Esri.WorldImagery"</span>),</span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>                    <span class="at">overlayGroups =</span> <span class="fu">c</span>(<span class="st">"Municipalities (CMA)"</span>,</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Hospital (public)"</span>,</span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Hospital (private)"</span>,</span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Dense Urban Center Settlment"</span>,</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Flood extent"</span>,</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Building density"</span>),</span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>                    <span class="at">options =</span> <span class="fu">layersControlOptions</span>(<span class="at">collapsed =</span> <span class="cn">FALSE</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">hideGroup</span>(<span class="fu">c</span>(<span class="st">"Dense Urban Center Settlment"</span>,</span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Building density"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 <section id="importing-data-into-postgresql" class="level2">
 <h2 class="anchored" data-anchor-id="importing-data-into-postgresql">Importing data into PostgreSQL</h2>
 </section>
@@ -271,6 +412,26 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="connecting-r-with-postgresql">Connecting R with PostgreSQL</h2>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-https://doi.org/10.7303/syn32211006.1" class="csl-entry" role="listitem">
+PCDaS. 2022. <span>“ETLCNES_SR.zip.”</span> Synapse. <a href="https://doi.org/10.7303/SYN32211006.1">https://doi.org/10.7303/SYN32211006.1</a>.
+</div>
+<div id="ref-https://doi.org/10.5281/zenodo.13999016" class="csl-entry" role="listitem">
+Possantti, Iporã, Ana Aguirre, Camila Alberti, Laura Azeredo, Mariana Barcelos, Fernando Becker, Mateus Camana, et al. 2024. <span>“Banco de Dados Das Cheias Na Região Hidrográfica Do Lago Guaíba Em Maio de 2024.”</span> Zenodo. <a href="https://doi.org/10.5281/ZENODO.13999016">https://doi.org/10.5281/ZENODO.13999016</a>.
+</div>
+<div id="ref-Runfola2020" class="csl-entry" role="listitem">
+Runfola, Daniel, Austin Anderson, Heather Baier, Matt Crittenden, Elizabeth Dowker, Sydney Fuhrig, Seth Goodman, et al. 2020. <span>“geoBoundaries: A Global Database of Political Administrative Boundaries.”</span> Edited by Wenwu Tang. <em>PLOS ONE</em> 15 (4): e0231866. <a href="https://doi.org/10.1371/journal.pone.0231866">https://doi.org/10.1371/journal.pone.0231866</a>.
+</div>
+<div id="ref-https://doi.org/10.2905/a0df7a6f-49de-46ea-9bde-563437a6e2ba" class="csl-entry" role="listitem">
+Schiavina, Marcello, Michele Melchiorri, and Martino Pesaresi. 2023. <span>“GHS-SMOD R2023A - GHS Settlement Layers, Application of the Degree of Urbanisation Methodology (Stage i) to GHS-POP R2023A and GHS-BUILT-s R2023A, Multitemporal (1975-2030).”</span> European Commission, Joint Research Centre (JRC). <a href="https://doi.org/10.2905/A0DF7A6F-49DE-46EA-9BDE-563437A6E2BA">https://doi.org/10.2905/A0DF7A6F-49DE-46EA-9BDE-563437A6E2BA</a>.
+</div>
+</div>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p><a href="https://download.geofabrik.de/south-america/brazil/sul.html#">https://download.geofabrik.de/south-america/brazil/sul.html#</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
 
 </main> <!-- /main -->

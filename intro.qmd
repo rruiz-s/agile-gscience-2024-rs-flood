@@ -1,7 +1,97 @@
 # Select AoI
 
-Work in progress, waiting for acceptance.
+The main objects of the research were the administrative boundaries from the municipalities, the flood extent, road network and hospitals. 
+
+* <p> geoBoundaries provided the <span class="font-color">**administrative units (ADM2)**</span> of Brazil [@Runfola2020]. We subset the data using 9 municipalities defined as the core metropolitan area of Rio Grande do Sul. The reason why we selected these municipalities is that they intersected with the dense urban center 1210 from the Global Human Settlement Layer [@https://doi.org/10.2905/a0df7a6f-49de-46ea-9bde-563437a6e2ba].</p>
+* <p> The Federal University of Rio Grande do Sul published the <span class="font-color">**flood extent**</span> observed from the Skystat, Planet and WorldView-2 satellites and also validated through field surveys [@https://doi.org/10.5281/zenodo.13999016].</p>
+* <p> The <span class="font-color">**road network**</span> is downloaded from GeoFabrik^[[https://download.geofabrik.de/south-america/brazil/sul.html#](https://download.geofabrik.de/south-america/brazil/sul.html#)]. </p>
+* The State Health Department shared the capacity of Intense Care Units (ICU) beds [@https://doi.org/10.7303/syn32211006.1], while the "Secretaria Estadual da Saúde/DGTI" published the <span class="font-color">**healthcare facilities**</span> in Rio Grande do Sul with ICU beds using a [WFS](https://iede.rs.gov.br/server/rest/services/SES/Hospitais_Leitos_UTI_RS/FeatureServer).
+
+```{=html}
+<iframe width="780" height="500" src="data/media/import_data_v0.html" title="Quarto Documentation"></iframe>
+```
+
+
+```{r}
+#| echo: true
+#| code-summary: "R code to create interactive map based on leaflet"
+#| eval: false
+
+library(leaflet.extras)
+library(leaflet)
+leaflet() |>
+  addTiles()  |>
+  addProviderTiles("OpenStreetMap", group = "OpenStreetMap")  |>
+  addProviderTiles("Esri.WorldImagery", group = "Esri.WorldImagery")  |>
+  addPolygons(data=municipalities_ghs_leaflet,
+                      weight = 2,
+                      color = "black",
+                      fillOpacity = 0,
+                      dashArray = "3",
+                      popup = ~paste0( "<b>Municipality: </b>", shapename, "<br/>",
+                                      "<b>Population affected: </b>", Pop.Aff, "<br/>",
+                                      "<b>PIB per capita: </b>", GDP, "<br/>"),
+                                      group= "Municipalities (CMA)") |>
+  addPolygons(data=urban_center_4326_core,
+                    fillColor = "yellow",
+                    opacity = 0.2,
+                    weight = 2,
+                    color = "black",
+                    dashArray = "1",
+                    group= "Dense Urban Center Settlment",
+                    popup = ~paste0( "<b>Settlment ID: </b>", gid, "<br/>",
+                    "<b>Population: </b>", round(pop_2020), "<br/>",
+                    "<b>Building Surface (m2): </b>", round(bu_m2_2020))) |>
+                    addPolygons(data=flooding_simplified_porto_united,
+                    fillColor = "#dec8b7ff",
+                    fillOpacity = 0.6,
+                    weight = 1,
+                    color = "#4b2609",
+                    dashArray = "1",
+                    group= "Flood extent") |>
+  addCircles(data=filter(hospital_bed_aux_leaflet, nat_jur_cat=="Public"),
+                    radius=10,
+                    weight=15,
+                    opacity = 0.6,
+                    color = "#6da991ff",
+                    popup= ~paste0("<b>Hospital: </b>", stringr::str_to_title(ds_cnes), "<br/>",
+                    "<b>Type Jur: </b>", nat_jur_cat, "<br/>",
+                    "<b>Nature Jur: </b>", stringr::str_to_title(nm_razao_s), "<br/>",
+                    "<b>UCI Beds: </b>", beds,"<br/>",
+                    "<b>Risk: </b>", tp_risco),
+                    group="Hospital (public)")  |>
+  addCircles(data=filter(hospital_bed_aux_leaflet, nat_jur_cat=="Private"),
+                    radius=10,
+                    weight=15,
+                    opacity = 0.6,
+                    color = "#3f98c3ff",
+                    popup= ~paste0("<b>Hospital: </b>", stringr::str_to_title(ds_cnes), "<br/>",
+                    "<b>Type Jur: </b>", nat_jur_cat, "<br/>",
+                    "<b>Nature Jur: </b>", stringr::str_to_title(nm_razao_s), "<br/>",
+                    "<b>UCI Beds: </b>", beds,"<br/>",
+                    "<b>Risk: </b>", tp_risco),
+                    group="Hospital (private)")   |>
+  addRasterImage(build_masked,
+                    colors = pal,
+                    opacity = 0.5,
+                    group="Building density") |>
+                    addLayersControl(
+                    baseGroups = c("OpenStreetMap",
+                    "Esri.WorldImagery"),
+                    overlayGroups = c("Municipalities (CMA)",
+                    "Hospital (public)",
+                    "Hospital (private)",
+                    "Dense Urban Center Settlment",
+                    "Flood extent",
+                    "Building density"),
+                    options = layersControlOptions(collapsed = FALSE)) |>
+                    hideGroup(c("Dense Urban Center Settlment",
+                    "Building density"))
+```
+
 
 ## Importing data into PostgreSQL
+
+
 
 ## Connecting R with PostgreSQL
