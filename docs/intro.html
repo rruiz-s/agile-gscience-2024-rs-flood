@@ -293,6 +293,11 @@ div.csl-indent {
   <ul>
   <li><a href="#importing-data-into-postgresql" id="toc-importing-data-into-postgresql" class="nav-link active" data-scroll-target="#importing-data-into-postgresql">Importing data into PostgreSQL</a></li>
   <li><a href="#connecting-r-with-postgresql" id="toc-connecting-r-with-postgresql" class="nav-link" data-scroll-target="#connecting-r-with-postgresql">Connecting R with PostgreSQL</a></li>
+  <li><a href="#data-wranging" id="toc-data-wranging" class="nav-link" data-scroll-target="#data-wranging">Data wranging</a>
+  <ul class="collapse">
+  <li><a href="#vector-data" id="toc-vector-data" class="nav-link" data-scroll-target="#vector-data">Vector data</a></li>
+  <li><a href="#raster-data" id="toc-raster-data" class="nav-link" data-scroll-target="#raster-data">Raster data</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -387,29 +392,217 @@ The <span class="font-color"><strong>road network</strong></span> is downloaded 
 <span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"&lt;b&gt;UCI Beds: &lt;/b&gt;"</span>, beds,<span class="st">"&lt;br/&gt;"</span>,</span>
 <span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"&lt;b&gt;Risk: &lt;/b&gt;"</span>, tp_risco),</span>
 <span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>                    <span class="at">group=</span><span class="st">"Hospital (private)"</span>)   <span class="sc">|&gt;</span></span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addRasterImage</span>(build_masked,</span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>                    <span class="at">colors =</span> pal,</span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>                    <span class="at">opacity =</span> <span class="fl">0.5</span>,</span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>                    <span class="at">group=</span><span class="st">"Building density"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">addLayersControl</span>(</span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>                    <span class="at">baseGroups =</span> <span class="fu">c</span>(<span class="st">"OpenStreetMap"</span>,</span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Esri.WorldImagery"</span>),</span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>                    <span class="at">overlayGroups =</span> <span class="fu">c</span>(<span class="st">"Municipalities (CMA)"</span>,</span>
-<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Hospital (public)"</span>,</span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Hospital (private)"</span>,</span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Dense Urban Center Settlment"</span>,</span>
-<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Flood extent"</span>,</span>
-<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Building density"</span>),</span>
-<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>                    <span class="at">options =</span> <span class="fu">layersControlOptions</span>(<span class="at">collapsed =</span> <span class="cn">FALSE</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">hideGroup</span>(<span class="fu">c</span>(<span class="st">"Dense Urban Center Settlment"</span>,</span>
-<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Building density"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addRasterImage</span>(building_density_local_aoi_4326_masked,</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>                    <span class="at">opacity =</span> <span class="fl">0.5</span>,</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>                    <span class="at">group=</span><span class="st">"Building density"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">addLayersControl</span>(</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>                    <span class="at">baseGroups =</span> <span class="fu">c</span>(<span class="st">"OpenStreetMap"</span>,</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Esri.WorldImagery"</span>),</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>                    <span class="at">overlayGroups =</span> <span class="fu">c</span>(<span class="st">"Municipalities (CMA)"</span>,</span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Hospital (public)"</span>,</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Hospital (private)"</span>,</span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Dense Urban Center Settlment"</span>,</span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Flood extent"</span>,</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Building density"</span>),</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>                    <span class="at">options =</span> <span class="fu">layersControlOptions</span>(<span class="at">collapsed =</span> <span class="cn">FALSE</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">hideGroup</span>(<span class="fu">c</span>(<span class="st">"Dense Urban Center Settlment"</span>,</span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Building density"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <section id="importing-data-into-postgresql" class="level2">
 <h2 class="anchored" data-anchor-id="importing-data-into-postgresql">Importing data into PostgreSQL</h2>
+<div class="cell">
+<details>
+<summary>Importing source data using ogr2ogr and shp2pgsql</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Urban Center to select core metropolitan area (2.514s)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">time</span> shp2pgsql <span class="at">-D</span> <span class="at">-I</span> <span class="at">-s</span> 54009:4326 GHS_SMOD_E2020_GLOBE_R2023A_54009_1000_UC_V2_0.shp agile_gis_2025_rs.urban_center_4326 <span class="kw">|</span> <span class="ex">psql</span> <span class="at">-p</span> 25432 <span class="at">-U</span> docker <span class="at">-d</span> gis  <span class="at">-h</span> localhost</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Hospitals (0.217s)</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="bu">time</span> ogr2ogr <span class="at">-f</span> PostgreSQL PG:<span class="st">"host=localhost port= 25432 user=docker password=docker dbname=gis schemas=agile_gis_2025_rs"</span> Hospitais_com_Leitos_de_UTIs_no_RS.geojson <span class="at">-nln</span> hospitals </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Administrative units (5.854s)</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="bu">time</span> ogr2ogr <span class="at">-f</span> PostgreSQL PG:<span class="st">"host=localhost port= 25432 user=docker password=docker dbname=gis schemas=agile_gis_2025_rs"</span> geoBoundaries-BRA-ADM2.geojson <span class="at">-nln</span> nuts</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#  Flood extent (1.008s)</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="bu">time</span> ogr2ogr <span class="at">-f</span> PostgreSQL PG:<span class="st">"host=localhost port= 25432 user=docker password=docker dbname=gis schemas=agile_gis_2025_rs"</span> rhguaiba_planetskysat_inundacao_obs_20240506.gpkg <span class="at">-nln</span> flooding_raw</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 </section>
 <section id="connecting-r-with-postgresql" class="level2">
 <h2 class="anchored" data-anchor-id="connecting-r-with-postgresql">Connecting R with PostgreSQL</h2>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DBI)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="do">## connect to PostgreSQL</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>connection <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbConnect</span>(RPostgres<span class="sc">::</span><span class="fu">Postgres</span>(),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">user=</span><span class="st">"docker"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                             <span class="at">password=</span><span class="st">"docker"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                             <span class="at">host=</span><span class="st">"localhost"</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                             <span class="at">dbname=</span><span class="st">"gis"</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                             <span class="at">port=</span><span class="dv">25432</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="do">## Connect to PostgreSQL to read CSV without defining in PostgreSQL</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tictoc)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">tic</span>()</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>etlcnes_hospital_selected <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/agile_giscience_2025_github/agile-gscience-2024-rs-flood/data/source_data/ETLCNES_SR_RS_21_12_t.csv"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>                          dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">c</span>(<span class="st">"CNES"</span>,<span class="st">"QTLEITP1"</span>,<span class="st">"QTLEITP2"</span>,<span class="st">"QTLEITP3"</span>,<span class="st">"NAT_JUR"</span>))</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="fu">toc</span>() <span class="co"># 54.361 sec elapsed</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="do">## Write table using PostgreSQL connection</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>DBI<span class="sc">::</span><span class="fu">dbWriteTable</span>(connection, DBI<span class="sc">::</span><span class="fu">Id</span>(<span class="at">schema=</span><span class="st">"agile_gis_2025_rs"</span>,<span class="at">table=</span><span class="st">"etlcnes_hospital_selected"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="data-wranging" class="level2">
+<h2 class="anchored" data-anchor-id="data-wranging">Data wranging</h2>
+<section id="vector-data" class="level3">
+<h3 class="anchored" data-anchor-id="vector-data">Vector data</h3>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">---- Dense urban center that intersects with Porto Alegre -&gt; ***Input for leaflet map***</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> urban_center_4326_core <span class="kw">AS</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    duc.<span class="op">*</span> </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    urban_center_4326 <span class="kw">AS</span> duc,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">SELECT</span> </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        <span class="op">*</span> </span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>     <span class="kw">FROM</span> </span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        nuts_shp </span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>     <span class="kw">WHERE</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        shapename <span class="op">=</span> <span class="st">'Porto Alegre'</span>) <span class="kw">AS</span> porto_alegre</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    st_intersects(</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        duc.geom,</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>        porto_alegre.geom);</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">--- 13.714 ms</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">--- Municipalities contained in the urban_center_4326</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span> </span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> municipalities_ghs <span class="kw">AS</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> porto_alegre_ghs <span class="kw">AS</span>(</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> </span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>       ghs.<span class="op">*</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>       urban_center_4326 <span class="kw">AS</span> ghs</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="kw">JOIN</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>       nuts </span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> </span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>       st_intersects(nuts.wkb_geometry, ghs.geom)</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> </span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>        nuts.shapename <span class="op">=</span> <span class="st">'Porto Alegre'</span>),</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>municipalities_ghs_geom <span class="kw">AS</span> (</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>        municipalities.<span class="op">*</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> </span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>        nuts <span class="kw">AS</span> municipalities,</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>        porto_alegre_ghs <span class="kw">AS</span> ghs</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>        st_intersects(municipalities.wkb_geometry, ghs.geom))</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> municipalities_ghs_geom; <span class="co">--- 19.062ms</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a><span class="co">---- Defined core metropolitan area of the municipalities_ghs</span></span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> core_metropolitan_area <span class="kw">AS</span></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> </span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>    st_union(wkb_geometry) <span class="kw">AS</span> geom</span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> </span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>municipalities_ghs; <span class="co">--- 15.382ms</span></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a><span class="co">---- Hospitals with ICU and their bed capacity -&gt; ***Input for leaflet map****</span></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span></span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> hospital_bed_aux_leaflet <span class="kw">AS</span></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> </span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>    h.fid,</span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>    <span class="fu">initcap</span>(h.ds_cnes) <span class="kw">AS</span> ds_cnes,</span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>    h.tp_risco,</span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>    h.nm_municip,</span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>    h.ds_bairro,</span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>    h.addr_ct,</span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>    h.geom_hospital,</span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>    h.distance,</span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>        aux_data.<span class="ot">"QTLEITP1"</span>,</span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>    aux_data.<span class="ot">"QTLEITP2"</span>,</span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>    aux_data.<span class="ot">"QTLEITP3"</span>,</span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>    <span class="ot">"QTLEITP1"</span><span class="op">+</span><span class="ot">"QTLEITP2"</span><span class="op">+</span><span class="ot">"QTLEITP3"</span> <span class="kw">AS</span> beds,</span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>    aux_data.<span class="ot">"NAT_JUR"</span>,</span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>    <span class="cf">CASE</span></span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>        <span class="cf">WHEN</span> <span class="ot">"NAT_JUR"</span> <span class="kw">IN</span> (<span class="dv">3069</span>,<span class="dv">3999</span>)</span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>        <span class="cf">THEN</span> <span class="st">'Private'</span> <span class="cf">ELSE</span> <span class="st">'Public'</span>  </span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>    <span class="cf">END</span> <span class="kw">AS</span> nat_jur_cat,</span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>    <span class="fu">initcap</span>(h.nm_razao_s) <span class="kw">AS</span> nm_razao_s</span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> </span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>    etlcnes_hospital_selected <span class="kw">AS</span> aux_data</span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span></span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a>    municipalities_ghs_hospitals <span class="kw">AS</span> h</span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a><span class="kw">ON</span></span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a>    h.cd_cnes <span class="op">=</span> aux_data.<span class="ot">"CNES"</span>; <span class="co">---- Execution Time: 43.901 ms</span></span>
+<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a><span class="co">--- Municipality of the AoI with additonial data from:</span></span>
+<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a><span class="co">------- A) IBGR: "https://www.ibge.gov.br/cidades-e-estados/rs/"</span></span>
+<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a><span class="co">--------B) DEE-SPGG: "https://mup.rs.gov.br/" </span></span>
+<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a><span class="co">--- -&gt; ***Input for leaflet map****</span></span>
+<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span></span>
+<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> municipalities_ghs_leaflet <span class="kw">AS</span></span>
+<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> shapename,</span>
+<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a>     wkb_geometry</span>
+<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> municipalities_ghs; <span class="co">----  8.511 ms</span></span>
+<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a><span class="co">--- Add new fields (A,B)</span></span>
+<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> municipalities_ghs_leaflet</span>
+<span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ADD</span> <span class="kw">COLUMN</span> <span class="ot">"Pop.Aff"</span> text,</span>
+<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ADD</span> <span class="kw">COLUMN</span> <span class="ot">"GDP"</span> text ; <span class="co">--- 0.012S execute time</span></span>
+<span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a><span class="co">--- Populate columns</span></span>
+<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span></span>
+<span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a>    <span class="kw">UPDATE</span> municipalities_ghs_leaflet</span>
+<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> <span class="ot">"Pop.Aff"</span> <span class="op">=</span> <span class="kw">data</span>.<span class="ot">"Pop.Aff"</span>,</span>
+<span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a>    <span class="ot">"GDP"</span> <span class="op">=</span> <span class="kw">data</span>.<span class="ot">"GDP"</span></span>
+<span id="cb4-100"><a href="#cb4-100" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> (<span class="kw">VALUES</span></span>
+<span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'Alvorada'</span>, <span class="st">'26K (29%)'</span>, <span class="st">'15K'</span>),</span>
+<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'Cachoeirinha'</span>, <span class="st">'12K (9%)'</span>, <span class="st">'49K'</span>),</span>
+<span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'Canoas'</span>, <span class="st">'157K (45%)'</span>, <span class="st">'63K'</span>),</span>
+<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'Esteio'</span>, <span class="st">'20K (26%)'</span>, <span class="st">'45K'</span>),</span>
+<span id="cb4-105"><a href="#cb4-105" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'Gravataí'</span>, <span class="st">'6K (2%)'</span>, <span class="st">'36K'</span>),</span>
+<span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'Nova Santa Rita'</span>, <span class="st">'7K (24%)'</span>, <span class="st">'81K'</span>),</span>
+<span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'Porto Alegre'</span>, <span class="st">'125K (9%)'</span>, <span class="st">'55K'</span>),</span>
+<span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'Sapucaia do Sul'</span>, <span class="st">'6K (4%)'</span>, <span class="st">'29K'</span>),</span>
+<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'Viamão'</span>, <span class="st">'2K (1%)'</span>, <span class="st">'17K'</span>)</span>
+<span id="cb4-110"><a href="#cb4-110" aria-hidden="true" tabindex="-1"></a>) <span class="kw">AS</span> <span class="kw">data</span>(shapename, <span class="ot">"Pop.Aff"</span>, <span class="ot">"GDP"</span>)</span>
+<span id="cb4-111"><a href="#cb4-111" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> municipalities_ghs_leaflet.shapename <span class="op">=</span> <span class="kw">data</span>.shapename; <span class="co">--- Execution Time: 0.596 ms</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="raster-data" class="level3">
+<h3 class="anchored" data-anchor-id="raster-data">Raster data</h3>
+<p>We used a subset of the GHS_BUILT_V available at origin and zenodo repository</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import data</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)  <span class="co"># vector files</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra) <span class="co"># raster files</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tictoc) <span class="co"># timing</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tic</span>()</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>buildings_density_global <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">'~/GHS_BUILT_V_E2020_GLOBE_R2023A_54009_100_V1_0.tif'</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">toc</span>() <span class="do">## 0.088 sec elapsed</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">tic</span>()</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>municipalities_ghs_transformed <span class="ot">&lt;-</span> municipalities_ghs <span class="sc">|&gt;</span> <span class="fu">st_transform</span>(<span class="fu">crs</span>(buildings_density_global))</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="fu">toc</span>() <span class="do">## 0.071 sec elapsed</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">tic</span>()</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>building_density_local_aoi <span class="ot">&lt;-</span> <span class="fu">crop</span>(buildings_density_global, municipalities_ghs_transformed)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="fu">toc</span>() <span class="do">## 0.074 sec elapsed</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="do">## Reproject for sampling</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="fu">tic</span>()</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>building_density_local_aoi_4326 <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">project</span>(building_density_local_aoi, <span class="fu">crs</span>(municipalities_ghs))</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="fu">toc</span>() <span class="do">### 0.595 sec elapsed</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="fu">tic</span>()</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>building_density_local_aoi_4326_masked <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">mask</span>(building_density_local_aoi_4326, municipalities_ghs) </span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="fu">toc</span>() <span class="do">## 0.089 sec elapsed</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>terra<span class="sc">::</span><span class="fu">writeRaster</span>(building_density_local_aoi_4326_masked, <span class="st">"GHS_BUILT_V_E2020_GLOBE_R2023A_4326_100_V1_0_RioGrandeDoSul.tif"</span>)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="do">### Reclassify values 0 with missing values (NA) to make them transparent in the leaflet map</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="fu">values</span>(building_density_local_aoi_4326_masked)[<span class="fu">values</span>(building_density_local_aoi_4326_masked) <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">=</span> <span class="cn">NA</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
@@ -426,6 +619,7 @@ Runfola, Daniel, Austin Anderson, Heather Baier, Matt Crittenden, Elizabeth Dowk
 Schiavina, Marcello, Michele Melchiorri, and Martino Pesaresi. 2023. <span>“GHS-SMOD R2023A - GHS Settlement Layers, Application of the Degree of Urbanisation Methodology (Stage i) to GHS-POP R2023A and GHS-BUILT-s R2023A, Multitemporal (1975-2030).”</span> European Commission, Joint Research Centre (JRC). <a href="https://doi.org/10.2905/A0DF7A6F-49DE-46EA-9BDE-563437A6E2BA">https://doi.org/10.2905/A0DF7A6F-49DE-46EA-9BDE-563437A6E2BA</a>.
 </div>
 </div>
+</section>
 </section>
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr>

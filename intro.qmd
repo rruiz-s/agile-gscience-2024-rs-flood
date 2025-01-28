@@ -71,8 +71,7 @@ leaflet() |>
                     "<b>UCI Beds: </b>", beds,"<br/>",
                     "<b>Risk: </b>", tp_risco),
                     group="Hospital (private)")   |>
-  addRasterImage(build_masked,
-                    colors = pal,
+  addRasterImage(building_density_local_aoi_4326_masked,
                     opacity = 0.5,
                     group="Building density") |>
                     addLayersControl(
@@ -92,6 +91,212 @@ leaflet() |>
 
 ## Importing data into PostgreSQL
 
-
+```{bash}
+#| eval: false
+#| echo: true
+#| code-summary: "Importing source data using ogr2ogr and shp2pgsql"
+# Urban Center to select core metropolitan area (2.514s)
+time shp2pgsql -D -I -s 54009:4326 GHS_SMOD_E2020_GLOBE_R2023A_54009_1000_UC_V2_0.shp agile_gis_2025_rs.urban_center_4326 | psql -p 25432 -U docker -d gis  -h localhost
+# Hospitals (0.217s)
+time ogr2ogr -f PostgreSQL PG:"host=localhost port= 25432 user=docker password=docker dbname=gis schemas=agile_gis_2025_rs" Hospitais_com_Leitos_de_UTIs_no_RS.geojson -nln hospitals 
+# Administrative units (5.854s)
+time ogr2ogr -f PostgreSQL PG:"host=localhost port= 25432 user=docker password=docker dbname=gis schemas=agile_gis_2025_rs" geoBoundaries-BRA-ADM2.geojson -nln nuts
+#  Flood extent (1.008s)
+time ogr2ogr -f PostgreSQL PG:"host=localhost port= 25432 user=docker password=docker dbname=gis schemas=agile_gis_2025_rs" rhguaiba_planetskysat_inundacao_obs_20240506.gpkg -nln flooding_raw
+```
 
 ## Connecting R with PostgreSQL
+
+```{r}
+#| echo: true
+#| eval: false
+library(DBI)
+library(dplyr)
+## connect to PostgreSQL
+connection <- DBI::dbConnect(RPostgres::Postgres(),
+                             user="docker",
+                             password="docker",
+                             host="localhost",
+                             dbname="gis",
+                             port=25432)
+## Connect to PostgreSQL to read CSV without defining in PostgreSQL
+library(tictoc)
+tic()
+etlcnes_hospital_selected <- read.csv("~/agile_giscience_2025_github/agile-gscience-2024-rs-flood/data/source_data/ETLCNES_SR_RS_21_12_t.csv") |> 
+                          dplyr::select(c("CNES","QTLEITP1","QTLEITP2","QTLEITP3","NAT_JUR"))
+toc() # 54.361 sec elapsed
+## Write table using PostgreSQL connection
+DBI::dbWriteTable(connection, DBI::Id(schema="agile_gis_2025_rs",table="etlcnes_hospital_selected"))
+```
+
+
+```{r}
+#| echo: false
+#| eval: false
+
+hospital_bed_aux_leaflet <- sf::st_read(connection, DBI::Id(schema="agile_gis_2025_rs" ,"hospital_bed_aux_leaflet"))
+municipalities_ghs_leaflet <- sf::st_read(connection, DBI::Id(schema="agile_gis_2025_rs" ,"municipalities_ghs_leaflet"))
+hospital_bed_aux_leaflet <- sf::st_read(connection, DBI::Id(schema="agile_gis_2025_rs" ,"hospital_bed_aux_leaflet"))
+hospital_bed_aux_leaflet <- sf::st_read(connection, DBI::Id(schema="agile_gis_2025_rs" ,"hospital_bed_aux_leaflet"))
+flooding_simplified_porto_united <- sf::st_read(connection, DBI::Id(schema="agile_gis_2025_rs" ,"flooding_simplified_porto_united"))
+urban_center_4326_core <- sf::st_read(connection, DBI::Id(schema="agile_gis_2025_rs" ,"urban_center_4326_core"))
+municipalities_ghs <- sf::st_read(connection, DBI::Id(schema="agile_gis_2025_rs" ,"municipalities_ghs"))
+```
+
+## Data wranging
+
+### Vector data
+
+```{sql}
+#| eval: false
+#| echo: true
+
+---- Dense urban center that intersects with Porto Alegre -> ***Input for leaflet map***
+EXPLAIN ANALYZE
+CREATE TABLE urban_center_4326_core AS
+SELECT 
+	duc.* 
+FROM 
+	urban_center_4326 AS duc,
+	(SELECT 
+		* 
+	 FROM 
+	 	nuts_shp 
+	 WHERE
+	 	shapename = 'Porto Alegre') AS porto_alegre
+WHERE
+	st_intersects(
+		duc.geom,
+		porto_alegre.geom);
+--- 13.714 ms
+
+--- Municipalities contained in the urban_center_4326
+EXPLAIN ANALYZE	
+CREATE TABLE municipalities_ghs AS
+WITH porto_alegre_ghs AS(
+    SELECT 
+       ghs.*
+    FROM
+       urban_center_4326 AS ghs
+    JOIN
+       nuts 
+    ON 
+       st_intersects(nuts.wkb_geometry, ghs.geom)
+    WHERE 
+        nuts.shapename = 'Porto Alegre'),
+municipalities_ghs_geom AS (
+	SELECT
+		municipalities.*
+	FROM 
+		nuts AS municipalities,
+		porto_alegre_ghs AS ghs
+	WHERE
+		st_intersects(municipalities.wkb_geometry, ghs.geom))
+	SELECT * FROM municipalities_ghs_geom; --- 19.062ms
+	
+---- Defined core metropolitan area of the municipalities_ghs
+EXPLAIN ANALYZE
+CREATE TABLE core_metropolitan_area AS
+SELECT 
+	st_union(wkb_geometry) AS geom
+FROM 
+municipalities_ghs; --- 15.382ms
+---- Hospitals with ICU and their bed capacity -> ***Input for leaflet map****
+
+
+EXPLAIN ANALYZE
+CREATE TABLE hospital_bed_aux_leaflet AS
+SELECT 
+	h.fid,
+	initcap(h.ds_cnes) AS ds_cnes,
+	h.tp_risco,
+	h.nm_municip,
+	h.ds_bairro,
+	h.addr_ct,
+	h.geom_hospital,
+	h.distance,
+		aux_data."QTLEITP1",
+	aux_data."QTLEITP2",
+	aux_data."QTLEITP3",
+	"QTLEITP1"+"QTLEITP2"+"QTLEITP3" AS beds,
+	aux_data."NAT_JUR",
+	CASE
+		WHEN "NAT_JUR" IN (3069,3999)
+		THEN 'Private' ELSE 'Public'  
+	END AS nat_jur_cat,
+	initcap(h.nm_razao_s) AS nm_razao_s
+FROM 
+	etlcnes_hospital_selected AS aux_data
+JOIN
+	municipalities_ghs_hospitals AS h
+ON
+	h.cd_cnes = aux_data."CNES"; ---- Execution Time: 43.901 ms
+	
+--- Municipality of the AoI with additonial data from:
+------- A) IBGR: "https://www.ibge.gov.br/cidades-e-estados/rs/"
+--------B) DEE-SPGG: "https://mup.rs.gov.br/" 
+--- -> ***Input for leaflet map****
+EXPLAIN ANALYZE
+CREATE TABLE municipalities_ghs_leaflet AS
+SELECT shapename,
+	 wkb_geometry
+FROM municipalities_ghs; ----  8.511 ms
+--- Add new fields (A,B)
+ALTER TABLE municipalities_ghs_leaflet
+	ADD COLUMN "Pop.Aff" text,
+	ADD COLUMN "GDP" text ; --- 0.012S execute time
+--- Populate columns
+EXPLAIN ANALYZE
+	UPDATE municipalities_ghs_leaflet
+SET "Pop.Aff" = data."Pop.Aff",
+    "GDP" = data."GDP"
+FROM (VALUES
+    ('Alvorada', '26K (29%)', '15K'),
+    ('Cachoeirinha', '12K (9%)', '49K'),
+    ('Canoas', '157K (45%)', '63K'),
+    ('Esteio', '20K (26%)', '45K'),
+    ('Gravataí', '6K (2%)', '36K'),
+    ('Nova Santa Rita', '7K (24%)', '81K'),
+    ('Porto Alegre', '125K (9%)', '55K'),
+    ('Sapucaia do Sul', '6K (4%)', '29K'),
+    ('Viamão', '2K (1%)', '17K')
+) AS data(shapename, "Pop.Aff", "GDP")
+WHERE municipalities_ghs_leaflet.shapename = data.shapename; --- Execution Time: 0.596 ms
+
+```
+
+
+### Raster data
+
+We used a subset of the GHS_BUILT_V available at origin and zenodo repository 
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Import data
+library(sf)  # vector files
+library(terra) # raster files
+library(tictoc) # timing
+tic()
+buildings_density_global <- terra::rast(
+  '~/GHS_BUILT_V_E2020_GLOBE_R2023A_54009_100_V1_0.tif')
+toc() ## 0.088 sec elapsed
+tic()
+municipalities_ghs_transformed <- municipalities_ghs |> st_transform(crs(buildings_density_global))
+toc() ## 0.071 sec elapsed
+tic()
+building_density_local_aoi <- crop(buildings_density_global, municipalities_ghs_transformed)
+toc() ## 0.074 sec elapsed
+## Reproject for sampling
+tic()
+building_density_local_aoi_4326 <- terra::project(building_density_local_aoi, crs(municipalities_ghs))
+toc() ### 0.595 sec elapsed
+tic()
+building_density_local_aoi_4326_masked <- terra::mask(building_density_local_aoi_4326, municipalities_ghs) 
+toc() ## 0.089 sec elapsed
+terra::writeRaster(building_density_local_aoi_4326_masked, "GHS_BUILT_V_E2020_GLOBE_R2023A_4326_100_V1_0_RioGrandeDoSul.tif")
+### Reclassify values 0 with missing values (NA) to make them transparent in the leaflet map
+values(building_density_local_aoi_4326_masked)[values(building_density_local_aoi_4326_masked) == 0] = NA
+```
+

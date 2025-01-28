@@ -312,7 +312,7 @@ div.csl-indent {
 <li><p>
 <span class="font-color"><strong>Obtain routable network</strong></span> created the two output post-disaster and pre-disaster network. Firstly, OpenRouteService is used to transform the OpenStreetMap data into a routable graph named pre-disaster network. Extracting the difference between the flood extent obtained in the previous lane with the pre-disaster network generated the post-disaster network. Both road networks are graphs, which allow to use the extension pgrotuing.</p></li>
 <li><p>
-<span class="font-color"><strong>Analysis centrality</strong> and resilience</span> is carried out calculating shortest paths with the inputs weighted and regular origin-destination. While calculating connectivity using the edge betweenness indicator provides results to answer the 1st and 2nd research question, calculating the lack of redundancy with alternative paths provides results to answer the third research question..</p></li>
+<span class="font-color"><strong>Analysis centrality and resilience</strong></span> is carried out calculating shortest paths with the inputs weighted and regular origin-destination. While calculating connectivity using the edge betweenness indicator provides results to answer the 1st and 2nd research question, calculating the lack of redundancy with alternative paths provides results to answer the third research question..</p></li>
 </ol>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -323,7 +323,7 @@ div.csl-indent {
 <section id="datasets" class="level2">
 <h2 class="anchored" data-anchor-id="datasets">Datasets</h2>
 <p>The table 1 summaries the initial data from which intermediate and final results are derived. The section link includes the origin of the data, so third parties to reuse. In addition, the public <a href="https://github.com/rruiz-s/agile-gscience-2024-rs-flood">github repository</a> with open data license also provide the data of the study.</p>
-<p>The total built-up volume weighted the sampling of the origin and destination and is accessible via the following DOI:<a href="https://human-settlement.emergency.copernicus.eu/ghs_buV2023.php">10.2905/AB2F107A-03CD-47A3-85E5-139D8EC63283</a>. The degree of urbanization determined the urban dense settlement analysed contained the 9 municipalities that comprises the studied area named core metropolitan area and is accessible via the following DOI:<a href="https://doi.org/10.2905/A0DF7A6F-49DE-46EA-9BDE-563437A6E2BA">10.2905/A0DF7A6F-49DE-46EA-9BDE-563437A6E2BA</a>.Similarly, the subset of the flood is derived from the cheias_rhguaiba_2024_db_v11.gpkg accesible in the <a href="https://doi.org/10.5281/zenodo.11164049">DOI:10.5281/zenodo.11164049</a>. For the hospitals, we used the dataset Hospitais_com_Leitos_de_UTIs_no_RS.geojson that included the bed capacity and is accessible via the DOI:<a href="https://doi.org/10.7303/syn32211006.1">10.7303/syn32211006.1</a>. The location of the healthcare facility is obtained using the <a href="https://iede.rs.gov.br/server/rest/services/SES/Hospitais_Leitos_UTI_RS/FeatureServer">WFS</a> provided by “Secretaria Estadual da Saúde/DGTI”</p>
+<p>The total built-up volume weighted the sampling of the origin and destination and is accessible via the following DOI:<a href="https://human-settlement.emergency.copernicus.eu/ghs_buV2023.php">10.2905/AB2F107A-03CD-47A3-85E5-139D8EC63283</a>. The degree of urbanization determined the urban dense settlement analysed contained the 9 municipalities that comprises the studied area named core metropolitan area and is accessible via the following DOI:<a href="https://doi.org/10.2905/A0DF7A6F-49DE-46EA-9BDE-563437A6E2BA">10.2905/A0DF7A6F-49DE-46EA-9BDE-563437A6E2BA</a>.Similarly, the subset of the flood is derived from the cheias_rhguaiba_2024_db_v11.gpkg accesible in the <a href="https://doi.org/10.5281/zenodo.11164049">DOI:10.5281/zenodo.11164049</a>. We also incorporated data from the Brazilian Institute of Geography and Statistics (IBGR) <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> to add the GPD of the municipalities or from the Economy and Statistics Department of Rio Grande do Sul State(DEE-SPGG) <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> about the population affected by the flood. For the hospitals, we used the dataset Hospitais_com_Leitos_de_UTIs_no_RS.geojson that included the bed capacity and is accessible via the DOI:<a href="https://doi.org/10.7303/syn32211006.1">10.7303/syn32211006.1</a>. The location of the healthcare facility is obtained using the <a href="https://iede.rs.gov.br/server/rest/services/SES/Hospitais_Leitos_UTI_RS/FeatureServer">WFS</a> provided by “Secretaria Estadual da Saúde/DGTI”.</p>
 <table class="table">
 <caption>Table 1: Original raw datasets</caption>
 <thead>
@@ -468,6 +468,13 @@ Belliard, Frederique, Rusne Sileryte, Anita Graser, Karl Broman, Marta Teperek, 
 </div>
 </section>
 </section>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p><a href="https://www.ibge.gov.br/cidades-e-estados/rs/">https://www.ibge.gov.br/cidades-e-estados/rs/</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p><a href="https://mup.rs.gov.br/">https://mup.rs.gov.br/</a><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
 
 </main> <!-- /main -->
