@@ -1,3 +1,22 @@
 # Analysis Centrality and Resilience
 
+
+This section describes the lane of the workflow that <span class="font-color">**analyse centrality and resilience**</span>. 
+
+* We <span class= "font-color">**transform into graph**</span> the road network from OSM using openrouteservice, which finally led to create the pre-disaster network. 
+* The flood extent is used to <span class="font-color"> **extract the difference**</span> with the pre-disaster network obtaining the post-disaster network graph. 
+
+![Fig.1 Flowchart](data/figures/obtaining_routable_network.svg)
+
+The pre-processing phase is finished providing the main objects of the study, the flood extent, municipalities, road network and hospitals. We used these objects in the centrality and accessibility study.
+## Regular OD
+
+## Weighted OD
+
+## Regular OD
+
+## Calculate connectivity
+
+## Calculate redundancy
+
 Work in progress, waiting for acceptance.

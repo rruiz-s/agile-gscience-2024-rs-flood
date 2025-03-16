@@ -6,6 +6,11 @@ book:
   title: "Centrality analysis on Rio Grande do Sul"
   author: "AA"
   date: "2025/01/01"
+  page-navigation: true
+  favicon: data/figures/agile_logo-370x206.png
+  sidebar:
+    logo: data/figures/agile_logo-370x206.png
+    search: true
   chapters:
     - index.qmd
     - part: intro.qmd

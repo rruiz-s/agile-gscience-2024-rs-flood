@@ -91,11 +91,13 @@ leaflet() |>
 
 ## Importing data into PostgreSQL
 
+
+
 ```{bash}
 #| eval: false
 #| echo: true
 #| code-summary: "Importing source data using ogr2ogr and shp2pgsql"
-# Urban Center to select core metropolitan area (2.514s)
+# Urban Center to select core metropolitan area (2.514s). Note: agile_gis_2025_rs is a created schema, by default, the schema public is install. In that case, remove "agile_gis_2025_rs"
 time shp2pgsql -D -I -s 54009:4326 GHS_SMOD_E2020_GLOBE_R2023A_54009_1000_UC_V2_0.shp agile_gis_2025_rs.urban_center_4326 | psql -p 25432 -U docker -d gis  -h localhost
 # Hospitals (0.217s)
 time ogr2ogr -f PostgreSQL PG:"host=localhost port= 25432 user=docker password=docker dbname=gis schemas=agile_gis_2025_rs" Hospitais_com_Leitos_de_UTIs_no_RS.geojson -nln hospitals 
@@ -104,6 +106,9 @@ time ogr2ogr -f PostgreSQL PG:"host=localhost port= 25432 user=docker password=d
 #  Flood extent (1.008s)
 time ogr2ogr -f PostgreSQL PG:"host=localhost port= 25432 user=docker password=docker dbname=gis schemas=agile_gis_2025_rs" rhguaiba_planetskysat_inundacao_obs_20240506.gpkg -nln flooding_raw
 ```
+
+Troubleshooting:
+When shp2pgsql failed to be located despite being install with postgis, we changed the user permissions in ubuntu to sucessfully find it. Similarly, make sure to be in the directory where the files are to find them. Alternatively, it is required to specifically indicate the file address.
 
 ## Connecting R with PostgreSQL
 
@@ -155,19 +160,19 @@ municipalities_ghs <- sf::st_read(connection, DBI::Id(schema="agile_gis_2025_rs"
 EXPLAIN ANALYZE
 CREATE TABLE urban_center_4326_core AS
 SELECT 
-	duc.* 
+    duc.* 
 FROM 
-	urban_center_4326 AS duc,
-	(SELECT 
-		* 
-	 FROM 
-	 	nuts_shp 
-	 WHERE
-	 	shapename = 'Porto Alegre') AS porto_alegre
+    urban_center_4326 AS duc,
+    (SELECT 
+        * 
+     FROM 
+        nuts 
+     WHERE
+        shapename = 'Porto Alegre') AS porto_alegre
 WHERE
-	st_intersects(
-		duc.geom,
-		porto_alegre.geom);
+    st_intersects(
+        duc.geom,
+        porto_alegre.wkb_geometry);	
 --- 13.714 ms
 
 --- Municipalities contained in the urban_center_4326
@@ -265,6 +270,8 @@ WHERE municipalities_ghs_leaflet.shapename = data.shapename; --- Execution Time:
 
 ```
 
+Troubleshooting:
+The new schema needed to be set with `sql SET search_path TO agile_gis_2025_rs, public;`. The name of the schema was agile_gis_2025_rs, while public allowed to find the postgis functions from the public schema. By doing this, the schema agile_gis_2025_rs accessed postgis and pgrouting functions handling geometries successfuly.   
 
 ### Raster data
 

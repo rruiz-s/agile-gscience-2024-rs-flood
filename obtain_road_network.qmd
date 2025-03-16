@@ -1,3 +1,86 @@
-# Obtain road network
+# Obtain road network using OSM data
 
-Work in progress, waiting for acceptance.
+```{r}
+#| echo: false
+#| include: false
+#| eval: false
+
+1+1
+```
+
+## Clipping network from Area of Interest (AOI)
+
+The following PostgreSQL created the command to extract the OpenStreetMap (OSM)
+network from our area of interest (AOI) using osmium. Firstly, the Global Human Settle-
+ment (GHS-SMOD) that intersected with Porto Alegre is selected as the AOI. Secondly,
+this GHS is used to dynamically generate the bounding box and command line required
+by osmium. 
+
+```{sql}
+#| echo: true
+#| eval: false
+
+--- The road network of the AOI is extracted as follows:
+--- 1.The GHS urban area that intersected with Porto Alegre city is selected
+WITH porto_alegre_ghs AS (
+    SELECT
+        ghs.*
+    FROM
+        urban_center_4326 AS ghs
+    JOIN
+        municipalities_ghs AS nuts
+    ON
+        st_intersects(nuts.wkb_geometry, ghs.geom)
+    WHERE
+        nuts.shapename='Porto Alegre'
+),
+--- 2. The Bounding box that contained the core metropolitan area that intersects with the GHS
+core_metropolitan_area_ghs AS (
+	SELECT 
+		st_union(wkb_geometry) AS core_geom
+	FROM 
+		nuts
+	JOIN 
+		porto_alegre_ghs
+	ON 
+		st_intersects(nuts.wkb_geometry,
+					  porto_alegre_ghs.geom)),
+--- 3. The Bounding box that contained the core metropolitan area is created
+    core_metropolitan_area_ghs_bbox AS (
+        SELECT
+            st_setsrid(st_extent(core_geom), 4326) AS geom_bbox
+        FROM
+            core_metropolitan_area_ghs
+    ),					  
+--- 3. An osmius command is generated using the core metropolitan area and its bounding box
+    core_metropolitan_bbox_osmium_command AS (
+        SELECT
+            ST_XMin(ST_SnapToGrid(geom_bbox, 0.0001)) AS min_lon,
+            ST_XMax(ST_SnapToGrid(geom_bbox, 0.0001)) AS max_lon,
+            ST_YMin(ST_SnapToGrid(geom_bbox, 0.0001)) AS min_lat,
+            ST_YMax(ST_SnapToGrid(geom_bbox, 0.0001)) AS max_lat
+        FROM
+            core_metropolitan_area_ghs_bbox)
+    SELECT
+        'osmium extract -b'
+        || min_lon || ',' || min_lat || ',' || max_lon || ',' || max_lat ||
+        ' sul-240501.osm.pbf -o porto_alegre_urban_center.osm.pbf'
+    AS osmium_command
+    FROM
+        core_metropolitan_bbox_osmium_command;
+
+```
+
+The result of the previous query returned the following command
+
+```{bash}
+#| eval: false
+#| echo: true
+
+osmium extract -b-51.2791,-30.1722,-50.9407,-29.8048 sul-240501.osm.pbf -o porto_alegre_urban_center.osm.pbf
+
+```
+
+The OSM network obtained with this osmium command was the road network input required for OpenRouteService (ORS) to generate a routable graph of the core metropolitan area of Porto Alegre instead of the entire Rio Grande do Sul network.
+
+We obtained the data from Geofabrik ^[[https://quarto.org/docs/authoring/markdown-basics.html#footnotes](https://quarto.org/docs/authoring/markdown-basics.html#footnotes)] raw directory index 

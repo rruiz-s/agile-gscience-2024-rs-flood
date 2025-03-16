@@ -1,3 +1,36 @@
 # Extract difference
 
-Work in progress, waiting for acceptance.
+```{r}
+#| eval: false
+#| echo: false
+#| include: false
+1+1
+```
+
+
+## Road in flood extent
+
+```{sql}
+#| eval: false
+#| echo: true
+
+CREATE TABLE porto_ghs_road_in AS
+  SELECT 
+      net.fid,
+  CASE
+    WHEN ST Contains(flood.the geom, net.the geom)
+    THEN net.the geom
+    ELSE st intersection(net.the_geom, flood.the geom)
+  END AS geom
+FROM
+  ghs_aoi_net_largest_net
+JOIN
+  flooding_cleaned_porto_ghs_municipalitie_flood
+ON st intersects(net.the geom, flood.the geom);
+
+```
+
+
+## Road on flood extent boundary
+
+## Road out from flood extent
