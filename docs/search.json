@@ -4,21 +4,30 @@
     "href": "index.html",
     "title": "Centrality analysis on Rio Grande do Sul",
     "section": "",
-    "text": "Data and Software Availability\nThis document is written following the Reproducibiltiy paper guidelines for the AGILE conference 2025 (Belliard et al. 2019) .The following flowchart explains the methodology to analyse the centrality and resilience of the road network and healthcare facilities in the core metropolitan area of Rio Grande do Sul."
+    "text": "Data and Software Availability\nThis document is written following the Reproducibiltiy paper guidelines for the AGILE conference 2025 (Belliard et al. 2019) .The following flowchart explains the methodology to analyse the centrality and resilience of the road network and healthcare facilities in the core metropolitan area of Rio Grande do Sul.",
+    "crumbs": [
+      "Data and Software Availability"
+    ]
   },
   {
     "objectID": "index.html#datasets",
     "href": "index.html#datasets",
     "title": "Centrality analysis on Rio Grande do Sul",
     "section": "Datasets",
-    "text": "Datasets\nThe table 1 summaries the initial data from which intermediate and final results are derived. The section link includes the origin of the data, so third parties to reuse. In addition, the public github repository with open data license also provide the data of the study.\nThe total built-up volume weighted the sampling of the origin and destination and is accessible via the following DOI:10.2905/AB2F107A-03CD-47A3-85E5-139D8EC63283. The degree of urbanization determined the urban dense settlement analysed contained the 9 municipalities that comprises the studied area named core metropolitan area and is accessible via the following DOI:10.2905/A0DF7A6F-49DE-46EA-9BDE-563437A6E2BA.Similarly, the subset of the flood is derived from the cheias_rhguaiba_2024_db_v11.gpkg accesible in the DOI:10.5281/zenodo.11164049. We also incorporated data from the Brazilian Institute of Geography and Statistics (IBGR) 1 to add the GPD of the municipalities or from the Economy and Statistics Department of Rio Grande do Sul State(DEE-SPGG) 2 about the population affected by the flood. For the hospitals, we used the dataset Hospitais_com_Leitos_de_UTIs_no_RS.geojson that included the bed capacity and is accessible via the DOI:10.7303/syn32211006.1. The location of the healthcare facility is obtained using the WFS provided by “Secretaria Estadual da Saúde/DGTI”.\n\nTable 1: Original raw datasets\n\n\nData\nDescription\nLink\n\n\n\n\nGHSL-Built-V\ntotal built-up volume in m³\nGHSL-Built-V\n\n\nGHSL-SMOD\nDegree of Urbanisation\nGHSL-SMOD\n\n\ncheias_rhguaiba_2024_db_v11.gpkg\nFlood extent obtained on the 29th April, 2024\nFlood extent\n\n\nETLCNES_SR_RS_21_12_t.csv\nIt includes ICU beds of healthcare facilities\nHospital data\n\n\nHospitais_com_Leitos_de_UTIs_no_RS.geojson\nIt includes healthcare facilities with ICU\nHospitals\n\n\ngeoBoundaries-BRA-ADM2\nIt contains subnational administrative boundaries in Brazil\nAdmiministrative units\n\n\nOpenStreetMap data\nIt represents the road network in the region of Sul, in Brazil\nOSM data"
+    "text": "Datasets\nThe table 1 summaries the initial data from which intermediate and final results are derived. The section link includes the origin of the data, so third parties to reuse. In addition, the public github repository with open data license also provide the data of the study.\nThe total built-up volume weighted the sampling of the origin and destination and is accessible via the following DOI:10.2905/AB2F107A-03CD-47A3-85E5-139D8EC63283. The degree of urbanization determined the urban dense settlement analysed contained the 9 municipalities that comprises the studied area named core metropolitan area and is accessible via the following DOI:10.2905/A0DF7A6F-49DE-46EA-9BDE-563437A6E2BA.Similarly, the subset of the flood is derived from the cheias_rhguaiba_2024_db_v11.gpkg accesible in the DOI:10.5281/zenodo.11164049. We also incorporated data from the Brazilian Institute of Geography and Statistics (IBGR) 1 to add the GPD of the municipalities or from the Economy and Statistics Department of Rio Grande do Sul State(DEE-SPGG) 2 about the population affected by the flood. For the hospitals, we used the dataset Hospitais_com_Leitos_de_UTIs_no_RS.geojson that included the bed capacity and is accessible via the DOI:10.7303/syn32211006.1. The location of the healthcare facility is obtained using the WFS provided by “Secretaria Estadual da Saúde/DGTI”.\n\nTable 1: Original raw datasets\n\n\nData\nDescription\nLink\n\n\n\n\nGHSL-Built-V\ntotal built-up volume in m³\nGHSL-Built-V\n\n\nGHSL-SMOD\nDegree of Urbanisation\nGHSL-SMOD\n\n\ncheias_rhguaiba_2024_db_v11.gpkg\nFlood extent obtained on the 29th April, 2024\nFlood extent\n\n\nETLCNES_SR_RS_21_12_t.csv\nIt includes ICU beds of healthcare facilities\nHospital data\n\n\nHospitais_com_Leitos_de_UTIs_no_RS.geojson\nIt includes healthcare facilities with ICU\nHospitals\n\n\ngeoBoundaries-BRA-ADM2\nIt contains subnational administrative boundaries in Brazil\nAdmiministrative units\n\n\nOpenStreetMap data\nIt represents the road network in the region of Sul, in Brazil\nOSM data",
+    "crumbs": [
+      "Data and Software Availability"
+    ]
   },
   {
     "objectID": "index.html#computational-workflows",
     "href": "index.html#computational-workflows",
     "title": "Centrality analysis on Rio Grande do Sul",
     "section": "Computational workflows",
-    "text": "Computational workflows\n\n\n\n\n\n\n\n\nLane\nActivity\nTime\n\n\n\n\nSelect Area of Interest (AOI)\nFlood extent:\nXs\n\n\nSelect Area of Interest (AOI)\nObtain road network\nXs\n\n\nObtain routable network\nTransform into graph: Convert into graph\nXs\n\n\nObtain routable network\nTransform into graph: Export geometry\nXs\n\n\nObtain routable network\nExtract difference: Subset flood extent\nXs\n\n\nObtain routable network\nExtract difference: Post-disaster network\nXs\n\n\nAnalyse centrality and resilience\nWeighted OD\nXs\n\n\nAnalyse centrality and resilience\nRegular OD\nXs\n\n\nAnalyse centrality and resilience\nCalculate connectivity: RQ1: C.Metropolitan scale\nXs\n\n\nAnalyse centrality and resilience\nCalculate connectivity: RQ2: Intracity Scale\nXs\n\n\nAnalyse centrality and resilience\nCalculate resilience: RQ3: Resilience-lack of redundancy\nXs\n\n\n\n\nComputational environment\n\nPostgreSQL 15.3 is used from the docker file container that includes the extension PostGIS 16-3.4-v2024.03.17 and pgrouting 3.5.\nThe libraries that includes the study analysis, visualization and creation of this documentation is available with the renv file.\nThe study required a CPU Intel(R) Core(TM) i5-4300U CPU @ 1.90 GHz with 15 Gi model HP EliteBook 820 G1.\nQGIS Version 3.38 ‘Grenoble’\nRStudio 2023.06.1+524 “Mountain Hydrangea”\nopenrouteservice:v8.0.0 used following the described docker file container instructions\n\n\n\nComputation steps\nThis Quarto book describes the detailed steps carried out for this use case in three chapters that contains the workflow described in the Fig 1 with 8 activities.\n\n\n\n\nBelliard, Frederique, Rusne Sileryte, Anita Graser, Karl Broman, Marta Teperek, Carlos Granell, Barbara Hofer, et al. 2019. “AGILE Reproducible Paper Guidelines.” https://doi.org/10.17605/OSF.IO/CB7Z8."
+    "text": "Computational workflows\n\n\n\n\n\n\n\n\nLane\nActivity\nTime\n\n\n\n\nSelect Area of Interest (AOI)\nFlood extent:\nXs\n\n\nSelect Area of Interest (AOI)\nObtain road network\nXs\n\n\nObtain routable network\nTransform into graph: Convert into graph\nXs\n\n\nObtain routable network\nTransform into graph: Export geometry\nXs\n\n\nObtain routable network\nExtract difference: Subset flood extent\nXs\n\n\nObtain routable network\nExtract difference: Post-disaster network\nXs\n\n\nAnalyse centrality and resilience\nWeighted OD\nXs\n\n\nAnalyse centrality and resilience\nRegular OD\nXs\n\n\nAnalyse centrality and resilience\nCalculate connectivity: RQ1: C.Metropolitan scale\nXs\n\n\nAnalyse centrality and resilience\nCalculate connectivity: RQ2: Intracity Scale\nXs\n\n\nAnalyse centrality and resilience\nCalculate resilience: RQ3: Resilience-lack of redundancy\nXs\n\n\n\n\nComputational environment\n\nPostgreSQL 15.3 is used from the docker file container that includes the extension PostGIS 16-3.4-v2024.03.17 and pgrouting 3.5.\nThe libraries that includes the study analysis, visualization and creation of this documentation is available with the renv file.\nThe study required a CPU Intel(R) Core(TM) i5-4300U CPU @ 1.90 GHz with 15 Gi model HP EliteBook 820 G1.\nQGIS Version 3.38 ‘Grenoble’\nRStudio 2023.06.1+524 “Mountain Hydrangea”\nopenrouteservice:v8.0.0 used following the described docker file container instructions\n\n\n\nComputation steps\nThis Quarto book describes the detailed steps carried out for this use case in three chapters that contains the workflow described in the Fig 1 with 8 activities.\n\n\n\n\nBelliard, Frederique, Rusne Sileryte, Anita Graser, Karl Broman, Marta Teperek, Carlos Granell, Barbara Hofer, et al. 2019. “AGILE Reproducible Paper Guidelines.” https://doi.org/10.17605/OSF.IO/CB7Z8.",
+    "crumbs": [
+      "Data and Software Availability"
+    ]
   },
   {
     "objectID": "intro.html#importing-data-into-postgresql",
@@ -32,63 +41,95 @@
     "href": "intro.html#connecting-r-with-postgresql",
     "title": "Select AoI",
     "section": "Connecting R with PostgreSQL",
-    "text": "Connecting R with PostgreSQL\n\n\nShow the code\nlibrary(DBI)\nlibrary(dplyr)\n## connect to PostgreSQL\nconnection &lt;- DBI::dbConnect(RPostgres::Postgres(),\n                             user=\"docker\",\n                             password=\"docker\",\n                             host=\"localhost\",\n                             dbname=\"gis\",\n                             port=25432)\n## Connect to PostgreSQL to read CSV without defining in PostgreSQL\nlibrary(tictoc)\ntic()\netlcnes_hospital_selected &lt;- read.csv(\"~/agile_giscience_2025_github/agile-gscience-2024-rs-flood/data/source_data/ETLCNES_SR_RS_21_12_t.csv\") |&gt; \n                          dplyr::select(c(\"CNES\",\"QTLEITP1\",\"QTLEITP2\",\"QTLEITP3\",\"NAT_JUR\"))\ntoc() # 54.361 sec elapsed\n## Write table using PostgreSQL connection\nDBI::dbWriteTable(connection, DBI::Id(schema=\"agile_gis_2025_rs\",table=\"etlcnes_hospital_selected\"))"
+    "text": "Connecting R with PostgreSQL\n\n\nShow the code\nlibrary(DBI)\nlibrary(dplyr)\n## connect to PostgreSQL\nconnection &lt;- DBI::dbConnect(RPostgres::Postgres(),\n                             user=\"docker\",\n                             password=\"docker\",\n                             host=\"localhost\",\n                             dbname=\"gis\",\n                             port=25432)\n## Connect to PostgreSQL to read CSV without defining in PostgreSQL\nlibrary(tictoc)\ntic()\netlcnes_hospital_selected &lt;- read.csv(\"~/agile_giscience_2025_github/agile-gscience-2024-rs-flood/data/source_data/ETLCNES_SR_RS_21_12_t.csv\") |&gt; \n                          dplyr::select(c(\"CNES\",\"QTLEITP1\",\"QTLEITP2\",\"QTLEITP3\",\"NAT_JUR\"))\ntoc() # 54.361 sec elapsed\n## Write table using PostgreSQL connection\nDBI::dbWriteTable(connection, DBI::Id(schema=\"agile_gis_2025_rs\",table=\"etlcnes_hospital_selected\"))",
+    "crumbs": [
+      "Select AoI"
+    ]
   },
   {
     "objectID": "intro.html#footnotes",
     "href": "intro.html#footnotes",
     "title": "Select AoI",
     "section": "",
-    "text": "https://download.geofabrik.de/south-america/brazil/sul.html#↩︎"
+    "text": "https://download.geofabrik.de/south-america/brazil/sul.html#↩︎",
+    "crumbs": [
+      "Select AoI"
+    ]
   },
   {
     "objectID": "detect_flood.html",
     "href": "detect_flood.html",
     "title": "1  Detect flood",
     "section": "",
-    "text": "Work in progress, waiting for acceptance."
+    "text": "1.1 Detect flood",
+    "crumbs": [
+      "Select AoI",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Detect flood</span>"
+    ]
   },
   {
     "objectID": "obtain_road_network.html",
     "href": "obtain_road_network.html",
-    "title": "2  Obtain road network",
+    "title": "2  Obtain road network using OSM data",
     "section": "",
-    "text": "Work in progress, waiting for acceptance."
+    "text": "2.1 Clipping network from Area of Interest (AOI)\nThe following PostgreSQL created the command to extract the OpenStreetMap (OSM) network from our area of interest (AOI) using osmium. Firstly, the Global Human Settle- ment (GHS-SMOD) that intersected with Porto Alegre is selected as the AOI. Secondly, this GHS is used to dynamically generate the bounding box and command line required by osmium.\nShow the code\n--- The road network of the AOI is extracted as follows:\n--- 1.The GHS urban area that intersected with Porto Alegre city is selected\nWITH porto_alegre_ghs AS (\n    SELECT\n        ghs.*\n    FROM\n        urban_center_4326 AS ghs\n    JOIN\n        municipalities_ghs AS nuts\n    ON\n        st_intersects(nuts.wkb_geometry, ghs.geom)\n    WHERE\n        nuts.shapename='Porto Alegre'\n),\n--- 2. The Bounding box that contained the core metropolitan area that intersects with the GHS\ncore_metropolitan_area_ghs AS (\n    SELECT \n        st_union(wkb_geometry) AS core_geom\n    FROM \n        nuts\n    JOIN \n        porto_alegre_ghs\n    ON \n        st_intersects(nuts.wkb_geometry,\n                      porto_alegre_ghs.geom)),\n--- 3. The Bounding box that contained the core metropolitan area is created\n    core_metropolitan_area_ghs_bbox AS (\n        SELECT\n            st_setsrid(st_extent(core_geom), 4326) AS geom_bbox\n        FROM\n            core_metropolitan_area_ghs\n    ),                    \n--- 3. An osmius command is generated using the core metropolitan area and its bounding box\n    core_metropolitan_bbox_osmium_command AS (\n        SELECT\n            ST_XMin(ST_SnapToGrid(geom_bbox, 0.0001)) AS min_lon,\n            ST_XMax(ST_SnapToGrid(geom_bbox, 0.0001)) AS max_lon,\n            ST_YMin(ST_SnapToGrid(geom_bbox, 0.0001)) AS min_lat,\n            ST_YMax(ST_SnapToGrid(geom_bbox, 0.0001)) AS max_lat\n        FROM\n            core_metropolitan_area_ghs_bbox)\n    SELECT\n        'osmium extract -b'\n        || min_lon || ',' || min_lat || ',' || max_lon || ',' || max_lat ||\n        ' sul-240501.osm.pbf -o porto_alegre_urban_center.osm.pbf'\n    AS osmium_command\n    FROM\n        core_metropolitan_bbox_osmium_command;\nThe result of the previous query returned the following command\nShow the code\nosmium extract -b-51.2791,-30.1722,-50.9407,-29.8048 sul-240501.osm.pbf -o porto_alegre_urban_center.osm.pbf\nThe OSM network obtained with this osmium command was the road network input required for OpenRouteService (ORS) to generate a routable graph of the core metropolitan area of Porto Alegre instead of the entire Rio Grande do Sul network.\nWe obtained the data from Geofabrik 1 raw directory index",
+    "crumbs": [
+      "Select AoI",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Obtain road network using OSM data</span>"
+    ]
   },
   {
     "objectID": "obtain_routable_network.html",
     "href": "obtain_routable_network.html",
     "title": "Obtain routable network",
     "section": "",
-    "text": "Work in progress, waiting for acceptance."
+    "text": "In this section that describes the lane of the workflow “Obtain routable networks”, we created the two outputs (a) pre-disaster network and (b) post-disaster network.\n\nWe transform into graph the road network from OSM using openrouteservice, which finally led to create the pre-disaster network.\nThe flood extent is used to  extract the difference with the pre-disaster network obtaining the post-disaster network graph.\n\n\n\n\nFig.1 Flowchart\n\n\nThe pre-processing phase is finished providing the main objects of the study, the flood extent, municipalities, road network and hospitals. We used these objects in the centrality and accessibility study.",
+    "crumbs": [
+      "Obtain routable network"
+    ]
   },
   {
     "objectID": "transform_into_graph.html",
     "href": "transform_into_graph.html",
     "title": "3  Transform into graph",
     "section": "",
-    "text": "Work in progress, waiting for acceptance."
+    "text": "4 Visualising OSM and ORS network\nShow the code\n## Load data\nors_network &lt;- st_read(postgresql_connection, DBI::Id(schema=\"agile_gis_2025_rs\", \"ors_raw_network\"))\nosm_network &lt;- st_read(postgresql_connection, layer=\"planet_osm_line\")\n## Create subset using a bounding box\nors_subset &lt;- ors_network |&gt; dplyr::filter(undrctI ==62320) |&gt; st_bbox()\nxrange &lt;- ors_subset$xmax - ors_subset$xmin\nyrange &lt;- ors_subset$ymax - ors_subset$ymin\n## Expand the bounding box\nors_subset[1] &lt;- ors_subset[1] + (1 * xrange) # xmin - left\nors_subset[3] &lt;- ors_subset[3] + (1 * xrange) # xmax - right\nors_subset[2] &lt;- ors_subset[2] - (2 * yrange) # ymin - bottom\nors_subset[4] &lt;- ors_subset[4] + (2 * yrange) # ymax - top\n## Convert bounding box into polygon\nors_subset_bbox &lt;- ors_subset %&gt;%  # \n  st_as_sfc() \n\nors_subset_bbox_manual &lt;- c(-51.215816,\n                                    -30.034622,\n                                    -51.206353,\n                                    -30.025891) names(ors_subset_bbox_manual) &lt;- c(\"xmin\",\"ymin\",\"xmax\",\"ymax\")\nbbox_manual &lt;- st_as_sfc(st_bbox(ors_subset_bbox_manual, crs=4326))\n## Use the polygon to subset the network\nsf_use_s2(FALSE)\nintersection_ors &lt;- sf::st_intersection(ors_network, bbox_manual)\nintersection_osm &lt;- sf::st_intersection(st_transform(osm_network,4326), bbox_manual)\n## Mapview maps\nlibrary(mapview)\nlibrary(leafpop)\nm1 &lt;- mapview(intersection_osm, \n              color=\"#6e93ff\",\n              layer.name =\"OpenStreetMap - Geometry\",\n              popup=leafpop::popupTable(intersection_osm, \n                               zcol=c(\"osm_id\",\"name\",\"way\")))\nm2 &lt;- mapview(intersection_ors,\n              color =\"#d50038\",\n              layer.name=\"OpenRouteService -Graph\",\n              popup=popupTable(intersection_ors))\nlibrary(leafsync)\nsync(m1,m2)",
+    "crumbs": [
+      "Obtain routable network",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Transform into graph</span>"
+    ]
   },
   {
     "objectID": "extract_difference.html",
     "href": "extract_difference.html",
     "title": "4  Extract difference",
     "section": "",
-    "text": "Work in progress, waiting for acceptance."
+    "text": "4.1 Road in flood extent\nShow the code\nCREATE TABLE porto_ghs_road_in AS\n  SELECT \n      net.fid,\n  CASE\n    WHEN ST Contains(flood.the geom, net.the geom)\n    THEN net.the geom\n    ELSE st intersection(net.the_geom, flood.the geom)\n  END AS geom\nFROM\n  ghs_aoi_net_largest_net\nJOIN\n  flooding_cleaned_porto_ghs_municipalitie_flood\nON st intersects(net.the geom, flood.the geom);",
+    "crumbs": [
+      "Obtain routable network",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Extract difference</span>"
+    ]
   },
   {
     "objectID": "analyse_centrality_resilience.html",
     "href": "analyse_centrality_resilience.html",
     "title": "Analysis Centrality and Resilience",
     "section": "",
-    "text": "Work in progress, waiting for acceptance."
+    "text": "Weighted OD",
+    "crumbs": [
+      "Analysis Centrality and Resilience"
+    ]
   },
   {
     "objectID": "od.html",
     "href": "od.html",
     "title": "5  Origin-Destination matrix",
     "section": "",
-    "text": "Work in progress, waiting for acceptance."
+    "text": "Work in progress, waiting for acceptance.",
+    "crumbs": [
+      "Analysis Centrality and Resilience",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Origin-Destination matrix</span>"
+    ]
   },
   {
     "objectID": "calculate_short_path.html",
@@ -123,20 +164,190 @@
     "href": "references.html",
     "title": "References",
     "section": "",
-    "text": "Belliard, Frederique, Rusne Sileryte, Anita Graser, Karl Broman, Marta\nTeperek, Carlos Granell, Barbara Hofer, et al. 2019. “AGILE\nReproducible Paper Guidelines.” https://doi.org/10.17605/OSF.IO/CB7Z8.\n\n\nPCDaS. 2022. “ETLCNES_SR.zip.” Synapse. https://doi.org/10.7303/SYN32211006.1.\n\n\nPossantti, Iporã, Ana Aguirre, Camila Alberti, Laura Azeredo, Mariana\nBarcelos, Fernando Becker, Mateus Camana, et al. 2024. “Banco de\nDados Das Cheias Na Região Hidrográfica Do Lago Guaíba Em Maio de\n2024.” Zenodo. https://doi.org/10.5281/ZENODO.13999016.\n\n\nRunfola, Daniel, Austin Anderson, Heather Baier, Matt Crittenden,\nElizabeth Dowker, Sydney Fuhrig, Seth Goodman, et al. 2020.\n“geoBoundaries: A Global Database of Political Administrative\nBoundaries.” Edited by Wenwu Tang. PLOS ONE 15 (4):\ne0231866. https://doi.org/10.1371/journal.pone.0231866.\n\n\nSchiavina, Marcello, Michele Melchiorri, and Martino Pesaresi. 2023.\n“GHS-SMOD R2023A - GHS Settlement Layers, Application of the\nDegree of Urbanisation Methodology (Stage i) to GHS-POP R2023A and\nGHS-BUILT-s R2023A, Multitemporal (1975-2030).” European\nCommission, Joint Research Centre (JRC). https://doi.org/10.2905/A0DF7A6F-49DE-46EA-9BDE-563437A6E2BA."
+    "text": "Belliard, Frederique, Rusne Sileryte, Anita Graser, Karl Broman, Marta\nTeperek, Carlos Granell, Barbara Hofer, et al. 2019. “AGILE\nReproducible Paper Guidelines.” https://doi.org/10.17605/OSF.IO/CB7Z8.\n\n\nPCDaS. 2022. “ETLCNES_SR.zip.” Synapse. https://doi.org/10.7303/SYN32211006.1.\n\n\nPossantti, Iporã, Ana Aguirre, Camila Alberti, Laura Azeredo, Mariana\nBarcelos, Fernando Becker, Mateus Camana, et al. 2024. “Banco de\nDados Das Cheias Na Região Hidrográfica Do Lago Guaíba Em Maio de\n2024.” Zenodo. https://doi.org/10.5281/ZENODO.13999016.\n\n\nRunfola, Daniel, Austin Anderson, Heather Baier, Matt Crittenden,\nElizabeth Dowker, Sydney Fuhrig, Seth Goodman, et al. 2020.\n“geoBoundaries: A Global Database of Political Administrative\nBoundaries.” Edited by Wenwu Tang. PLOS ONE 15 (4):\ne0231866. https://doi.org/10.1371/journal.pone.0231866.\n\n\nSchiavina, Marcello, Michele Melchiorri, and Martino Pesaresi. 2023.\n“GHS-SMOD R2023A - GHS Settlement Layers, Application of the\nDegree of Urbanisation Methodology (Stage i) to GHS-POP R2023A and\nGHS-BUILT-s R2023A, Multitemporal (1975-2030).” European\nCommission, Joint Research Centre (JRC). https://doi.org/10.2905/A0DF7A6F-49DE-46EA-9BDE-563437A6E2BA.",
+    "crumbs": [
+      "References"
+    ]
   },
   {
     "objectID": "intro.html#data-wranging",
     "href": "intro.html#data-wranging",
     "title": "Select AoI",
     "section": "Data wranging",
-    "text": "Data wranging\n\nVector data\n\n\nShow the code\n---- Dense urban center that intersects with Porto Alegre -&gt; ***Input for leaflet map***\nEXPLAIN ANALYZE\nCREATE TABLE urban_center_4326_core AS\nSELECT \n    duc.* \nFROM \n    urban_center_4326 AS duc,\n    (SELECT \n        * \n     FROM \n        nuts_shp \n     WHERE\n        shapename = 'Porto Alegre') AS porto_alegre\nWHERE\n    st_intersects(\n        duc.geom,\n        porto_alegre.geom);\n--- 13.714 ms\n\n--- Municipalities contained in the urban_center_4326\nEXPLAIN ANALYZE \nCREATE TABLE municipalities_ghs AS\nWITH porto_alegre_ghs AS(\n    SELECT \n       ghs.*\n    FROM\n       urban_center_4326 AS ghs\n    JOIN\n       nuts \n    ON \n       st_intersects(nuts.wkb_geometry, ghs.geom)\n    WHERE \n        nuts.shapename = 'Porto Alegre'),\nmunicipalities_ghs_geom AS (\n    SELECT\n        municipalities.*\n    FROM \n        nuts AS municipalities,\n        porto_alegre_ghs AS ghs\n    WHERE\n        st_intersects(municipalities.wkb_geometry, ghs.geom))\n    SELECT * FROM municipalities_ghs_geom; --- 19.062ms\n    \n---- Defined core metropolitan area of the municipalities_ghs\nEXPLAIN ANALYZE\nCREATE TABLE core_metropolitan_area AS\nSELECT \n    st_union(wkb_geometry) AS geom\nFROM \nmunicipalities_ghs; --- 15.382ms\n---- Hospitals with ICU and their bed capacity -&gt; ***Input for leaflet map****\n\n\nEXPLAIN ANALYZE\nCREATE TABLE hospital_bed_aux_leaflet AS\nSELECT \n    h.fid,\n    initcap(h.ds_cnes) AS ds_cnes,\n    h.tp_risco,\n    h.nm_municip,\n    h.ds_bairro,\n    h.addr_ct,\n    h.geom_hospital,\n    h.distance,\n        aux_data.\"QTLEITP1\",\n    aux_data.\"QTLEITP2\",\n    aux_data.\"QTLEITP3\",\n    \"QTLEITP1\"+\"QTLEITP2\"+\"QTLEITP3\" AS beds,\n    aux_data.\"NAT_JUR\",\n    CASE\n        WHEN \"NAT_JUR\" IN (3069,3999)\n        THEN 'Private' ELSE 'Public'  \n    END AS nat_jur_cat,\n    initcap(h.nm_razao_s) AS nm_razao_s\nFROM \n    etlcnes_hospital_selected AS aux_data\nJOIN\n    municipalities_ghs_hospitals AS h\nON\n    h.cd_cnes = aux_data.\"CNES\"; ---- Execution Time: 43.901 ms\n    \n--- Municipality of the AoI with additonial data from:\n------- A) IBGR: \"https://www.ibge.gov.br/cidades-e-estados/rs/\"\n--------B) DEE-SPGG: \"https://mup.rs.gov.br/\" \n--- -&gt; ***Input for leaflet map****\nEXPLAIN ANALYZE\nCREATE TABLE municipalities_ghs_leaflet AS\nSELECT shapename,\n     wkb_geometry\nFROM municipalities_ghs; ----  8.511 ms\n--- Add new fields (A,B)\nALTER TABLE municipalities_ghs_leaflet\n    ADD COLUMN \"Pop.Aff\" text,\n    ADD COLUMN \"GDP\" text ; --- 0.012S execute time\n--- Populate columns\nEXPLAIN ANALYZE\n    UPDATE municipalities_ghs_leaflet\nSET \"Pop.Aff\" = data.\"Pop.Aff\",\n    \"GDP\" = data.\"GDP\"\nFROM (VALUES\n    ('Alvorada', '26K (29%)', '15K'),\n    ('Cachoeirinha', '12K (9%)', '49K'),\n    ('Canoas', '157K (45%)', '63K'),\n    ('Esteio', '20K (26%)', '45K'),\n    ('Gravataí', '6K (2%)', '36K'),\n    ('Nova Santa Rita', '7K (24%)', '81K'),\n    ('Porto Alegre', '125K (9%)', '55K'),\n    ('Sapucaia do Sul', '6K (4%)', '29K'),\n    ('Viamão', '2K (1%)', '17K')\n) AS data(shapename, \"Pop.Aff\", \"GDP\")\nWHERE municipalities_ghs_leaflet.shapename = data.shapename; --- Execution Time: 0.596 ms\n\n\n\n\nRaster data\nWe used a subset of the GHS_BUILT_V available at origin and zenodo repository\n\n\nShow the code\n# Import data\nlibrary(sf)  # vector files\nlibrary(terra) # raster files\nlibrary(tictoc) # timing\ntic()\nbuildings_density_global &lt;- terra::rast(\n  '~/GHS_BUILT_V_E2020_GLOBE_R2023A_54009_100_V1_0.tif')\ntoc() ## 0.088 sec elapsed\ntic()\nmunicipalities_ghs_transformed &lt;- municipalities_ghs |&gt; st_transform(crs(buildings_density_global))\ntoc() ## 0.071 sec elapsed\ntic()\nbuilding_density_local_aoi &lt;- crop(buildings_density_global, municipalities_ghs_transformed)\ntoc() ## 0.074 sec elapsed\n## Reproject for sampling\ntic()\nbuilding_density_local_aoi_4326 &lt;- terra::project(building_density_local_aoi, crs(municipalities_ghs))\ntoc() ### 0.595 sec elapsed\ntic()\nbuilding_density_local_aoi_4326_masked &lt;- terra::mask(building_density_local_aoi_4326, municipalities_ghs) \ntoc() ## 0.089 sec elapsed\nterra::writeRaster(building_density_local_aoi_4326_masked, \"GHS_BUILT_V_E2020_GLOBE_R2023A_4326_100_V1_0_RioGrandeDoSul.tif\")\n### Reclassify values 0 with missing values (NA) to make them transparent in the leaflet map\nvalues(building_density_local_aoi_4326_masked)[values(building_density_local_aoi_4326_masked) == 0] = NA\n\n\n\n\n\n\nPCDaS. 2022. “ETLCNES_SR.zip.” Synapse. https://doi.org/10.7303/SYN32211006.1.\n\n\nPossantti, Iporã, Ana Aguirre, Camila Alberti, Laura Azeredo, Mariana Barcelos, Fernando Becker, Mateus Camana, et al. 2024. “Banco de Dados Das Cheias Na Região Hidrográfica Do Lago Guaíba Em Maio de 2024.” Zenodo. https://doi.org/10.5281/ZENODO.13999016.\n\n\nRunfola, Daniel, Austin Anderson, Heather Baier, Matt Crittenden, Elizabeth Dowker, Sydney Fuhrig, Seth Goodman, et al. 2020. “geoBoundaries: A Global Database of Political Administrative Boundaries.” Edited by Wenwu Tang. PLOS ONE 15 (4): e0231866. https://doi.org/10.1371/journal.pone.0231866.\n\n\nSchiavina, Marcello, Michele Melchiorri, and Martino Pesaresi. 2023. “GHS-SMOD R2023A - GHS Settlement Layers, Application of the Degree of Urbanisation Methodology (Stage i) to GHS-POP R2023A and GHS-BUILT-s R2023A, Multitemporal (1975-2030).” European Commission, Joint Research Centre (JRC). https://doi.org/10.2905/A0DF7A6F-49DE-46EA-9BDE-563437A6E2BA."
+    "text": "Data wranging\n\nVector data\n\n\nShow the code\n---- Dense urban center that intersects with Porto Alegre -&gt; ***Input for leaflet map***\nEXPLAIN ANALYZE\nCREATE TABLE urban_center_4326_core AS\nSELECT \n    duc.* \nFROM \n    urban_center_4326 AS duc,\n    (SELECT \n        * \n     FROM \n        nuts \n     WHERE\n        shapename = 'Porto Alegre') AS porto_alegre\nWHERE\n    st_intersects(\n        duc.geom,\n        porto_alegre.wkb_geometry); \n--- 13.714 ms\n\n--- Municipalities contained in the urban_center_4326\nEXPLAIN ANALYZE \nCREATE TABLE municipalities_ghs AS\nWITH porto_alegre_ghs AS(\n    SELECT \n       ghs.*\n    FROM\n       urban_center_4326 AS ghs\n    JOIN\n       nuts \n    ON \n       st_intersects(nuts.wkb_geometry, ghs.geom)\n    WHERE \n        nuts.shapename = 'Porto Alegre'),\nmunicipalities_ghs_geom AS (\n    SELECT\n        municipalities.*\n    FROM \n        nuts AS municipalities,\n        porto_alegre_ghs AS ghs\n    WHERE\n        st_intersects(municipalities.wkb_geometry, ghs.geom))\n    SELECT * FROM municipalities_ghs_geom; --- 19.062ms\n    \n---- Defined core metropolitan area of the municipalities_ghs\nEXPLAIN ANALYZE\nCREATE TABLE core_metropolitan_area AS\nSELECT \n    st_union(wkb_geometry) AS geom\nFROM \nmunicipalities_ghs; --- 15.382ms\n---- Hospitals with ICU and their bed capacity -&gt; ***Input for leaflet map****\n\n\nEXPLAIN ANALYZE\nCREATE TABLE hospital_bed_aux_leaflet AS\nSELECT \n    h.fid,\n    initcap(h.ds_cnes) AS ds_cnes,\n    h.tp_risco,\n    h.nm_municip,\n    h.ds_bairro,\n    h.addr_ct,\n    h.geom_hospital,\n    h.distance,\n        aux_data.\"QTLEITP1\",\n    aux_data.\"QTLEITP2\",\n    aux_data.\"QTLEITP3\",\n    \"QTLEITP1\"+\"QTLEITP2\"+\"QTLEITP3\" AS beds,\n    aux_data.\"NAT_JUR\",\n    CASE\n        WHEN \"NAT_JUR\" IN (3069,3999)\n        THEN 'Private' ELSE 'Public'  \n    END AS nat_jur_cat,\n    initcap(h.nm_razao_s) AS nm_razao_s\nFROM \n    etlcnes_hospital_selected AS aux_data\nJOIN\n    municipalities_ghs_hospitals AS h\nON\n    h.cd_cnes = aux_data.\"CNES\"; ---- Execution Time: 43.901 ms\n    \n--- Municipality of the AoI with additonial data from:\n------- A) IBGR: \"https://www.ibge.gov.br/cidades-e-estados/rs/\"\n--------B) DEE-SPGG: \"https://mup.rs.gov.br/\" \n--- -&gt; ***Input for leaflet map****\nEXPLAIN ANALYZE\nCREATE TABLE municipalities_ghs_leaflet AS\nSELECT shapename,\n     wkb_geometry\nFROM municipalities_ghs; ----  8.511 ms\n--- Add new fields (A,B)\nALTER TABLE municipalities_ghs_leaflet\n    ADD COLUMN \"Pop.Aff\" text,\n    ADD COLUMN \"GDP\" text ; --- 0.012S execute time\n--- Populate columns\nEXPLAIN ANALYZE\n    UPDATE municipalities_ghs_leaflet\nSET \"Pop.Aff\" = data.\"Pop.Aff\",\n    \"GDP\" = data.\"GDP\"\nFROM (VALUES\n    ('Alvorada', '26K (29%)', '15K'),\n    ('Cachoeirinha', '12K (9%)', '49K'),\n    ('Canoas', '157K (45%)', '63K'),\n    ('Esteio', '20K (26%)', '45K'),\n    ('Gravataí', '6K (2%)', '36K'),\n    ('Nova Santa Rita', '7K (24%)', '81K'),\n    ('Porto Alegre', '125K (9%)', '55K'),\n    ('Sapucaia do Sul', '6K (4%)', '29K'),\n    ('Viamão', '2K (1%)', '17K')\n) AS data(shapename, \"Pop.Aff\", \"GDP\")\nWHERE municipalities_ghs_leaflet.shapename = data.shapename; --- Execution Time: 0.596 ms\n\n\nTroubleshooting: The new schema needed to be set with sql SET search_path TO agile_gis_2025_rs, public;. The name of the schema was agile_gis_2025_rs, while public allowed to find the postgis functions from the public schema. By doing this, the schema agile_gis_2025_rs accessed postgis and pgrouting functions handling geometries successfuly.\n\n\nRaster data\nWe used a subset of the GHS_BUILT_V available at origin and zenodo repository\n\n\nShow the code\n# Import data\nlibrary(sf)  # vector files\nlibrary(terra) # raster files\nlibrary(tictoc) # timing\ntic()\nbuildings_density_global &lt;- terra::rast(\n  '~/GHS_BUILT_V_E2020_GLOBE_R2023A_54009_100_V1_0.tif')\ntoc() ## 0.088 sec elapsed\ntic()\nmunicipalities_ghs_transformed &lt;- municipalities_ghs |&gt; st_transform(crs(buildings_density_global))\ntoc() ## 0.071 sec elapsed\ntic()\nbuilding_density_local_aoi &lt;- crop(buildings_density_global, municipalities_ghs_transformed)\ntoc() ## 0.074 sec elapsed\n## Reproject for sampling\ntic()\nbuilding_density_local_aoi_4326 &lt;- terra::project(building_density_local_aoi, crs(municipalities_ghs))\ntoc() ### 0.595 sec elapsed\ntic()\nbuilding_density_local_aoi_4326_masked &lt;- terra::mask(building_density_local_aoi_4326, municipalities_ghs) \ntoc() ## 0.089 sec elapsed\nterra::writeRaster(building_density_local_aoi_4326_masked, \"GHS_BUILT_V_E2020_GLOBE_R2023A_4326_100_V1_0_RioGrandeDoSul.tif\")\n### Reclassify values 0 with missing values (NA) to make them transparent in the leaflet map\nvalues(building_density_local_aoi_4326_masked)[values(building_density_local_aoi_4326_masked) == 0] = NA\n\n\n\n\n\n\nPCDaS. 2022. “ETLCNES_SR.zip.” Synapse. https://doi.org/10.7303/SYN32211006.1.\n\n\nPossantti, Iporã, Ana Aguirre, Camila Alberti, Laura Azeredo, Mariana Barcelos, Fernando Becker, Mateus Camana, et al. 2024. “Banco de Dados Das Cheias Na Região Hidrográfica Do Lago Guaíba Em Maio de 2024.” Zenodo. https://doi.org/10.5281/ZENODO.13999016.\n\n\nRunfola, Daniel, Austin Anderson, Heather Baier, Matt Crittenden, Elizabeth Dowker, Sydney Fuhrig, Seth Goodman, et al. 2020. “geoBoundaries: A Global Database of Political Administrative Boundaries.” Edited by Wenwu Tang. PLOS ONE 15 (4): e0231866. https://doi.org/10.1371/journal.pone.0231866.\n\n\nSchiavina, Marcello, Michele Melchiorri, and Martino Pesaresi. 2023. “GHS-SMOD R2023A - GHS Settlement Layers, Application of the Degree of Urbanisation Methodology (Stage i) to GHS-POP R2023A and GHS-BUILT-s R2023A, Multitemporal (1975-2030).” European Commission, Joint Research Centre (JRC). https://doi.org/10.2905/A0DF7A6F-49DE-46EA-9BDE-563437A6E2BA.",
+    "crumbs": [
+      "Select AoI"
+    ]
   },
   {
     "objectID": "index.html#footnotes",
     "href": "index.html#footnotes",
     "title": "Centrality analysis on Rio Grande do Sul",
     "section": "",
-    "text": "https://www.ibge.gov.br/cidades-e-estados/rs/↩︎\nhttps://mup.rs.gov.br/↩︎"
+    "text": "https://www.ibge.gov.br/cidades-e-estados/rs/↩︎\nhttps://mup.rs.gov.br/↩︎",
+    "crumbs": [
+      "Data and Software Availability"
+    ]
+  },
+  {
+    "objectID": "intro.html",
+    "href": "intro.html",
+    "title": "Select AoI",
+    "section": "",
+    "text": "Importing data into PostgreSQL\nImporting source data using ogr2ogr and shp2pgsql\n# Urban Center to select core metropolitan area (2.514s). Note: agile_gis_2025_rs is a created schema, by default, the schema public is install. In that case, remove \"agile_gis_2025_rs\"\ntime shp2pgsql -D -I -s 54009:4326 GHS_SMOD_E2020_GLOBE_R2023A_54009_1000_UC_V2_0.shp agile_gis_2025_rs.urban_center_4326 | psql -p 25432 -U docker -d gis  -h localhost\n# Hospitals (0.217s)\ntime ogr2ogr -f PostgreSQL PG:\"host=localhost port= 25432 user=docker password=docker dbname=gis schemas=agile_gis_2025_rs\" Hospitais_com_Leitos_de_UTIs_no_RS.geojson -nln hospitals \n# Administrative units (5.854s)\ntime ogr2ogr -f PostgreSQL PG:\"host=localhost port= 25432 user=docker password=docker dbname=gis schemas=agile_gis_2025_rs\" geoBoundaries-BRA-ADM2.geojson -nln nuts\n#  Flood extent (1.008s)\ntime ogr2ogr -f PostgreSQL PG:\"host=localhost port= 25432 user=docker password=docker dbname=gis schemas=agile_gis_2025_rs\" rhguaiba_planetskysat_inundacao_obs_20240506.gpkg -nln flooding_raw\nTroubleshooting: When shp2pgsql failed to be located despite being install with postgis, we changed the user permissions in ubuntu to sucessfully find it. Similarly, make sure to be in the directory where the files are to find them. Alternatively, it is required to specifically indicate the file address.",
+    "crumbs": [
+      "Select AoI"
+    ]
+  },
+  {
+    "objectID": "transform_into_graph.html#creating-routable-network-for-pgrouting",
+    "href": "transform_into_graph.html#creating-routable-network-for-pgrouting",
+    "title": "3  Transform into graph",
+    "section": "7.1 Creating routable network for pgrouting",
+    "text": "7.1 Creating routable network for pgrouting\n\n\nEditing ORS network to be routable for pgrouting\nALTER TABLE ors_raw_network \n    ALTER COLUMN \"toId\" type bigint,\n    ALTER COLUMN \"fromId\" type bigint,\n    ALTER COLUMN \"id\" type bigint;\n\n\nSELECT pgr_createverticesTable('ors_raw_network',\nthe_geom:='geom',\nsource:='fromId',\ntarget:='toId');",
+    "crumbs": [
+      "Obtain routable network",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Transform into graph</span>"
+    ]
+  },
+  {
+    "objectID": "transform_into_graph.html#analysing-components",
+    "href": "transform_into_graph.html#analysing-components",
+    "title": "3  Transform into graph",
+    "section": "7.2 Analysing components",
+    "text": "7.2 Analysing components\n\n\nThe table aoi_net_componets classified all the components of the network for inspection\nCREATE TABLE aoi_net_components AS \n--- Classify the network by their components\nWITH ghs_aoi_net_component AS (\n    SELECT \n        *\n    FROM\n        pgr_strongComponents('SELECT\n                                    id,\n                                    \"fromId\" AS source,\n                                    \"toId\" AS target,\n                                    weight AS cost\n                                FROM\n                                    ors_raw_network')),\n--- Calculate the total length of each component\nghs_aoi_net_component_geom AS (\n    SELECT\n        net.*,\n        net_geom.geom\n    FROM\n        ghs_aoi_net_component AS net\n    JOIN\n        ors_raw_network AS net_geom\n    ON\n        net.node = net_geom.\"fromId\"),\n    all_component_net AS (\n                                SELECT\n                                    component,\n                                    st_union(geom) AS the_geom,\n                                    st_length(st_union(geom)::geography)::int AS length --- meters\n                                FROM\n                                    ghs_aoi_net_component_geom\n                                GROUP BY component\n                                ORDER BY length DESC)\nSELECT * FROM all_component_net;\n\n\n\n\n\nFig.1 Flowchart\n\n\n\n\ncomponents\nlibrary(ggplot2)\n# optional\ncomponent_analysis_network$quantile &lt;- ecdf(component_analysis_network$length)(component_analysis_network$length)\ncomponent_analysis_network$length_km &lt;- component_analysis_network$length/1000 \n\ncomponent_analysis_network$quantile_cat &lt;- \n  cut(component_analysis_network$length_km,\n      breaks= c(0,.027,.057,.114,10911,10911918), label=FALSE) # quantiles and largest network\n\n## original plot\np1 &lt;- ggplot(component_analysis_network, aes(length_km,\n                                             quantile,\n                                             color=factor(quantile_cat))) +\n      geom_point()\n\n## ggbreak plot without legend\nlibrary(ggbreak)\nlibrary(patchwork)\nlibrary(dplyr)  \ndf_geom &lt;-na.omit(component_analysis_network) %&gt;%\n        group_by(quantile_cat) %&gt;%\n        summarise(\n            quantile_length= sum(length_km)\n        )\ndf &lt;-  na.omit(component_analysis_network) %&gt;%\n        sf::st_drop_geometry() %&gt;%\n        group_by(quantile_cat) %&gt;%\n        summarise(\n            quantile_length= sum(length_km)\n        )\nlibrary(forcats)\nggplot(df, aes(x=quantile_cat, y=quantile_length), scale=4) +\n  geom_col(aes(fill=factor(quantile_cat))) +\n  scale_y_continuous(breaks=c(8,27,53)) +\n  expand_limits(y=11000) +\n  scale_y_break(c(282,10000), scale=2 , ticklabels = c(10000,10912)) +\n  scale_y_break(c(52,280), scale=2,ticklabels=c(52,281.2))  +\n    labs(\n      tag=\"Figure 2\",\n      fill= \"Components by quantiles\",\n    x=\"Quantiles\",\n    y=\"Sum of the network's length (km)\",\n    caption =\"Based on network's components obtained from pgrouting\"\n  ) +\n  scale_fill_manual(values= c(\"#a6cee3\", \"#1f78b4\", \"#b2df8a\", \"#33a02c\", \"#fc8d62\"),labels=c(\"Q5 (n=1)\",\n                              \"Q4 (n=645)\",\n                            \"Q3 (n=647)\",\n                              \"Q2 (n=632) \",\n                              \"Q1 (n=656)\")) +\n  coord_flip() +\n  theme_minimal() +\n  theme(legend.position = \"bottom\")\n\n\nMap\n\n\n\nCreating a map for visualization\n### Tidy component to be used as categorical variable\nlibrary(forcats)\ncomponent_analysis_network$component  &lt;- component_analysis_network$component |&gt; as.character() |&gt; as_factor()\n## Visualization\nlibrary(mapview)\nlibrary(leafpop)\nm1_net &lt;- df_geom |&gt;\n              dplyr::filter(quantile_cat==\"1\") |&gt;\n              mapview(layer.name = \"1st quantile\",\n                      lwd= 3,\n                      color=\"#66c2a5\",\n                       popup= popupTable( rename(df_geom[1,],\n                                                    Quantile=\"quantile_cat\",\n                                                    Total_length_km = \"quantile_length\"),\n                                        zcol=(c(\"Quantile\",\"Total_length_km\"))))\n\nm2_net &lt;- df_geom |&gt;\n              dplyr::filter(quantile_cat==\"2\") |&gt;\n              mapview(layer.name = \"2nd quantile\",\n                      lwd= 3,\n                      color=\"#1f78b4\",\n                       popup= popupTable( rename(df_geom[2,],\n                                                    Quantile=\"quantile_cat\",\n                                                    Total_length_km = \"quantile_length\"),\n                                        zcol=(c(\"Quantile\",\"Total_length_km\"))))\nm3_net &lt;- df_geom |&gt;\n              dplyr::filter(quantile_cat==\"3\") |&gt;\n              mapview(layer.name = \"3rd quantile\",\n                      lwd= 3,\n                      color=\"#b2df8a\",\n                       popup= popupTable( rename(df_geom[3,],\n                                                    Quantile=\"quantile_cat\",\n                                                    Total_length_km = \"quantile_length\"),\n                                        zcol=(c(\"Quantile\",\"Total_length_km\"))))\n\nm4_net &lt;- df_geom |&gt;\n              dplyr::filter(quantile_cat==\"4\") |&gt;\n              mapview(layer.name = \"4th quantile\",\n                      lwd= 3,\n                      color=\"#33a02c\",\n                       popup= popupTable( rename(df_geom[4,],\n                                                    Quantile=\"quantile_cat\",\n                                                    Total_length_km = \"quantile_length\"),\n                                        zcol=(c(\"Quantile\",\"Total_length_km\"))))\n\nm5_net &lt;- df_geom |&gt;\n              dplyr::filter(quantile_cat==\"5\") |&gt;\n              mapview(layer.name = \"5th quantile\",\n                      lwd= 0.5,\n                      color=\"#fc8d62\",\n                      popup= popupTable( rename(df_geom[5,],\n                                                    Quantile=\"quantile_cat\",\n                                                    Total_length_km = \"quantile_length\"),\n                                        zcol=(c(\"Quantile\",\"Total_length_km\"))))\n\nm1_net + m2_net + m3_net+  m4_net+m5_net",
+    "crumbs": [
+      "Obtain routable network",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Transform into graph</span>"
+    ]
+  },
+  {
+    "objectID": "transform_into_graph.html#selecting-largest-component",
+    "href": "transform_into_graph.html#selecting-largest-component",
+    "title": "3  Transform into graph",
+    "section": "6.3 Selecting largest component",
+    "text": "6.3 Selecting largest component\n\n\nThe table ghs_aoi_net_largest selected the largest components of the network\nCREATE TABLE ghs_aoi_net_largest AS\n--- Same as classifying the components in previous step\nWITH ghs_aoi_net_component AS (\n    SELECT \n        *\n    FROM\n        pgr_strongComponents('SELECT\n                                    id,\n                                    \"fromId\" AS source,\n                                    \"toId\" AS target,\n                                    weight AS cost\n                                FROM\n                                    ors_raw_network')),\n--- Similar as obtaining the length, although in this case the largest component of the network is selected\nghs_aoi_net_component_geom AS (\n    SELECT\n        net.*,\n        net_geom.geom\n    FROM\n        ghs_aoi_net_component AS net\n    JOIN\n        ors_raw_network AS net_geom\n    ON\n        net.node = net_geom.\"fromId\"),\n    largest_component_net AS (\n                                SELECT\n                                    component,\n                                    st_union(geom) AS the_geom,\n                                    st_length(st_union(geom)::geography)::int AS length\n                                FROM\n                                    ghs_aoi_net_component_geom\n                                GROUP BY component\n                                ORDER BY length DESC\n                                LIMIT 1),\n    net_largest_component_network_ghs_aoi AS (\n                        SELECT\n                        *\n                        FROM\n                            ghs_aoi_net_component,\n                            largest_component_net\n                        WHERE\n                            ghs_aoi_net_component.component = largest_component_net.component)\n                        SELECT\n                            net_multi_component.*\n                        FROM\n                            ors_raw_network AS net_multi_component,\n                            net_largest_component_network_ghs_aoi AS net_largest_component\n                        WHERE \n                            net_multi_component.\"fromId\" IN (net_largest_component.node);",
+    "crumbs": [
+      "Obtain routable network",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Transform into graph</span>"
+    ]
+  },
+  {
+    "objectID": "transform_into_graph.html#visualising-largest-component",
+    "href": "transform_into_graph.html#visualising-largest-component",
+    "title": "3  Transform into graph",
+    "section": "7.3 Visualising largest component",
+    "text": "7.3 Visualising largest component\n\n\nThe table ghs_aoi_net_largest selected the largest components of the network\nCREATE TABLE ghs_aoi_net_largest AS\n--- Same as classifying the components in previous step\nWITH ghs_aoi_net_component AS (\n    SELECT \n        *\n    FROM\n        pgr_strongComponents('SELECT\n                                    id,\n                                    \"fromId\" AS source,\n                                    \"toId\" AS target,\n                                    weight AS cost\n                                FROM\n                                    ors_raw_network')),\n--- Similar as obtaining the length, although in this case the largest component of the network is selected\nghs_aoi_net_component_geom AS (\n    SELECT\n        net.*,\n        net_geom.geom\n    FROM\n        ghs_aoi_net_component AS net\n    JOIN\n        ors_raw_network AS net_geom\n    ON\n        net.node = net_geom.\"fromId\"),\n    largest_component_net AS (\n                                SELECT\n                                    component,\n                                    st_union(geom) AS the_geom,\n                                    st_length(st_union(geom)::geography)::int AS length\n                                FROM\n                                    ghs_aoi_net_component_geom\n                                GROUP BY component\n                                ORDER BY length DESC\n                                LIMIT 1),\n    net_largest_component_network_ghs_aoi AS (\n                        SELECT\n                        *\n                        FROM\n                            ghs_aoi_net_component,\n                            largest_component_net\n                        WHERE\n                            ghs_aoi_net_component.component = largest_component_net.component)\n                        SELECT\n                            net_multi_component.*\n                        FROM\n                            ors_raw_network AS net_multi_component,\n                            net_largest_component_network_ghs_aoi AS net_largest_component\n                        WHERE \n                            net_multi_component.\"fromId\" IN (net_largest_component.node);",
+    "crumbs": [
+      "Obtain routable network",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Transform into graph</span>"
+    ]
+  },
+  {
+    "objectID": "obtain_road_network.html#visualising-osm-data",
+    "href": "obtain_road_network.html#visualising-osm-data",
+    "title": "2  Obtain road network using OSM data",
+    "section": "2.2 Visualising OSM data",
+    "text": "2.2 Visualising OSM data",
+    "crumbs": [
+      "Select AoI",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Obtain road network using OSM data</span>"
+    ]
+  },
+  {
+    "objectID": "obtain_road_network.html#footnotes",
+    "href": "obtain_road_network.html#footnotes",
+    "title": "2  Obtain road network using OSM data",
+    "section": "",
+    "text": "https://quarto.org/docs/authoring/markdown-basics.html#footnotes↩︎",
+    "crumbs": [
+      "Select AoI",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Obtain road network using OSM data</span>"
+    ]
+  },
+  {
+    "objectID": "transform_into_graph.html#footnotes",
+    "href": "transform_into_graph.html#footnotes",
+    "title": "3  Transform into graph",
+    "section": "",
+    "text": "https://giscience.github.io/openrouteservice/run-instance/running-with-docker↩︎",
+    "crumbs": [
+      "Obtain routable network",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Transform into graph</span>"
+    ]
+  },
+  {
+    "objectID": "analyse_centrality_resilience.html#regular-od",
+    "href": "analyse_centrality_resilience.html#regular-od",
+    "title": "Analysis Centrality and Resilience",
+    "section": "Regular OD",
+    "text": "Regular OD",
+    "crumbs": [
+      "Analysis Centrality and Resilience"
+    ]
+  },
+  {
+    "objectID": "analyse_centrality_resilience.html#calculate-connectivity",
+    "href": "analyse_centrality_resilience.html#calculate-connectivity",
+    "title": "Analysis Centrality and Resilience",
+    "section": "Calculate connectivity",
+    "text": "Calculate connectivity",
+    "crumbs": [
+      "Analysis Centrality and Resilience"
+    ]
+  },
+  {
+    "objectID": "analyse_centrality_resilience.html#calculate-redundancy",
+    "href": "analyse_centrality_resilience.html#calculate-redundancy",
+    "title": "Analysis Centrality and Resilience",
+    "section": "Calculate redundancy",
+    "text": "Calculate redundancy\nWork in progress, waiting for acceptance.",
+    "crumbs": [
+      "Analysis Centrality and Resilience"
+    ]
+  },
+  {
+    "objectID": "detect_flood.html#obtain-road-network",
+    "href": "detect_flood.html#obtain-road-network",
+    "title": "1  Detect flood",
+    "section": "1.2 Obtain road network",
+    "text": "1.2 Obtain road network\nWork in progress, waiting for acceptance.",
+    "crumbs": [
+      "Select AoI",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Detect flood</span>"
+    ]
+  },
+  {
+    "objectID": "detect_flood.html#footnotes",
+    "href": "detect_flood.html#footnotes",
+    "title": "1  Detect flood",
+    "section": "",
+    "text": "https://blog.cleverelephant.ca/2019/11/subdivide.html↩︎\nhttps://icarto.es/en/improve-performance-making-the-difference-between-two-layers-with-postgis/↩︎\nhttps://trac.osgeo.org/postgis/wiki/UsersWikiBufferCoast↩︎\nhttps://cdn2.hubspot.net/hubfs/2283855/PostGIS%20Day%202019%20-%20Overview.pdf↩︎",
+    "crumbs": [
+      "Select AoI",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Detect flood</span>"
+    ]
+  },
+  {
+    "objectID": "extract_difference.html#road-on-flood-extent-boundary",
+    "href": "extract_difference.html#road-on-flood-extent-boundary",
+    "title": "4  Extract difference",
+    "section": "4.2 Road on flood extent boundary",
+    "text": "4.2 Road on flood extent boundary",
+    "crumbs": [
+      "Obtain routable network",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Extract difference</span>"
+    ]
+  },
+  {
+    "objectID": "extract_difference.html#road-out-from-flood-extent",
+    "href": "extract_difference.html#road-out-from-flood-extent",
+    "title": "4  Extract difference",
+    "section": "4.3 Road out from flood extent",
+    "text": "4.3 Road out from flood extent",
+    "crumbs": [
+      "Obtain routable network",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Extract difference</span>"
+    ]
   }
 ]
