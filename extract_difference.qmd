@@ -7,8 +7,8 @@
 1+1
 ```
 
-
-## Road in flood extent
+## Multi-step approach
+### Road in flood extent
 
 ```{sql}
 #| eval: false
@@ -16,21 +16,258 @@
 
 CREATE TABLE porto_ghs_road_in AS
   SELECT 
-      net.fid,
+      net.id,
   CASE
-    WHEN ST Contains(flood.the geom, net.the geom)
-    THEN net.the geom
-    ELSE st intersection(net.the_geom, flood.the geom)
+    WHEN ST_Contains(flood.geom, net.geom)
+    THEN net.geom
+    ELSE st_intersection(net.geom, flood.geom)
   END AS geom
 FROM
-  ghs_aoi_net_largest_net
+  ghs_aoi_net_largest AS net
 JOIN
-  flooding_cleaned_porto_ghs_municipalitie_flood
-ON st intersects(net.the geom, flood.the geom);
+  flooding_cleaned_porto_union AS flood
+ON st_intersects(net.geom, flood.geom);
 
 ```
 
 
-## Road on flood extent boundary
+### Road out from flood extent
 
-## Road out from flood extent
+```{sql}
+#| eval: false
+#| echo: true
+
+--- 2) Network outside the flooding mask
+CREATE TABLE porto_ghs_road_out AS
+SELECT 
+  net.*
+FROM 
+  ghs_aoi_net_largest AS net
+WHERE 
+  net.id NOT IN (SELECT 
+  				            	id
+                  FROM 
+                        porto_ghs_road_in);
+
+```
+
+
+### Road on the flood extent boundary
+
+```{sql}
+#| eval: false
+#| echo: true
+
+
+CREATE TABLE porto_ghs_alegre_boundary AS
+WITH exterior_flood AS (
+SELECT
+	ST_ExteriorRing((ST_dump(union_geom)).geom) AS geom
+FROM
+	(
+	SELECT
+		ST_Union(flood.geom) AS union_geom
+	FROM
+		flooding_cleaned_porto AS flood
+	) AS subquery
+)
+SELECT 
+	net."id",
+	CASE
+		WHEN NOT ST_Contains(flood.geom, net.geom)
+		THEN net.geom
+		ELSE st_intersection(net.geom, flood.geom)
+	END AS geom,
+		net."toId",
+		net."fromId",
+		weight,
+		"undrctI",
+		"bdrctId"
+FROM
+	ghs_aoi_net_largest AS net
+JOIN
+	exterior_flood AS flood
+	ON
+	st_intersects(net.geom, flood.geom);
+	
+
+```
+
+```{sql}
+#| echo: true
+#| eval: false
+
+CREATE TABLE difference_outside_boundary AS
+SELECT
+    net.id,
+    net."toId",
+    net."fromId",
+    weight,
+    net."undrctI",
+    net."bdrctId",
+    st_difference(net.geom, flood.geom) AS geom
+FROM 
+    porto_ghs_alegre_boundary AS net,
+    flooding_cleaned_porto_union AS flood;
+```
+
+```{sql}
+#| echo: true
+#| eval: false
+#| code-summary: Create post-disaster network
+
+CREATE TABLE ghs_aoi_net_largest_post AS
+SELECT
+	id,
+	geom,
+	"toId",
+	"fromId",
+	weight,
+	"undrctI",
+	"bdrctId"
+FROM
+  porto_ghs_road_out
+UNION
+SELECT 
+	id,
+	geom,
+	"toId",
+	"fromId",
+	weight,
+	"undrctI",
+	"bdrctId"
+FROM 
+  difference_outside_boundary;
+```
+
+## Visualiza post-disaster network and each step
+
+Note: Important to use the united flood extent at the end, after using the subdivided for st_difference. Also mention the order of the columns
+
+
+```{=html}
+<iframe width="780" height="500" src="data/media/extract_post_network.html" title="Multi-step"></iframe>
+```
+
+
+```{r}
+#| eval: false
+#| echo: true
+#| code-summary: Visualization of the multi-step approach of the network 
+
+# Select subset to quick visualization in the website
+library(raster)
+bounding_box_subset <-as(raster::extent(-51.248323,-51.092702,-30.048948,-29.947103),
+                  "SpatialPolygons") 
+proj4string(bounding_box_subset) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
+bounding_box_subset <- bounding_box_subset |> sf::st_as_sfc()
+# Flood extent 
+flooding_cleaned_porto_union <- sf::st_read(connection,
+                                    DBI::Id(
+                                            schema="agile_gis_2025_rs",
+                                            table="flooding_cleaned_porto_union"))
+sf::sf_use_s2(FALSE) # This simplify the representation, we allowed it for visualization purpose.
+flooding_cleaned_porto_union_subset <- sf::st_intersection(flooding_cleaned_porto_union,
+                                                           bounding_box_subset)
+## Read Road in flood extent
+porto_ghs_road_in <- sf::st_read(connection,
+                                    DBI::Id(
+                                            schema="agile_gis_2025_rs",
+                                            table="porto_ghs_road_in"))
+## Subset
+porto_ghs_road_in_subset <- sf::st_intersection(porto_ghs_road_in,
+                                                bounding_box_subset) |> 
+                                              rename(geometry=geom)
+## Read Road out from flood extent
+porto_ghs_road_out <- sf::st_read(connection,
+                                    DBI::Id(
+                                            schema="agile_gis_2025_rs",
+                                            table="porto_ghs_road_out")) |>
+                                            rename(geometry=geom)
+## Subset
+porto_ghs_road_out_subset <- sf::st_intersection(porto_ghs_road_out,
+                                                 bounding_box_subset)
+## Read Road on the flood extent boundary
+porto_ghs_alegre_boundary <- sf::st_read(connection,
+                                    DBI::Id(
+                                            schema="agile_gis_2025_rs",
+                                            table="porto_ghs_alegre_boundary"))
+## Subset
+porto_ghs_road_boundary_subset <- sf::st_intersection(porto_ghs_alegre_boundary,
+                                                      bounding_box_subset) |>
+                                                      rename(geometry=geom)
+difference_outside_boundary <- sf::st_read(connection,
+                                    DBI::Id(
+                                            schema="agile_gis_2025_rs",
+                                            table="difference_outside_boundary"))
+## Subset
+porto_ghs_road_outside_subset <- sf::st_intersection(difference_outside_boundary,
+                                                     bounding_box_subset) |>
+                                              rename(geometry=geom)
+## Post & Pre disaster road network
+porto_alegre_net_pre <- sf::st_read(connection,
+                                    DBI::Id(
+                                            schema="agile_gis_2025_rs",
+                                            table="ghs_aoi_net_largest"))
+## Subset
+porto_ghs_road_net_pre_subset <- sf::st_intersection(porto_alegre_net_pre,
+                                                     bounding_box_subset) |> 
+                                                    rename(geometry = geom)
+ghs_aoi_net_largest_post <-  sf::st_read(connection,
+                                         DBI::Id(
+                                                  schema="agile_gis_2025_rs",
+                                                  table="ghs_aoi_net_largest_post")) |>
+                                                      rename(geometry=geom)
+## Subset
+porto_ghs_road_net_post_subset <- sf::st_intersection(ghs_aoi_net_largest_post,
+                                                      bounding_box_subset)
+
+## Create dynamic map.
+library(mapview)
+library(leafpop)
+mapview(porto_ghs_road_in_subset$geometry,
+          color="red",
+          lwd= 0.5,
+          hide = TRUE,
+          layer.name="A.Road in flood extent",
+          popup=popupTable(porto_ghs_road_in_subset)) +
+mapview(porto_ghs_road_outside_subset$geometry,
+          color="lightgreen",
+          lwd= 0.5,
+          hide = TRUE,
+          layer.name="D.Road boundary-outside",
+          popup=popupTable(porto_ghs_road_outside_subset)) +
+  mapview(porto_ghs_road_boundary_subset$geometry,
+          color="yellow",
+          lwd= 0.5,
+          hide = TRUE,
+          layer.name="C.Road boundary",
+          popup=popupTable(porto_ghs_road_boundary_subset)) +    
+  mapview(porto_ghs_road_out_subset,
+          color="darkgreen",
+          lwd= 0.2,
+          hide = TRUE,
+          layer.name="B.Road out from flood extent",
+          popup=popupTable(porto_ghs_road_out_subset)) +     
+mapview(porto_ghs_road_net_pre_subset,
+          color="#a6611a",
+          lwd= 0.2,
+          layer.name="Pre-flooding network",
+          popup=leafpop::popupTable(porto_ghs_road_net_pre_subset)) +
+mapview(porto_ghs_road_net_post_subset,
+          color="#018571",
+          lwd= 0.2,
+          layer.name="Post-flooding network",
+          popup=leafpop::popupTable(porto_ghs_road_net_post_subset)) +    
+  mapview(flooding_cleaned_porto_union_subset,
+          color="darkblue",
+          alpha.regions= 0.25,
+          layer.name="Flood extent") +
+  mapview(bounding_box_subset,
+          color="red",
+          alpha.regions = 0,
+          lwd= 1,
+          layer.name="Subset of the AoI") 
+```
+
+ 

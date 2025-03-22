@@ -1,3 +1,499 @@
 # Origin-Destination matrix
 
-Work in progress, waiting for acceptance.
+Work in progress, waiting for acceptance. A
+
+## Weighted OD
+
+### Create sampling points
+```{r}
+#| eval: false
+#| echo: true
+
+# Import data
+library(sf) # handle vector files
+library(terra) # handle raster files
+buildings <- terra::rast("/home/ricardors/agile-gscience-2024-rs-flood/data/source_data/GHS_BUILT_V_E2020_GLOBE_R2023A_4326_100_V1_0_RioGrandeDoSul.tif")
+pop_ghs <- 300 # set up number of sampling points
+## Select area of interest from the database
+municipalities_ghs <- sf::read_sf(connection,
+                                  DBI::Id(schema="agile_gis_2025_rs",
+                                          table="municipalities_ghs"))
+municipalities_ghs_reproj <- municipalities_ghs |>
+                                            st_transform(crs(buildings))
+build_cropped <- crop(buildings,
+                      municipalities_ghs_reproj)
+## Reproject for sampling
+build_4326 <- terra::project(build_cropped,
+                             crs(municipalities_ghs))
+build_masked <- terra::mask(build_4326,
+                            municipalities_ghs)
+## Weighted sampling
+set.seed(123)
+od <- spatSample(build_masked,
+                     pop_ghs,
+                    "weights",
+                     as.points = TRUE) |>
+                st_as_sf() |>
+                st_transform(4326)
+## Rename column
+names(od)[1] <- "building"
+## Upload the sampling points to the database
+sf::dbWriteTable(connection, DBI::Id(schema = "agile_gis_2025_rs",
+table = "od_300_v2"), od)
+```
+
+### Snap sampling points
+
+```{sql}
+#| eval: false
+#| echo: true
+#| code-summary: snapping
+
+# Create "id" column as a pre-requisite for snapping
+ALTER TABLE od_300_v2
+ADD COLUMN id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY;
+
+# Split this comments into several chunks
+ALTER TABLE ghs_aoi_net_largest 
+    ALTER COLUMN "toId" type bigint,
+    ALTER COLUMN "fromId" type bigint,
+    ALTER COLUMN "id" type bigint;
+
+# Similar to chunk X
+SELECT pgr_createverticesTable('ghs_aoi_net_largest',
+the_geom:='geom',
+source:='fromId',
+target:='toId');
+
+CREATE TABLE od_300_snapped_v2 AS
+SELECT DISTINCT ON (net.id)
+  pt.id AS pt_id, --- original position of the Origin-Destination
+  net.id AS snapped_id, --- snapped position of the Origin-Destination
+  net.geometry
+FROM
+(SELECT * FROM od_300_v2 AS pt) as pt
+CROSS JOIN
+LATERAL (SELECT
+            *
+        FROM
+          ghs_aoi_net_largest_vertices_pgr AS net
+        ORDER BY net.geom <->pt.geometry
+        LIMIT 1) AS net;
+
+```
+
+### Visualize Weigted OD
+
+Add you removed OpenBuilding for QGIS.
+
+```{=html}
+<iframe width= "780" height="500" src="data/media/weighted_od.html" title "Weighted OD"></iframe>
+```
+
+
+```{r}
+#| eval: false
+#| echo: true
+
+library(sf)
+library(DBI)
+
+## Import Data from PostgreSQL database
+municipalities_ghs <- st_read(connection,
+        DBI::Id(schema="agile_gis_2025_rs",
+                table="municipalities_ghs"))
+core_metropolitan_area <- st_read(connection,
+        DBI::Id(schema="agile_gis_2025_rs",
+                table="core_metropolitan_area"))        
+od_300_snapped_v2 <- st_read(
+                              connection,
+                              DBI::Id(schema="agile_gis_2025_rs",
+                                      table="od_300_snapped_v2"))
+## Create interactive map
+### styles
+library(raster)
+pal <- colorNumeric(c("#faebdd", "#cd1c4e", "#110c24"), values(build_masked),
+  na.color = "transparent")
+
+### map
+library(leaflet)
+leaflet() |>
+  addTiles()  |>
+  addProviderTiles("CartoDB.Positron", group = "CartoDB.Positron")  |>
+  addProviderTiles("Esri.WorldImagery", group = "Esri.WorldImagery")  |>                    addPolygons(data=municipalities_ghs,
+                    fillColor = "yellow",
+                    fillOpacity = 0.05,
+                    weight = 1.5,
+                    color = "red",
+                    dashArray = "1",
+                    group= "Municipalities") |> 
+  addPolygons(data=core_metropolitan_area,
+                    fillColor = "yellow",
+                    fillOpacity = 0.05,
+                    weight = 2,
+                    color = "red",
+                    dashArray = "1",
+                    group= "Core Metropolitan Area") |> 
+  addCircleMarkers(data=od_300_snapped_v2,
+                    fillColor = "yellow",
+                    fillOpacity = 0.8,
+                    weight = 1.5,
+                    radius= 3,
+                    color = "black",
+                    dashArray = "1",
+                    group= "Weighted OD") |> 
+  addRasterImage(build_masked,
+                 opacity=0.7,
+                 colors = pal,
+                 group="Bulding density") |> 
+     addLegend(pal = pal, values = values(build_masked),
+    title = "Building Density (m³)") |> 
+ addLayersControl(
+    baseGroups = c("CartoDB.Positron", "Esri.WorldImagery"),
+    overlayGroups = c("Municipalities","Core Metropolitan Area", "Weighted OD","Bulding density"),
+    options = layersControlOptions(collapsed = FALSE)
+  ) |>
+  hideGroup(c("Municipalities","Core Metropolitan Area")) |>
+  setView( lng =-51.21566 , lat = -30.04176, zoom = 12 ) 
+```
+
+## Regular OD
+
+### Select Point of Interest (PoI)
+
+```{sql}
+#| eval: false
+#| echo: true
+#| code-summary: Hospitals
+
+CREATE TABLE hospitals_poi AS
+--- Add ICU bed capacity from ETLCNES to the hospitals
+WITH all_hospitals AS (SELECT DISTINCT ON (cd_cnes)
+	cd_cnes,
+    ds_cnes,
+    wkb_geometry AS geom,
+		"QTLEITP1",
+	"QTLEITP2",
+	"QTLEITP3",
+	"NAT_JUR",
+	tp_risco,
+	nm_razao_s,
+	nm_municip
+FROM
+	hospitals AS geom_hospital
+LEFT JOIN
+	etlcnes_hospital_selected AS df_hospital
+ON
+	df_hospital."CNES"=geom_hospital.cd_cnes),
+--- Define Point Of Interest (POI) using Area of Interest (AoI)
+	 poi_hospitals AS (
+SELECT 
+    h.*
+FROM 
+    all_hospitals AS h,
+    core_metropolitan_area AS poi
+WHERE st_intersects(h.geom, poi.geom))
+--- Add the original geometry and the snapped position
+SELECT DISTINCT ON (h.cd_cnes)
+	h.*,
+    f.the_geom <-> h.geom AS distance,
+    h.geom AS geom_hospital,
+    f.the_geom AS geom_node
+FROM poi_hospitals h
+LEFT JOIN LATERAL
+(SELECT 
+    id, 
+    the_geom
+FROM ghs_aoi_net_largest_vertices_pgr AS net
+ORDER BY
+    net.the_geom <-> h.geom
+LIMIT 1) AS f ON true
+
+```
+
+
+### Create Isochrones from PoI
+
+Error: Openrouteservice API request failed
+[3004] Parameter 'locations=22' is out of range. Maximum possible value is 5.
+
+```{r}
+#| eval: false
+#| echo: true
+
+
+library(sf)
+library(openrouteservice)
+
+# Remember to forget your API Rick, written by Rick.
+openrouteservice::ors_api_key("5b3ce3597851110001cf6248ba03ca736c924d61aadb844a004da6fe")
+
+hospitals_poi <- sf::st_read(connection, DBI::Id(schema="agile_gis_2025_rs" ,"hospitals_poi"))
+library(tidyverse)
+## Part I: PoI (1-5) 
+isochrone_part_1 <- 
+  ors_isochrones(st_coordinates(hospitals_poi$geom_node[1:5]),
+                                range = 600,
+                                interval = 600,
+                                output = "sf") |>
+                            mutate(ds_cnes = hospitals_poi$ds_cnes[1:5],
+                                   cd_cnes = hospitals_poi$cd_cnes[1:5],
+                                   id = hospitals_poi$id[1:5])
+## Part II: PoI (6-10)
+isochrone_part_2 <- 
+  ors_isochrones(st_coordinates(hospitals_poi$geom_node[6:10]),
+                                range = 600,
+                                interval = 600,
+                                output = "sf") |>
+                            mutate(ds_cnes = hospitals_poi$ds_cnes[6:10],
+                                   cd_cnes = hospitals_poi$cd_cnes[6:10],
+                                   id = hospitals_poi$id[6:10])
+## Part III: PoI (11-15)
+isochrone_part_3 <- 
+  ors_isochrones(st_coordinates(hospitals_poi$geom_node[11:15]),
+                                range = 600,
+                                interval = 600,
+                                output = "sf") |>
+                            mutate(ds_cnes = hospitals_poi$ds_cnes[11:15],
+                                   cd_cnes = hospitals_poi$cd_cnes[11:15],
+                                   id = hospitals_poi$id[11:15])
+## Part IV: PoI (16-20)
+isochrone_part_4 <- 
+  ors_isochrones(st_coordinates(hospitals_poi$geom_node[16:20]),
+                                range = 600,
+                                interval = 600,
+                                output = "sf") |>
+                            mutate(ds_cnes = hospitals_poi$ds_cnes[16:20],
+                                   cd_cnes = hospitals_poi$cd_cnes[16:20],
+                                   id = hospitals_poi$id[16:20])
+## Part V: PoI (20-22)
+isochrone_part_5 <- 
+  ors_isochrones(st_coordinates(hospitals_poi$geom_node[21:22]),
+                                range = 600,
+                                interval = 600,
+                                output = "sf") |>
+                            mutate(ds_cnes = hospitals_poi$ds_cnes[21:22],
+                                   cd_cnes = hospitals_poi$cd_cnes[21:22],
+                                   id = hospitals_poi$id[21:22])
+## Merge 5 parts
+
+isochrones_poi_hospitals <- rbind(isochrone_part_1,
+                                  isochrone_part_2,
+                                  isochrone_part_3,
+                                  isochrone_part_4,
+                                  isochrone_part_5 )  |>
+                                select(-center) # the variable "center" is a list. Writting will return  no applicable method for st_write.
+st_write(obj = isochrones_poi_hospitals,
+         dsn = connection,
+         Id(schema="agile_gis_2025_rs",
+            table = "isochrones_poi_hospitals"))
+```
+
+
+### Create sampling points
+
+FIrst he fcuntion: guck mal wo war diese Post 
+
+```{sql}
+#| eval: false
+#| echo: true
+#| code-summary: Regular OD
+
+CREATE OR REPLACE FUNCTION I_Grid_Point_Series(geom geometry, x_side decimal, y_side decimal, spheroid boolean default false)
+RETURNS SETOF geometry AS $BODY$
+DECLARE
+x_max decimal;
+y_max decimal;
+x_min decimal;
+y_min decimal;
+srid integer := 4326;
+input_srid integer;
+x_series DECIMAL;
+y_series DECIMAL;
+BEGIN
+CASE st_srid(geom) WHEN 0 THEN
+  geom := ST_SetSRID(geom, srid);
+  RAISE NOTICE 'SRID Not Found.';
+    ELSE
+        RAISE NOTICE 'SRID Found.';
+    END CASE;
+
+    CASE spheroid WHEN false THEN
+        RAISE NOTICE 'Spheroid False';
+    else
+        srid := 900913;
+        RAISE NOTICE 'Spheroid True';
+    END CASE;
+    input_srid:=st_srid(geom);
+    geom := st_transform(geom, srid);
+    x_max := ST_XMax(geom);
+    y_max := ST_YMax(geom);
+    x_min := ST_XMin(geom);
+    y_min := ST_YMin(geom);
+    x_series := CEIL ( @( x_max - x_min ) / x_side);
+    y_series := CEIL ( @( y_max - y_min ) / y_side );
+RETURN QUERY
+SELECT st_collect(st_setsrid(ST_MakePoint(x * x_side + x_min, y*y_side + y_min), srid)) FROM
+generate_series(0, x_series) as x,
+generate_series(0, y_series) as y
+WHERE st_intersects(st_setsrid(ST_MakePoint(x*x_side + x_min, y*y_side + y_min), srid), geom);
+END;
+$BODY$ LANGUAGE plpgsql IMMUTABLE STRICT;
+
+```
+
+For the weig
+
+```{sql}
+#| eval: false
+#| echo: true
+#| code-summary: bbox
+
+# Move core bbox 
+
+CREATE TABLE core_metropolitan_bbox AS
+SELECT 
+	ST_Extent(geom)::geometry AS geom
+FROM 
+	core_metropolitan_area;
+
+```
+
+
+```{sql}
+#| eval: false
+#| echo: true
+#| code-summary: Regular OD
+
+# Move this to centrality hospitals
+
+CREATE TABLE regular_point_od AS (
+WITH multipoint_regular AS(
+SELECT 
+    I_Grid_Point_Series(geom, 0.037,0.037, false) AS geom
+    FROM core_metropolitan_bbox AS geom),
+point_regular AS(
+SELECT 
+    st_setsrid((st_dump(geom)).geom, 4326)::geometry(Point, 4326) AS geom
+FROM  multipoint_regular)
+SELECT 
+    row_number() over() AS id,
+    geom
+FROM 
+    point_regular);
+```
+
+For the Isochrones:
+
+```{sql}
+#| eval: false
+#| echo: true
+
+CREATE TABLE  regular_sampling_isochrones_ghs_aoi AS
+WITH multipoint_regular AS(
+SELECT 
+    I_Grid_Point_Series(geometry, 0.00912,0.00912, false) AS geom,
+    ds_cnes,
+    cd_cnes
+FROM 
+	isochrones_poi_hospitals),
+point_regular AS(
+SELECT 
+    st_setsrid((st_dump(geom)).geom, 4326)::geometry(Point, 4326) AS geom,
+    ds_cnes,
+    cd_cnes
+FROM  multipoint_regular)
+SELECT 
+	cd_cnes,
+    ds_cnes,
+    geom,
+	row_number() over() AS id
+FROM 
+    point_regular; 
+
+```
+
+### Snap sampling points
+
+Regular
+
+```{sql}
+#| eval: false
+#| echo: true
+
+CREATE TABLE regular_sampling_isochrones_snapped_ghs_aoi AS
+SELECT DISTINCT ON (net.id)
+   	net.id,
+   	ds_cnes,
+   	cd_cnes,
+   	net.the_geom  AS geom
+FROM regular_sampling_isochrones_ghs_aoi AS pt
+CROSS JOIN LATERAL 
+	(SELECT 
+		*
+	FROM  ghs_aoi_net_largest_vertices_pgr AS net
+	ORDER BY
+	net.the_geom <-> pt.geom
+	LIMIT 1) AS net;
+
+```
+
+### Visualize Regular OD
+
+Add drop geometry porque tiene dos columnas, cuidadito
+
+```{=html}
+<iframe width="780" height=500 src="data/media/regular_od.html" title="Regular OD"></iframe>
+```
+
+
+```{r}
+#| echo: true
+#| eval: false
+
+## Import data:
+regular_sampling_isochrones_snapped_ghs_aoi <- 
+  sf::st_read(connection, Id(schema="agile_gis_2025_rs",table="regular_sampling_isochrones_snapped_ghs_aoi"))
+
+## style:
+factpal <- colorFactor(topo.colors(22), isochrones_poi_hospitals$ds_cnes)
+## Map
+leaflet() |>
+  addTiles()  |>
+  addProviderTiles("CartoDB.Positron", group = "CartoDB.Positron")  |>
+  addProviderTiles("Esri.WorldImagery", group = "Esri.WorldImagery")  |>   
+  addProviderTiles("CartoDB.DarkMatter", group = "CartoDB.DarkMatter") |> 
+  addCircleMarkers(data=hospitals_poi,
+                    fillColor = "yellow",
+                    fillOpacity = 0.6,
+                    weight = 3,
+                    radius = 5,
+                    color = "red",
+                    dashArray = "1",
+                    group= "Hospitals PoI") |> 
+  addPolygons(data=isochrones_poi_hospitals,
+                    fillOpacity = 0.2,
+                    weight = 2,
+                    color = ~factpal(ds_cnes),
+                    dashArray = "1",
+                    group= "Isochrones") |> 
+  addCircleMarkers(data=regular_sampling_isochrones_snapped_ghs_aoi,
+                    fillOpacity = 0.8,
+                    weight = 1.5,
+                    radius= 3,
+                    color =~factpal(ds_cnes),
+                    dashArray = "1",
+                    group= "Regular OD") |> 
+ addLayersControl(
+    baseGroups = c("CartoDB.Positron", "Esri.WorldImagery","CartoDB.DarkMatter"),
+    overlayGroups = c("Hospitals PoI","Isochrones", "Regular OD"),
+    options = layersControlOptions(collapsed = FALSE)
+  ) |> 
+    setView( lng =-51.01134 , lat = -29.93259, zoom = 11.5 ) 
+```
+
+
+
+
+
+

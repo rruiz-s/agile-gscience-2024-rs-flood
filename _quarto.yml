@@ -4,12 +4,72 @@ project:
 
 book:
   title: "Centrality analysis on Rio Grande do Sul"
-  author: "AA"
+  author:
+    - name: Ricardo Ruiz Sánchez
+      orcid: 0009-0000-6108-3389
+      email: ricardo.ruiz.sanchez@gmail.com
+      role:
+       - kWritingOrigina
+       - Methodology
+       - Software
+       - Validation
+       - Formal analysis
+       - Investigation
+       - Resources
+       - Data Curation
+       - Writing - Original Draft
+       - Writing - Review & Editing
+       - Visualization
+    - name: Marcel Reinmuth
+      orcid: 0000-0002-0204-5101
+      email: marcel.reinmuth@heigit.org
+      role:
+       - Conceptualization
+       - Methodology
+       - Software
+       - Investigation
+       - Formal analysis
+       - Resources
+       - Writing - Original Draft
+       - Writing - Review & Editing
+      affiliations:
+       - name: Heidelberg Institute for Geoinformation Technology gGmbH
+         address: Schloss-Wolfsbrunnenweg 33
+         city: Heidelberg
+         state: Germany
+         postal-code: 69118
+    - name: Cristian Albornoz Espinoza
+      orcid: 0000-0002-5476-2508
+      email: cristian.albornoz.espinoza@gmail.com
+    - name: Sven Lautenbach
+      orcid: 0000-0003-1825-9996
+      email: sven.lautenbach@heigit.org
+      affiliations:
+       - name: Heidelberg Institute for Geoinformation Technology gGmbH
+         address: Schloss-Wolfsbrunnenweg 33
+         city: Heidelberg
+         state: Germany
+         postal-code: 69118
+    - name: Alexander Zipf
+      orcid: 0000-0003-4916-9838
+      email: alexander.zipf@heigit.org
+      affiliations:
+       - name: Heidelberg Institute for Geoinformation Technology gGmbH
+         address: Schloss-Wolfsbrunnenweg 33
+         city: Heidelberg
+         state: Germany
+         postal-code: 69118
+       - name: Institute of Geography, Heidelberg University
+         address: Berliner Str. 48
+         city: Heidelberg
+         state: Germany
+         postal-code: 69118
   date: "2025/01/01"
   page-navigation: true
+  search: true
   favicon: data/figures/agile_logo-370x206.png
   sidebar:
-    logo: data/figures/agile_logo-370x206.png
+    logo: data/figures/side-logo_v4.png
     search: true
   chapters:
     - index.qmd
@@ -54,6 +114,7 @@ format:
     css: styles.css
     code-fold: true
     code-summary: "Show the code"
+  
   pdf:
     documentclass: scrreprt
 

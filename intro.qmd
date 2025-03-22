@@ -131,7 +131,7 @@ etlcnes_hospital_selected <- read.csv("~/agile_giscience_2025_github/agile-gscie
                           dplyr::select(c("CNES","QTLEITP1","QTLEITP2","QTLEITP3","NAT_JUR"))
 toc() # 54.361 sec elapsed
 ## Write table using PostgreSQL connection
-DBI::dbWriteTable(connection, DBI::Id(schema="agile_gis_2025_rs",table="etlcnes_hospital_selected"))
+DBI::dbWriteTable(connection, DBI::Id(schema="agile_gis_2025_rs",table="etlcnes_hospital_selected"),etlcnes_hospital_selected)
 ```
 
 

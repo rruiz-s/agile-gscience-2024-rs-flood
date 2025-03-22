@@ -14,3 +14,10 @@ $code-block-bg-alpha: -.8;
 .font-color{
 	color: $heigit-dark
 }
+.sidebar-logo {
+  max-width: 100%;
+  min-height: unset;
+  width: auto; 
+  display: block; 
+}
+
