@@ -1,3 +1,5 @@
+# Body of Knowledge
+
 # Data and Software Availability {.unnumbered}
 
 This document is written following the [Reproducibiltiy paper guidelines](https://osf.io/numa5) for the AGILE conference 2025 [@https://doi.org/10.17605/osf.io/cb7z8] .The following flowchart explains the methodology to analyse the centrality and resilience of the road network and healthcare facilities in the core metropolitan area of Rio Grande do Sul.
@@ -56,3 +58,6 @@ The total built-up volume weighted the sampling of the origin and destination an
 ### Computation steps
 
 This Quarto book describes the detailed steps carried out for this use case in three chapters that contains the workflow described in the Fig 1 with 8 activities.
+
+# Fundings
+

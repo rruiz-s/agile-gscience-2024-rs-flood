@@ -1,5 +1,128 @@
 # Calculate connectivity
-## RQ1
-## RQ2
+## Research question 1
+### Intracity scale
 
-Work in progress, waiting for acceptance.
+```{r}
+1+1
+```
+
+
+```{sql}
+#| eval: false
+#| echo: true
+
+CREATE TABLE centrality_ghs_aoi_pre AS
+SELECT
+	b.Id,
+	b.geom,
+	count(geom) as centrality
+FROM pgr_dijkstra(
+	'SELECT 
+		id AS id,
+		"fromId" AS source,
+		"toId" AS target,
+		weight as cost
+	FROM 
+	  ghs_aoi_net_largest',
+	ARRAY(SELECT snapped_id AS start_id FROM od_300_snapped_v2),
+	ARRAY(SELECT snapped_id AS end_id FROM od_300_snapped_v2),
+		directed:=TRUE) j
+	LEFT JOIN 
+	  ghs_aoi_net_largest AS b
+	ON
+	  j.edge=b.Id
+	GROUP BY
+		b.Id, b.geom;
+
+```
+
+
+```{sql}
+#| eval: false
+#| echo: true
+
+CREATE TABLE centrality_ghs_aoi_bidirect_pre AS
+SELECT 
+	t1.*,
+	t2."bdrctId"
+FROM
+	centrality_ghs_aoi_pre AS t1
+JOIN
+	ghs_aoi_net_largest AS t2
+ON
+t1.id = t2.id;
+```
+
+
+```{sql}
+#| eval: false
+#| echo: true
+
+select max("bdrctId") from centrality_ghs_aoi_bidirect_pre ; ---99527
+create sequence bidirectid_centrality_ghs_aoi start 99527;
+update centrality_ghs_aoi_bidirect_pre
+set "bdrctId" = nextval('bidirectid_centrality_ghs_aoi')
+where "bdrctId" is null ;
+```
+
+
+```{sql}
+#| eval: false
+#| echo: true
+
+select count(*)
+from centrality_ghs_aoi_bidirect_pre
+where "bdrctId" is null; ---0
+
+```
+
+```{sql}
+#| eval: false
+#| echo: true
+
+create table centrality_ghs_aoi_bidirect_pre_group as
+select
+"bdrctId",
+sum(centrality) as centrality
+from centrality_ghs_aoi_bidirect_pre
+group by "bdrctId";
+```
+
+
+```{sql}
+#| eval: false
+#| echo: true
+
+create table centrality_ghs_aoi_bidirect_pre_group_id as
+select t1.*, t2.id
+from centrality_ghs_aoi_bidirect_pre_group t1
+join centrality_ghs_aoi_bidirect_pre t2
+on t1."bdrctId" = t2."bdrctId";
+
+```
+
+
+
+```{sql}
+#| eval: false
+#| echo: true
+
+create table centrality_ghs_aoi_bidirect_pre_cleaned as
+select
+	t1.*,
+	t2.geom,
+	t2."toId",
+	t2."fromId",
+	t2.weight,
+	t2."undrctI"
+from
+	centrality_ghs_aoi_bidirect_pre_group_id t1
+join
+	ghs_aoi_net_largest t2
+on
+t1.id = t2.id;
+
+```
+
+### Core Metropolitan scale
+## Research question 2
