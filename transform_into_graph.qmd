@@ -1,3 +1,18 @@
+```{r}
+#| eval: false
+#| echo: false
+#| include: false
+
+connection <- DBI::dbConnect(RPostgres::Postgres(),
+                             user="docker",
+                             password="docker",
+                             host="localhost",
+                             dbname="gis",
+                             port=25432)
+municipalities_ghs <- st_read(connection, Id(schema="agile_gis_2025_rs", table="municipalities_ghs"))
+ghs_aoi_net_largest <-  st_read(connection, Id(schema="agile_gis_2025_rs", table="ghs_aoi_net_largest"))
+```
+
 # Transform into graph
 
 Having obtained the OSM road network of the AOI, we run the docker for ORS ^[[https://giscience.github.io/openrouteservice/run-instance/running-with-docker](https://giscience.github.io/openrouteservice/run-instance/running-with-docker)],which transforms the OSM geometry into a routable graph.
@@ -131,26 +146,7 @@ sudo shp2pgsql -D -I -S -s 4326 ors_raw_network ors_raw_network | psql -h localh
 # Obtaining pre-disaster network
 
 ## Creating routable network for pgrouting
-
-```{sql}
-#| eval: false
-#| echo: true
-#| code-summary: "Editing ORS network to be routable for pgrouting"
-
-ALTER TABLE ors_raw_network 
-	ALTER COLUMN "toId" type bigint,
-	ALTER COLUMN "fromId" type bigint,
-	ALTER COLUMN "id" type bigint;
-
-
-SELECT pgr_createverticesTable('ors_raw_network',
-the_geom:='geom',
-source:='fromId',
-target:='toId');
-```
-
-
-## Analysing components
+### Analysing components lengths
 
 ```{sql}
 #| eval: false
@@ -199,7 +195,6 @@ SELECT * FROM all_component_net;
 #| echo: true
 #| eval: false
 #| code-summary: "components"
-
 
 library(ggplot2)
 # optional
@@ -257,13 +252,16 @@ ggplot(df, aes(x=quantile_cat, y=quantile_length), scale=4) +
 ```
 
 
+
+
+### Analysing components locations
+
+
 Map
 
 ```{=html}
 <iframe width="780" height="500" src="data/media/map_graphs_components.html" title="Quarto Documentation"></iframe>
 ```
-
-
 
 
 
@@ -331,7 +329,7 @@ m1_net + m2_net + m3_net+  m4_net+m5_net
 ```
 
 
-## Visualising largest component
+## Core Metropolotian centrality
 
 ```{sql}
 #| eval: false
@@ -389,5 +387,188 @@ ghs_aoi_net_component_geom AS (
 							net_multi_component."fromId" IN (net_largest_component.node);
 
 ```
+
+
+```{sql}
+#| eval: false
+#| echo: true
+#| code-summary: "Editing ORS network to be routable for pgrouting"
+
+ALTER TABLE ors_raw_network 
+	ALTER COLUMN "toId" type bigint,
+	ALTER COLUMN "fromId" type bigint,
+	ALTER COLUMN "id" type bigint;
+
+
+SELECT pgr_createverticesTable('ors_raw_network',
+the_geom:='geom',
+source:='fromId',
+target:='toId');
+```
+
+## Intracity connectivity
+
+We created tables in the "public" schema lowering the case of columns. There were several reasons. Firsly to reduce the number of tables in the schema "agile_gis_2025_rs" for better understanding. Secondly, we used the library glue [@glue], so we preferred to lower the case of the fields to parse SQL queries with ease. Similarly, the difficulty of parsing SQL queries is reported for the python module sql_alchemy ^[[https://stackoverflow.com/questions/68638554/change-all-column-names-to-lowercase-postgresql](https://stackoverflow.com/questions/68638554/change-all-column-names-to-lowercase-postgresql)]. We used a query[[https://www.postgresonline.com/article_pfriendly/141.html](https://www.postgresonline.com/article_pfriendly/141.html)] to create the statements to alter the columns' table.
+
+```{sql}
+#| eval: false
+#| echo: true
+
+--- First, copy the tables from the schema agile_gis_2025_rs to public
+CREATE TABLE ghs_aoi_net_largest AS
+    SELECT 
+      * 
+    FROM
+      agile_gis_2025_rs.ghs_aoi_net_largest;
+CREATE TABLE municipalities_ghs AS
+    SELECT
+      *
+    FROM
+      agile_gis_2025_rs.municipalities_ghs;
+
+--- Second, alter the tables in teh public schema lowering the case of columns
+SELECT  'ALTER TABLE ' || quote_ident(c.table_schema) || '.'
+  || quote_ident(c.table_name) || ' RENAME "' || c.column_name || '" TO ' || quote_ident(lower(c.column_name)) || ';' As ddlsql
+  FROM information_schema.columns As c
+  WHERE c.table_schema NOT IN('agile_gis_2025_rs') 
+      AND c.column_name <> lower(c.column_name) 
+  ORDER BY c.table_schema, c.table_name, c.column_name;
+  
+---- After removing extra "", we obtained the queries to alter the required columns:
+ALTER TABLE public.ghs_aoi_net_largest RENAME "bdrctId" TO bdrctid;
+ALTER TABLE public.ghs_aoi_net_largest RENAME "fromId" TO fromid;
+ALTER TABLE public.ghs_aoi_net_largest RENAME "toId" TO toid;
+ALTER TABLE public.ghs_aoi_net_largest RENAME "undrctI" TO undrcti;
+ALTER TABLE public.ghs_aoi_net_largest_post RENAME "bdrctId" TO bdrctid;
+ALTER TABLE public.ghs_aoi_net_largest_post RENAME "fromId" TO fromid;
+ALTER TABLE public.ghs_aoi_net_largest_post RENAME "toId" TO toid;
+ALTER TABLE public.ghs_aoi_net_largest_post RENAME "undrctI" TO undrcti;
+ALTER TABLE public.net_1 RENAME "bdrctId" TO bdrctid;
+ALTER TABLE public.net_1 RENAME "fromId" TO fromid;
+ALTER TABLE public.net_1 RENAME "toId" TO toid;
+ALTER TABLE public.net_1 RENAME "undrctI" TO undrcti;
+```
+
+
+```{r}
+#| eval: false
+#| echo: true
+
+library(glue)
+library(tictoc)
+table_rq_1_2_net <- glue_sql("CREATE TABLE table_rq_1_2_net 
+                (id integer,
+                fromId integer,
+                toid integer,
+                weight float,
+                undrcti integer,
+                bdrctid integer,
+                wkb_geometry geometry,
+                shapename varchar(250))", .con =connection)
+table_end_db <- dbGetQuery(conn=connection,table_rq_1_2_net )
+
+for (idx in 1:length(municipalities_ghs$ogc_fid)) {
+  tic(glue("run {idx}/{length(municipalities_ghs$ogc_fid)}")) 
+  muncipality_id <- municipalities_ghs$ogc_fid[idx]
+  table_name_1 <- glue("net_{idx}")
+  table_name_2 <- glue("net_largest_{idx}")
+
+  dbExecute(glue_sql("DROP TABLE IF EXISTS {`table_name_1`}", .con=connection),
+            conn=connection)
+  
+  # Assuming you have an open PostgreSQL connection in con
+dbExecute(glue_sql("DROP TABLE IF EXISTS {`table_name_1`}", .con=connection),
+          conn=connection)  
+  query_1 <- glue_sql("CREATE TABLE {`table_name_1`} AS
+SELECT
+	net.*,
+	nuts.shapename 
+FROM 
+	(SELECT
+		* 
+	FROM 
+		municipalities_ghs 
+	WHERE 
+		ogc_fid =  {muncipality_id} ) AS nuts,
+	ghs_aoi_net_largest AS net
+WHERE
+	st_intersects(nuts.wkb_geometry, net.geom)", .con = connection)
+  # Send the query
+  result_q1 <- dbGetQuery(conn= connection, query_1)
+  # Alter the table
+ query_2 <- glue_sql("ALTER TABLE {`table_name_1`}
+    ALTER COLUMN toid type bigint,
+    ALTER COLUMN fromid type bigint,
+    ALTER COLUMN id type bigint", .con = connection)
+	result_q2 <- dbGetQuery(conn= connection, query_2)
+dbExecute(glue_sql("DROP TABLE IF EXISTS {`table_name_2`}", .con=connection),
+          conn=connection)  	
+	query_3 <- glue_sql("CREATE TABLE {`table_name_2`} AS  ---here table
+WITH ghs_aoi_net_component AS (
+SELECT 
+  * 
+FROM 
+  pgr_strongComponents('SELECT
+                               id AS id,
+                               fromid AS source,
+                               toid AS target,
+                               weight AS cost 
+                        FROM 
+                              {`table_name_1`}')),
+--- Calculate the largest component from the network
+ghs_aoi_net_component_geom AS (
+SELECT 
+    net.*,
+    net_geom.geom
+FROM 
+    ghs_aoi_net_component AS net
+JOIN 
+    {`table_name_1`}  AS net_geom -----
+ON 
+    net.node = net_geom.fromid),
+largest_component_net as (SELECT 
+    component,
+    st_union(geom) AS the_geom,
+    st_length(st_union(geom)::geography)::int AS length
+FROM  
+    ghs_aoi_net_component_geom
+GROUP BY component
+ORDER BY length DESC
+LIMIT 1),
+--- Using the largest component from the network to filter
+largeset_component_network_ghs_aoi AS (
+SELECT
+    *,
+    largest_component_net.component,
+    largest_component_net.length
+FROM
+    ghs_aoi_net_component,
+    largest_component_net
+WHERE 
+    ghs_aoi_net_component.component = largest_component_net.component)
+SELECT 
+    net_multi_component.*
+FROM 
+    {`table_name_1`} AS net_multi_component,
+    largeset_component_network_ghs_aoi AS net_largest_component
+WHERE  
+    net_multi_component.fromid IN (net_largest_component.node)", .con = connection)
+result_q3 <- dbGetQuery(conn= connection, query_3)	
+query_4 <- glue(" 
+SELECT pgr_createverticestable('{`table_name_2`}',
+								the_geom:='geom',
+								source:='fromid',
+								target:='toid');", .con = connection )
+result_q4 <- dbGetQuery(conn= connection, query_4)
+
+  insert_query <- glue_sql("INSERT INTO table_rq_1_2_net (id, fromid, toid, weight, undrcti, bdrctid, wkb_geometry, shapename)
+                            SELECT id, fromid, toid, weight, undrcti, bdrctid, geom, shapename 
+                            FROM {`table_name_2`}", .con = connection)
+  dbExecute(conn = connection, insert_query)
+  
+	toc()
+}
+```
+
 
 

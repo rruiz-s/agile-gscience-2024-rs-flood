@@ -11,7 +11,13 @@ The topic of this study includes _Open Spatial Data, Open Science, Open-source G
 
 We used open-ssource data and software including OpenRouteService (ORS),Pgrouting, PostGIS, R or QGIS. In addition, we mainly used the open-source data from OpenStreetMap (OSM). Based on centrality metrics and alternative paths, we compared the centrality of the road network in the core of the metropolitan area of Rio Grande do Sul before and after the flood event that took place on the 29th of April of 2024. The methodology is mainly conducted in SQL using PostGIS to handle geospatial data and Pgrouting to analyze road networks.
 
-The submission type is _use case_.
+The **submission type** of this study is _use case_, while the **Body of Knowledge** ([BoK](https://bok.eo4geo.eu/GIST)) is the following:
+- [[GIST] Geographic Information Science and Technology](https://bok.eo4geo.eu/GIST)
+    - [[AM](https://bok.eo4geo.eu/AM)] Analytical Methods. We derive analytical results from such as connectivity or redundancy from public Geospatial data. 
+        - [[AM11](https://bok.eo4geo.eu/AM11)] Network analysis. We used the road network of the Core Metropolitan area of Porto Alegre to derive results based on the graph theory.
+            - [[AM11-2](https://bok.eo4geo.eu/AM11-2)] Graph theoretic descriptive measures of networks. We used edge betweenness indicator to measure the level of connectivity on the road network of Porto Alegre.
+            - [[AM11-3](https://bok.eo4geo.eu/AM11-3)] Least-cost shortest path. We used pgrouting to compute the optimum path through a network with Dijkstras algorithm based on the weights given by OpenRouteService (ORS). 
+            - [[AM11-7](https://bok.eo4geo.eu/AM11-7)] Accessibility modeling. We defined a method for measuring redundancy on the access to hospitals.
 
 # Overview
 

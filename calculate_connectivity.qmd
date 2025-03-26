@@ -1,10 +1,13 @@
 # Calculate connectivity
 ## Research question 1
-### Intracity scale
 
-hj
+### Core Metropolitan scale
 
 ```{r}
+#| echo: false
+#| include: false
+
+# This code chunk is created to avoid running python notebook when the first chunk code is not in R.
 1+1
 ```
 
@@ -126,5 +129,110 @@ t1.id = t2.id;
 
 ```
 
-### Core Metropolitan scale
+
+### Intracity scale
+
+
+```{r}
+#| eval: false
+#| echo: true
+
+## Table with networks
+library(sf)
+table_rq_1_2_net <- st_read(connection, "table_rq_1_2_net")
+table_snapped <- st_read(connection, "table_snapped")
+municipalities_ghs <- st_read(connection, "municipalities_ghs")
+  
+for(idx in 1:9){
+  tic(glue("run {idx}/9")) 
+  table_name_1_centrality <- glue("net_largest_{as.character(idx)}")
+  temp_table_name <- glue("temp_centrality_{idx}")
+  table_bidirect_id <- glue("t_bidirect_id_{idx}")
+  dbExecute(glue_sql("DROP TABLE IF EXISTS {`temp_table_name`}", .con=connection),
+          conn=connection)  
+query_1_central <- glue_sql("CREATE TABLE {`temp_table_name`} AS
+ SELECT   
+ b.id,
+ b.geom,
+ count(b.geom) AS centrality 
+ FROM  pgr_dijkstra('SELECT id,
+                            fromid AS source,
+                            toid AS target,
+                            weight AS cost
+                      FROM {`table_name_1_centrality`}',
+                      ARRAY(SELECT 
+                        snapped_id AS start_id 
+                        FROM table_snapped 
+                        WHERE shapename_id = {idx}::text),
+                      ARRAY(SELECT
+                        snapped_id AS end_id 
+                        FROM table_snapped
+                        WHERE shapename_id = {idx}::text),
+                      directed := TRUE) j
+                      LEFT JOIN {`table_name_1_centrality`} AS b
+                      ON j.edge = b.id
+                      GROUP BY  b.id, geom;", .con=connection)
+
+dbExecute(con=connection, query_1_central)
+toc()
+}
+
+```
+
+Falta probar al menos uno. Este es el de Canoas
+
+```{r}
+#| eval: false
+#| echo: false
+
+---- 3 
+ CREATE TABLE centrality_bidirect_temp_centrality_3 AS
+SELECT t1.*,
+    t2."bidirectid"
+FROM
+    temp_centrality_3 t1
+JOIN
+    net_largest_3 t2
+ON
+    t1.fid = t2.fid;
+--- The final product requries  79941   
+select max("bidirectid") from centrality_bidirect_temp_centrality_3 ;
+create sequence bididirect_id_temp_centrality_3_seq start 99494;
+update centrality_bidirect_temp_centrality_3
+set "bidirectid" = nextval('bididirect_id_temp_centrality_3_seq')
+where "bidirectid" is null ;
+---- verify
+select count(*) 
+from centrality_bidirect_temp_centrality_3 
+where "bidirectid" is null; --- 0
+----
+create table centrality_bidirect_temp_centrality_3_bidirect_group as 
+select 
+       "bidirectid",
+       sum(centrality) as  centrality
+from centrality_bidirect_temp_centrality_3 
+group by "bidirectid"; --- this sum the centrality for duplicated bidirect id
+---
+---- now recover the id
+create table centrality_bidirect_temp_centrality_3_bidirect_group_id as 
+select t1.*, t2.fid
+from centrality_bidirect_temp_centrality_3_bidirect_group t1
+join centrality_bidirect_temp_centrality_3 t2 
+on t1."bidirectid" = t2."bidirectid"; 
+---- add geometries
+create table centrality_bidirect_temp_centrality_3_cleamed as
+select t1.*,
+    t2.the_geom,
+    t2.toid,
+    t2.fromid,
+    t2.weight,
+    t2."unidirectid"
+from 
+    centrality_bidirect_temp_centrality_3_bidirect_group_id t1
+join
+    net_largest_3 t2
+on
+  t1.fid = t2.fid;
+```
+
 ## Research question 2

@@ -1,3 +1,71 @@
 # Calculate short path
 
-Work in progress, waiting for acceptance.
+Wundertüte
+
+Population 2010, possibility to sample proportionally to municipalities' population.
+
+```{r}
+#| echo: true
+#| eval: false
+
+
+municipality_pop_geom <- left_join(municipalities_ghs,  population_2010, by = "row") |>
+  select(c(shapename,"Population_2010.y", geom)) |>
+  rename("population" = "Population_2010.y") |>
+  mutate(n_od_sampling = ceiling(municipality_pop_geom$population/sum(municipality_pop_geom$population) *n_samples_ghs))
+
+municipalities_ghs_leaflet <-  sf::st_read(connection,
+                                  Id(schema="agile_gis_2025_rs",
+                                     table="municipalities_ghs_leaflet"))
+
+tabela1378_bairros <- read_csv("/home/ricardors/heigit_data/tabela1378_bairros.csv")
+library(stringr)
+
+filtered_bairros <- data.frame()
+
+for (x in 1:length(municipalities_ghs$shapename)) {
+  # Select places that are in the municipality of the AoI
+  a= tabela1378_bairros[str_which(tabela1378_bairros$place, municipalities_ghs$shapename[x]),]
+  # Filter places that have code of 7 characters
+  a_filtered <- a[nchar(a$code) == 7, ] |>
+  # Remove space and the (RS) that indicates Rio Grande do Sul
+      mutate(place=str_remove(place, " \\(RS\\)"))
+  # Create dataset
+  filtered_bairros <- bind_rows(filtered_bairros, a_filtered)
+}
+
+# Add the population to municipalities_ghs
+municipalities_ghs$Population_2010 <- filtered_bairros$Population_2010
+
+# 
+municipalities_ghs <- municipalities_ghs |> 
+                            mutate(n_od_sampling = ceiling(
+                              municipalities_ghs$Population_2010/sum(municipalities_ghs$Population_2010) *n_samples))
+```
+
+
+Buildings from overture
+
+```{r}
+#| eval: false
+#| echo: true
+
+## Import data
+library(overturemapsr)
+core_metropolitan_area <- st_read(connection, Id(schema="agile_gis_2025_rs",
+                              table="core_metropolitan_area"))
+overture_buildings <- record_batch_reader(schema_type = 'building',
+                                          bbox = sf::st_bbox(core_metropolitan_area))
+## Subset data
+overture_roads_subset <- overture_roads |> dplyr::select(c(id, geometry,class,update_time, subtype))
+## Export data
+### Local file
+library(arrow)
+library(sfarrow)
+sfarrow::st_write_parquet(overture_roads, "overture_roads.parquet")
+### Database
+library(DBI)
+library(nanoarrow)
+DBI::dbWriteTable(eisenberg_connection, "overture_roads_subset", overture_roads_subset)
+```
+

@@ -1,10 +1,24 @@
 # Origin-Destination matrix
 
+```{r}
+#| eval: false
+#| include: false
+#| echo: false
+
+
+# Snapping
+od_200_each <- st_read(connection, Id(schema="agile_gis_2025_rs", table="od_200_each" ))
+od_200_each_group_id <- st_read(connection, Id(schema="public", table="od_200_each_group_id"))  |> 
+                          mutate(dense_rank = as.character(dense_rank)) 
+```
+
 Work in progress, waiting for acceptance. A
 
 ## Weighted OD
 
-### Create sampling points
+### Create weighted sampling points
+#### For the Core Metropolitan Area
+
 ```{r}
 #| eval: false
 #| echo: true
@@ -42,7 +56,52 @@ sf::dbWriteTable(connection, DBI::Id(schema = "agile_gis_2025_rs",
 table = "od_300_v2"), od)
 ```
 
-### Snap sampling points
+#### For the Intracity connectivity
+
+```{r}
+#| eval: false
+#| echo: true
+
+
+# Load the municipalities 
+municipalities_ghs <- sf::st_read(connection,
+                                  Id(schema="agile_gis_2025_rs",
+                                     table="municipalities_ghs"))
+# Select size of sample population
+n_samples <- 200
+
+# Create a list before looping for each municipality to generate sampling points
+sampled_points_list_200 <- list()
+library(tidyverse)
+for (idx in 1:nrow(municipalities_ghs)){
+  shapename <- municipalities_ghs$shapename[idx]
+  municipality_geom <- municipalities_ghs$wkb_geometry[idx]
+  n_od_samples <- n_samples
+  masked_ghs_aoi <- mask(build_masked, vect(municipality_geom))
+  
+od <- spatSample(masked_ghs_aoi, size = n_od_samples, method = "weights", as.points = TRUE) 
+ od_sf <- st_as_sf(od) |> st_transform(4326)
+  
+  # df with the point id and muncipality (shapename)
+  od_sf <- od_sf |> 
+    mutate(
+      id_sample = row_number(),
+      shapename = shapename
+    ) |> 
+    select(id_sample, shapename, geometry = geometry)
+  
+  # list that stores all the points
+  sampled_points_list_200[[idx]] <- od_sf
+}
+# Create a dataframe from the previous list created during the loop
+sampled_points_df_200 <- bind_rows(sampled_points_list_200)
+# Export from R to PostgreSQL
+DBI::dbWriteTable(connection, Id(schema="agile_gis_2025_rs","od_200_each"),sampled_points_df_200)
+```
+
+### Snap weighted sampling points
+
+#### For the Core Metropolitan Area
 
 ```{sql}
 #| eval: false
@@ -82,6 +141,105 @@ LATERAL (SELECT
 
 ```
 
+#### For the Intracity connectivity
+
+We created a numeric column named shapename_id to iterate for each of the municipalities' networks.
+
+```{sql}
+#| eval: false
+#| echo: true
+
+
+CREATE TABLE od_200_each_group_id AS
+SELECT 
+	*,
+dense_rank() OVER (ORDER BY shapename) 
+FROM od_200_each;
+
+```
+
+First, we create an empty table that contained the final columns. 
+
+```{r}
+#| echo: true
+#| eval: false
+library(glue)
+library(DBI)
+od_200_each_group_id <- st_read(connection,"od_200_each_group_id")
+
+table_snapped <- glue_sql("CREATE TABLE table_snapped 
+                (pt_id numeric,
+                snapped_id numeric,
+                shapename_id varchar(200),
+                shapename varchar(200),
+                geom geometry)", .con =connection)
+table_snapped_db <- dbGetQuery(conn=connection, table_snapped )
+
+```
+
+We snapped the sampling points to the closest vertice of the network. The table net_largest_1_vertices_pgr was created in the loop shown in code chunk Y. The final table table_snapped contained the sampling point weighted on the building density for each of the municipalities. Indicar aquí también que se puso en el public.
+
+```{r}
+#| echo: true
+#| eval: false
+
+## od_200_each_group_id
+for (idx in unique(od_200_each_group_id$dense_rank)){
+table_name_vertices <- glue("net_largest_{as.character(idx)}_vertices_pgr")
+table_name_result <- glue("od_200_each_snapped_{as.character(idx)}")
+
+dbExecute(glue_sql("DROP TABLE IF EXISTS {`table_name_result`}", .con=connection),
+          conn=connection)  
+query_1_snap <- glue_sql("CREATE TABLE {`table_name_result`} AS
+SELECT DISTINCT ON (net.id)
+       pt.id_sample AS pt_id,
+       net.id AS snapped_id,
+       pt.dense_rank AS shapename_id,
+       pt.shapename,
+       net.the_geom
+FROM 
+(SELECT * 
+FROM 
+    od_200_each_group_id
+    WHERE
+    dense_rank = {as.character(idx)}) as pt
+CROSS JOIN
+LATERAL (SELECT
+        * 
+        FROM {`table_name_vertices`} AS net
+         ORDER BY net.the_geom <-> pt.geometry 
+        LIMIT 1) AS net;", .con= connection)
+result_1_snap <- dbGetQuery(conn=connection, query_1_snap)
+ insert_query <- glue_sql("INSERT INTO table_snapped (pt_id, snapped_id, shapename_id,shapename, geom)
+                            SELECT pt_id, snapped_id, shapename_id,shapename, the_geom 
+                            FROM {`table_name_result`}", .con = connection)
+  dbExecute(conn = connection, insert_query)
+}
+
+```
+
+
+Parche, falló lo de la tabla. Por si acaso,
+
+```{r}
+#| eval: false
+#| echo: false
+
+for (idx in 1:9) {
+  table_name_result <- glue("od_200_each_snapped_{idx}")
+  
+  insert_query <- glue_sql("
+    INSERT INTO table_snapped (pt_id, snapped_id, shapename_id, shapename, geom)
+    SELECT pt_id, snapped_id, shapename_id, shapename, the_geom
+    FROM {`table_name_result`};
+  ", .con = connection)
+  
+  dbExecute(conn = connection, insert_query)
+}
+
+```
+
+
 ### Visualize Weigted OD
 
 Add you removed OpenBuilding for QGIS.
@@ -114,7 +272,10 @@ od_300_snapped_v2 <- st_read(
 library(raster)
 pal <- colorNumeric(c("#faebdd", "#cd1c4e", "#110c24"), values(build_masked),
   na.color = "transparent")
-
+pal_fct <- colorFactor(
+  palette = c('#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00','#ffff33','#a65628', '#f781bf','#999999' ),
+  domain = od_200_each$shapename
+)
 ### map
 library(leaflet)
 leaflet() |>
@@ -141,7 +302,14 @@ leaflet() |>
                     radius= 3,
                     color = "black",
                     dashArray = "1",
-                    group= "Weighted OD") |> 
+                    group= "Weighted OD - C.Metropolitan Area") |> 
+   addCircleMarkers(data=od_200_each,
+                    color = ~pal_fct(shapename),
+                    fillOpacity = 0.8,
+                    weight = 1.5,
+                    radius= 3,
+                    dashArray = "1",
+                    group= "Weighted OD - Municipality") |> 
   addRasterImage(build_masked,
                  opacity=0.7,
                  colors = pal,
@@ -150,10 +318,10 @@ leaflet() |>
     title = "Building Density (m³)") |> 
  addLayersControl(
     baseGroups = c("CartoDB.Positron", "Esri.WorldImagery"),
-    overlayGroups = c("Municipalities","Core Metropolitan Area", "Weighted OD","Bulding density"),
+    overlayGroups = c("Municipalities","Core Metropolitan Area", "Weighted OD - C.Metropolitan Area","Weighted OD - Municipality","Bulding density"),
     options = layersControlOptions(collapsed = FALSE)
   ) |>
-  hideGroup(c("Municipalities","Core Metropolitan Area")) |>
+  hideGroup(c("Municipalities","Core Metropolitan Area","Weighted OD - Municipality")) |>
   setView( lng =-51.21566 , lat = -30.04176, zoom = 12 ) 
 ```
 
@@ -290,7 +458,7 @@ st_write(obj = isochrones_poi_hospitals,
 ```
 
 
-### Create sampling points
+### Create regular sampling points
 
 FIrst he fcuntion: guck mal wo war diese Post 
 
@@ -413,7 +581,7 @@ FROM
 
 ```
 
-### Snap sampling points
+### Snap regular sampling points
 
 Regular
 
