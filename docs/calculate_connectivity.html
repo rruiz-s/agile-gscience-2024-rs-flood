@@ -287,8 +287,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#research-question-1" id="toc-research-question-1" class="nav-link active" data-scroll-target="#research-question-1"><span class="header-section-number">8.1</span> Research question 1</a>
   <ul class="collapse">
-  <li><a href="#intracity-scale" id="toc-intracity-scale" class="nav-link" data-scroll-target="#intracity-scale"><span class="header-section-number">8.1.1</span> Intracity scale</a></li>
-  <li><a href="#core-metropolitan-scale" id="toc-core-metropolitan-scale" class="nav-link" data-scroll-target="#core-metropolitan-scale"><span class="header-section-number">8.1.2</span> Core Metropolitan scale</a></li>
+  <li><a href="#core-metropolitan-scale" id="toc-core-metropolitan-scale" class="nav-link" data-scroll-target="#core-metropolitan-scale"><span class="header-section-number">8.1.1</span> Core Metropolitan scale</a></li>
+  <li><a href="#intracity-scale" id="toc-intracity-scale" class="nav-link" data-scroll-target="#intracity-scale"><span class="header-section-number">8.1.2</span> Intracity scale</a></li>
   </ul></li>
   <li><a href="#research-question-2" id="toc-research-question-2" class="nav-link" data-scroll-target="#research-question-2"><span class="header-section-number">8.2</span> Research question 2</a></li>
   </ul>
@@ -318,9 +318,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="research-question-1" class="level2" data-number="8.1">
 <h2 data-number="8.1" class="anchored" data-anchor-id="research-question-1"><span class="header-section-number">8.1</span> Research question 1</h2>
-<section id="intracity-scale" class="level3" data-number="8.1.1">
-<h3 data-number="8.1.1" class="anchored" data-anchor-id="intracity-scale"><span class="header-section-number">8.1.1</span> Intracity scale</h3>
-<p>hj</p>
+<section id="core-metropolitan-scale" class="level3" data-number="8.1.1">
+<h3 data-number="8.1.1" class="anchored" data-anchor-id="core-metropolitan-scale"><span class="header-section-number">8.1.1</span> Core Metropolitan scale</h3>
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
@@ -422,8 +421,53 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </details>
 </div>
 </section>
-<section id="core-metropolitan-scale" class="level3" data-number="8.1.2">
-<h3 data-number="8.1.2" class="anchored" data-anchor-id="core-metropolitan-scale"><span class="header-section-number">8.1.2</span> Core Metropolitan scale</h3>
+<section id="intracity-scale" class="level3" data-number="8.1.2">
+<h3 data-number="8.1.2" class="anchored" data-anchor-id="intracity-scale"><span class="header-section-number">8.1.2</span> Intracity scale</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Table with networks</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>table_rq_1_2_net <span class="ot">&lt;-</span> <span class="fu">st_read</span>(connection, <span class="st">"table_rq_1_2_net"</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>table_snapped <span class="ot">&lt;-</span> <span class="fu">st_read</span>(connection, <span class="st">"table_snapped"</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>municipalities_ghs <span class="ot">&lt;-</span> <span class="fu">st_read</span>(connection, <span class="st">"municipalities_ghs"</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(idx <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>){</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tic</span>(<span class="fu">glue</span>(<span class="st">"run {idx}/9"</span>)) </span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  table_name_1_centrality <span class="ot">&lt;-</span> <span class="fu">glue</span>(<span class="st">"net_largest_{as.character(idx)}"</span>)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  temp_table_name <span class="ot">&lt;-</span> <span class="fu">glue</span>(<span class="st">"temp_centrality_{idx}"</span>)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  table_bidirect_id <span class="ot">&lt;-</span> <span class="fu">glue</span>(<span class="st">"t_bidirect_id_{idx}"</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dbExecute</span>(<span class="fu">glue_sql</span>(<span class="st">"DROP TABLE IF EXISTS {`temp_table_name`}"</span>, <span class="at">.con=</span>connection),</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>          <span class="at">conn=</span>connection)  </span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>query_1_central <span class="ot">&lt;-</span> <span class="fu">glue_sql</span>(<span class="st">"CREATE TABLE {`temp_table_name`} AS</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="st"> SELECT   </span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="st"> b.id,</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="st"> b.geom,</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="st"> count(b.geom) AS centrality </span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="st"> FROM  pgr_dijkstra('SELECT id,</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="st">                            fromid AS source,</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="st">                            toid AS target,</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="st">                            weight AS cost</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="st">                      FROM {`table_name_1_centrality`}',</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="st">                      ARRAY(SELECT </span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="st">                        snapped_id AS start_id </span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="st">                        FROM table_snapped </span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="st">                        WHERE shapename_id = {idx}::text),</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a><span class="st">                      ARRAY(SELECT</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a><span class="st">                        snapped_id AS end_id </span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a><span class="st">                        FROM table_snapped</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a><span class="st">                        WHERE shapename_id = {idx}::text),</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a><span class="st">                      directed := TRUE) j</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a><span class="st">                      LEFT JOIN {`table_name_1_centrality`} AS b</span></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a><span class="st">                      ON j.edge = b.id</span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a><span class="st">                      GROUP BY  b.id, geom;"</span>, <span class="at">.con=</span>connection)</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a><span class="fu">dbExecute</span>(<span class="at">con=</span>connection, query_1_central)</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a><span class="fu">toc</span>()</span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Falta probar al menos uno. Este es el de Canoas</p>
 </section>
 </section>
 <section id="research-question-2" class="level2" data-number="8.2">
