@@ -1,0 +1,8 @@
+Data,Description,Link
+GHSL-Built-V,total built-up volume in m³,https://human-settlement.emergency.copernicus.eu/download.php?ds=builtV
+GHSL-SMOD,Degree of Urbanisation,https://human-settlement.emergency.copernicus.eu/download.php?ds=smod
+cheias_rhguaiba_2024_db_v11.gpkg,Flood extent,https://zenodo.org/records/12593168
+ETLCNES_SR_RS_21_12_t.csv,It includes ICU beds of healthcare facilities,https://www.synapse.org/Synapse:syn32211006
+Hospitais_com_Leitos_de_UTIs_no_RS.geojson,It includes healthcare facilities with ICU,https://iede.rs.gov.br/server/rest/services/SES/Hospitais_Leitos_UTI_RS/FeatureServer
+GeoBoundaries-BRA-ADM2,It contains subnational administrative boundaries in Brazil,https://data.humdata.org/dataset/geoboundaries-admin-boundaries-for-brazil
+OpenStreetMap data,"It represents the road network in the region of Sul, in Brazil",https://download.geofabrik.de/south-america/brazil/sul.html#

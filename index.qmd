@@ -27,6 +27,11 @@ The <span class="font-color">**submission type**</span> of this study is _use ca
 
 The table 1 summaries the initial data from which intermediate and final results are derived. The section link includes the origin of the data, so third parties to reuse. In addition, the public [github repository](https://github.com/rruiz-s/agile-gscience-2024-rs-flood) with open data license also provide the data of the study.
 
+The total built-up volume weighted the sampling of the origin and destination and is accessible via the following DOI:[10.2905/AB2F107A-03CD-47A3-85E5-139D8EC63283](https://human-settlement.emergency.copernicus.eu/ghs_buV2023.php). The degree of urbanization determined the urban dense settlement analysed contained the 9 municipalities that comprises the studied area named core metropolitan area and is accessible via the following DOI:[10.2905/A0DF7A6F-49DE-46EA-9BDE-563437A6E2BA](https://doi.org/10.2905/A0DF7A6F-49DE-46EA-9BDE-563437A6E2BA).Similarly, the subset of the flood is derived from the cheias_rhguaiba_2024_db_v11.gpkg accesible in the [DOI:10.5281/zenodo.11164049](https://doi.org/10.5281/zenodo.11164049). We also incorporated data from the Brazilian Institute of Geography and Statistics (IBGR) ^[[https://www.ibge.gov.br/cidades-e-estados/rs/](https://www.ibge.gov.br/cidades-e-estados/rs/)] to add the GPD of the municipalities or from the Economy and Statistics Department of Rio Grande do Sul State(DEE-SPGG) ^[[https://mup.rs.gov.br/](https://mup.rs.gov.br/)] about the population affected by the flood. For the hospitals, we used the dataset   Hospitais_com_Leitos_de_UTIs_no_RS.geojson that included the bed capacity and is accessible via the DOI:[10.7303/syn32211006.1](https://doi.org/10.7303/syn32211006.1). The location of the healthcare facility is obtained using the [WFS](https://iede.rs.gov.br/server/rest/services/SES/Hospitais_Leitos_UTI_RS/FeatureServer) provided by "Secretaria Estadual da Saúde/DGTI".  
+
+## Input data
+
+
 ```{r}
 #| echo: true
 #| eval: true
@@ -47,19 +52,6 @@ DT::datatable(extensions = 'Buttons',
               escape = FALSE) 
 ```
 
-The total built-up volume weighted the sampling of the origin and destination and is accessible via the following DOI:[10.2905/AB2F107A-03CD-47A3-85E5-139D8EC63283](https://human-settlement.emergency.copernicus.eu/ghs_buV2023.php). The degree of urbanization determined the urban dense settlement analysed contained the 9 municipalities that comprises the studied area named core metropolitan area and is accessible via the following DOI:[10.2905/A0DF7A6F-49DE-46EA-9BDE-563437A6E2BA](https://doi.org/10.2905/A0DF7A6F-49DE-46EA-9BDE-563437A6E2BA).Similarly, the subset of the flood is derived from the cheias_rhguaiba_2024_db_v11.gpkg accesible in the [DOI:10.5281/zenodo.11164049](https://doi.org/10.5281/zenodo.11164049). We also incorporated data from the Brazilian Institute of Geography and Statistics (IBGR) ^[[https://www.ibge.gov.br/cidades-e-estados/rs/](https://www.ibge.gov.br/cidades-e-estados/rs/)] to add the GPD of the municipalities or from the Economy and Statistics Department of Rio Grande do Sul State(DEE-SPGG) ^[[https://mup.rs.gov.br/](https://mup.rs.gov.br/)] about the population affected by the flood. For the hospitals, we used the dataset   Hospitais_com_Leitos_de_UTIs_no_RS.geojson that included the bed capacity and is accessible via the DOI:[10.7303/syn32211006.1](https://doi.org/10.7303/syn32211006.1). The location of the healthcare facility is obtained using the [WFS](https://iede.rs.gov.br/server/rest/services/SES/Hospitais_Leitos_UTI_RS/FeatureServer) provided by "Secretaria Estadual da Saúde/DGTI".  
-
-## Input data
-
-| Data            |Description        |        Link |
-|-----------------|:------------------|:-----------:|
-| GHSL-Built-V      |  total built-up volume  in m³  |       [GHSL-Built-V](https://human-settlement.emergency.copernicus.eu/download.php?ds=builtV)   |
-| GHSL-SMOD     | Degree of Urbanisation  |   [GHSL-SMOD](https://human-settlement.emergency.copernicus.eu/download.php?ds=smod) | 
-| cheias_rhguaiba_2024_db_v11.gpkg       | Flood extent obtained on the 29th April, 2024    |     [Flood extent](https://zenodo.org/records/12593168) |
-| ETLCNES_SR_RS_21_12_t.csv| It includes ICU beds of healthcare facilities   |[Hospital data](https://www.synapse.org/Synapse:syn32211006)       |
-| Hospitais_com_Leitos_de_UTIs_no_RS.geojson| It includes healthcare facilities with ICU |   [Hospitals](https://iede.rs.gov.br/server/rest/services/SES/Hospitais_Leitos_UTI_RS/FeatureServer)        |
-| geoBoundaries-BRA-ADM2 | It contains subnational administrative boundaries in Brazil | [Admiministrative units](https://data.humdata.org/dataset/geoboundaries-admin-boundaries-for-brazil) |
-|OpenStreetMap data | It represents the road network in the region of Sul, in Brazil | [OSM data](https://download.geofabrik.de/south-america/brazil/sul.html#) |
 
 # Computational Workflow
 
