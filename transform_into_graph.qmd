@@ -1,8 +1,14 @@
+
+
+# Transform into graph
+
 ```{r}
-#| eval: false
+#| eval: true
 #| echo: false
 #| include: false
-
+library(sf)
+library(DBI)
+library(RPostgres)
 connection <- DBI::dbConnect(RPostgres::Postgres(),
                              user="docker",
                              password="docker",
@@ -11,105 +17,47 @@ connection <- DBI::dbConnect(RPostgres::Postgres(),
                              port=25432)
 municipalities_ghs <- st_read(connection, Id(schema="agile_gis_2025_rs", table="municipalities_ghs"))
 ghs_aoi_net_largest <-  st_read(connection, Id(schema="agile_gis_2025_rs", table="ghs_aoi_net_largest"))
+table_rq_1_2_net <- st_read(connection, Id(schema="public", table="table_rq_1_2_net"))
+ors_raw_network <-  st_read(connection, Id(schema="agile_gis_2025_rs", table="ors_raw_network"))
+ors_raw_network_vertices_pgr <-  st_read(connection, Id(schema="agile_gis_2025_rs", table="ors_raw_network_vertices_pgr"))
 ```
 
-# Transform into graph
 
-Having obtained the OSM road network of the AOI, we run the docker for ORS ^[[https://giscience.github.io/openrouteservice/run-instance/running-with-docker](https://giscience.github.io/openrouteservice/run-instance/running-with-docker)],which transforms the OSM geometry into a routable graph.
-In the “ors-config.yml” from
-OpenRotueService (ORS), the “source file” parameter is set to find the directory contain-
-ing the OSM road network.
-OpenRouteService (ORS) created a routable network with
-costs and adding information for each node such as the origin, “fromId”, and the destina-
-tion, “toId”.
-The R script “get graph” from Marcel Reinmuth exported the ORS network
-named as “porto alegre net”.
-As indicated in the official documentation of pgrouting [[https://docs.pgrouting.org/latest/en/pgr dijkstra.html](https://docs.pgrouting.org/latest/en/pgr dijkstra.html)], we changed the data type of the columns “fromid” and “toid” to execute the function
-pgr dijkstra.
+## Run ORS
 
-<span class= "font-color">**Select Area of Interest (AOI)**</span>
+Having obtained the OpenStreetMap (OSM) road network of the AOI, we run the docker for <span class="font-color">**OpenRouteService (OSM)**</span>  ^[[https://giscience.github.io/openrouteservice/run-instance/running-with-docker](https://giscience.github.io/openrouteservice/run-instance/running-with-docker)],which transforms the OSM geometry into a routable graph. 
+
+Firstly, in the _ors-config.yml_ from OpenRotueService (ORS), the “source file” parameter located in the line 102 is set to find the directory containing the OSM road network. In this case, we set the directory to _/home/ors/files/porto_alegre_urban_center.osm.pbf_. Secondly, before running the docker, we added the file "porto_alegre_urban_center.osm.pbf" obtained in the lane obtain routable network to the directory files inside the docker. The last step is to run the ORS docker using the command [ORN-1] `docker compose up` in the terminal where the file _docker-compose.yml_ is located. Do not close this window or run the docker with the parameter -d.
+
+OpenRouteService (ORS) created a routable network with costs and adding information for each node such as the origin, “fromId”, and the destination, “toId”. We named _ors_raw_network_ to the table containing this network made up of 109653 edges and 83202 nodes.
+
+![Fig](data/figures/openrouteservice.png)
+
 
 ```{r}
 #| echo: false
 #| eval: false
 
 library(sf)
-component_analysis_network <- sf::st_read(postgresql_connection,
+component_analysis_network <- sf::st_read(connection,
                               DBI::Id(
                                 schema="agile_gis_2025_rs",
                                 "aoi_net_components"))
 
 ```
 
-# Visualising OSM and ORS network
+## Export from ORS to R
 
-```{=html}
-<iframe width="780" height="500" src="data/media/ors_osm_network.html" title="Quarto Documentation"></iframe>
-```
-
+The R script “get_graph” from Marcel Reinmuth exported the ORS network to R. This script contains the function get_graph() that allowed us to transfer the data from the ORS docker to the R enviroment. The parameters used were no_cores to 4, which depends on your CPU ; aoi and aoi_bbox to select and mask related to the AoI ; profile to 'driving-car'. It is possible to adjust these parameters to the user case. Finally, we exported this R object as _ors_raw_network.shp_.
 
 ```{r}
 #| eval: false
 #| echo: true
+#| code-summary: "[ORN-2] Importing ORS network to R"
 
-## Load data
-ors_network <- st_read(postgresql_connection, DBI::Id(schema="agile_gis_2025_rs", "ors_raw_network"))
-osm_network <- st_read(postgresql_connection, layer="planet_osm_line")
-## Create subset using a bounding box
-ors_subset <- ors_network |> dplyr::filter(undrctI ==62320) |> st_bbox()
-xrange <- ors_subset$xmax - ors_subset$xmin
-yrange <- ors_subset$ymax - ors_subset$ymin
-## Expand the bounding box
-ors_subset[1] <- ors_subset[1] + (1 * xrange) # xmin - left
-ors_subset[3] <- ors_subset[3] + (1 * xrange) # xmax - right
-ors_subset[2] <- ors_subset[2] - (2 * yrange) # ymin - bottom
-ors_subset[4] <- ors_subset[4] + (2 * yrange) # ymax - top
-## Convert bounding box into polygon
-ors_subset_bbox <- ors_subset %>%  # 
-  st_as_sfc() 
-
-ors_subset_bbox_manual <- c(-51.215816,
-                                    -30.034622,
-                                    -51.206353,
-                                    -30.025891) names(ors_subset_bbox_manual) <- c("xmin","ymin","xmax","ymax")
-bbox_manual <- st_as_sfc(st_bbox(ors_subset_bbox_manual, crs=4326))
-## Use the polygon to subset the network
-sf_use_s2(FALSE)
-intersection_ors <- sf::st_intersection(ors_network, bbox_manual)
-intersection_osm <- sf::st_intersection(st_transform(osm_network,4326), bbox_manual)
-## Mapview maps
-library(mapview)
-library(leafpop)
-m1 <- mapview(intersection_osm, 
-              color="#6e93ff",
-              layer.name ="OpenStreetMap - Geometry",
-              popup=leafpop::popupTable(intersection_osm, 
-                               zcol=c("osm_id","name","way")))
-m2 <- mapview(intersection_ors,
-              color ="#d50038",
-              layer.name="OpenRouteService -Graph",
-              popup=popupTable(intersection_ors))
-library(leafsync)
-sync(m1,m2) 
-```
-
-
-# Importing from ORS to R
-
-```{r}
-#| eval: false
-#| echo: true
-#| code-summary: "Importing ORS network to R"
-# Connect R with PostgreSQL
-library(DBI)
-postgresql_connection <- DBI::dbConnect(RPostgres::Postgres(),
-                                        user="docker",
-                                        password="docker",
-                                        host="localhost",
-                                        dbname="gis",
-                                        port=25432)
 # Import data from PostgreSQL into R
 library(sf)
+library(DBI)
 sampling_area <-  sf::st_read(postgresql_connection,
                               DBI::Id(
                                 schema="agile_gis_2025_rs",
@@ -124,34 +72,97 @@ exported_graph <- get_graph(port=8080,
                             aoi_bbox=sampling_area |> sf::st_bbox(),
                             aoi=sampling_area_aoi,
                             profile='driving-car',
-                            no_cores=12)
+                            no_cores=4)
 ### Storing the data
 sf_data <- exported_graph[[1]]
 net <- exported_graph[[2]]
 ### Exporting the data into a shp file
 sf_data  %>% sf::st_write("ors_raw_network.shp")
+
+# time: 626039 ms
+
 ```
 
-# Importing from R to PostgreSQL|QGIS
+This shapefile can be exported to PostgreSQL|QGIS.  The data in the PostgreSQL database is automatically available in QGIS using the DB Manager plugin^[[QGIS-DB Manger: https://docs.qgis.org/3.40/en/docs/user_manual/plugins/core_plugins/plugins_db_manager.html](https://docs.qgis.org/3.40/en/docs/user_manual/plugins/core_plugins/plugins_db_manager.html)].  since we connected it with each other already. Bear in mind that is required to refresh the connection when new data is imported to the server.
 
 ```{bash}
 #| eval: false
 #| echo: true
-#| code-summary: "The tool shp2phsql imported the data from R into PostgreSQL"
+#| code-summary: "The tool shp2pgsql imported the data from R into PostgreSQL"
 
 sudo shp2pgsql -D -I -S -s 4326 ors_raw_network ors_raw_network | psql -h localhost -p 25432
-# Note: The data in the PostgreSQL is automatically available in QGIS, since we connected it with each other already. Bear in mind that is required to refresh the connection when new data is imported to the server.
 ```
 
-# Obtaining pre-disaster network
+**troubleshooting 5**  When uploading the shapefile to the PostgreSQL database, the program frozen on occassions. We solved this by using ogr2ogr, R or QGIS instead of shp2pgsql.
 
-## Creating routable network for pgrouting
-### Analysing components lengths
+# Obtain pre-disaster network
+
+We used pgrouting [[Pgrouting: https://docs.pgrouting.org/latest/en/pgr dijkstra.html](https://docs.pgrouting.org/latest/en/pgr dijkstra.html)] to use the algorith Dijkstra for the centrality and redundancy analysis. The first part of the query [ORN-4] cast the variables toId, fromId and id to bigint as the documentation from pgrouting indicated. The function pgr_createverticestable created the pgrouting routable network generating the auxiliar table _ors_raw_network_vertices_pgr_. 
 
 ```{sql}
 #| eval: false
 #| echo: true
-#| code-summary: "The table aoi_net_componets classified all the components of the network for inspection"
+#| code-summary: "[ORN-3] Editing ORS network to be routable for pgrouting"
+
+--- Cast variables
+ALTER TABLE ors_raw_network 
+	ALTER COLUMN "toId" type bigint,
+	ALTER COLUMN "fromId" type bigint,
+	ALTER COLUMN "id" type bigint;
+
+--- Creating pgrouting network
+EXPLAIN ANALYZE
+SELECT pgr_createverticesTable('ors_raw_network',
+the_geom:='geom',
+source:='fromId',
+target:='toId');
+
+--- Execution time: 10580.669 ms
+```
+
+The following information shows the first 5 observations from the main table _ors_raw_network_.
+
+
+```{r}
+#| echo: false
+#| message: false
+
+library(kableExtra)
+library(dplyr)
+kbl(slice(ors_raw_network, 1:5))
+```
+
+The following table shows the first 5 observations from the auxiliary table _ors_raw_network_vertices_pgr_ created and required by pgrouting to calculate routes.
+
+```{r}
+#| echo: false
+#| message: false
+
+library(kableExtra)
+library(dplyr)
+kbl(slice(ors_raw_network_vertices_pgr, 1:5))
+```
+
+**troubleshooting 6**: Depending on the method and parameters to import the data, the columns name may be slightly different. For example, ogr_id instead of id or toId instead of toid. To solve this, it is possible to specifically name the geometry column using ogr2ogr with the paremeter `GEOMETRY_NAME=geom`. Alternatively, rename the column once uploaded in the database.
+
+## Select one routable network
+
+We explored the number of components of the raw ORS network using the function pgr_strongComponents()^[[Pgrouting-Components: https://docs.pgrouting.org/dev/en/pgr strongComponents.html](https://docs.pgrouting.org/dev/en/pgr strongComponents.html)]. The reason was that a routable network is considered as one-self connected connected component without disconnected parts or islands [@Lu2018]. We selected the component based on its length from a quantitative point of view and checking its location with a qualitative inspection.
+
+### Components length
+
+We analysed the distribution of the length on each of the networks component. The classification of the components is based on the quantiles as follows:
+
+* <span class="font-color">**Q1:**</span> Components of the network with a length less than the first quartile with a value of 0.027 km. The sum of all these  656 components is 8 km. 
+* <span class="font-color">**Q2:**</span> Components of the network with a length between 0.027 km and 0.057 km. When these 632 networks are added, the total length is 27 km.
+* <span class="font-color">**Q3:**</span> Components of the network with a length range from  0.057 km to 0.114 km. Adding the length of these 647 components returned a total length of 53 km.
+* <span class="font-color">**Q4:**</span> 645 Components with a length between 0.114 km and 10911 km having a total length of 281.2 km.
+* <span class="font-color">**Q5:**</span> We named "Q5" to the 1 component with a length higher than 10911 km. The total length is 10912 km.
+
+```{sql}
+#| eval: false
+#| echo: true
+#| code-summary: "[ORN-4] The table aoi_net_componets classified all the components of the network for inspection"
 
 CREATE TABLE aoi_net_components AS 
 --- Classify the network by their components
@@ -187,14 +198,15 @@ ghs_aoi_net_component_geom AS (
 								GROUP BY component
 								ORDER BY length DESC)
 SELECT * FROM all_component_net;
+---time:  4238.637 ms
 ```
 
-![Fig.1 Flowchart](data/figures/components_length_network.svg)
+![Fig.1 Length from the networks' components](data/figures/components_length_network.svg)
 
 ```{r}
 #| echo: true
 #| eval: false
-#| code-summary: "components"
+#| code-summary: "How to create the bar plot for a quantitative inspection"
 
 library(ggplot2)
 # optional
@@ -203,8 +215,8 @@ component_analysis_network$length_km <- component_analysis_network$length/1000
 
 component_analysis_network$quantile_cat <- 
   cut(component_analysis_network$length_km,
-      breaks= c(0,.027,.057,.114,10911,10911918), label=FALSE) # quantiles and largest network
-
+      breaks= c(0,.027,.057,.114,10911,10911918), label=FALSE) 
+# quantiles and largest network
 ## original plot
 p1 <- ggplot(component_analysis_network, aes(length_km,
                                              quantile,
@@ -234,41 +246,36 @@ ggplot(df, aes(x=quantile_cat, y=quantile_length), scale=4) +
   scale_y_break(c(282,10000), scale=2 , ticklabels = c(10000,10912)) +
   scale_y_break(c(52,280), scale=2,ticklabels=c(52,281.2))  +
     labs(
-      tag="Figure 2",
       fill= "Components by quantiles",
     x="Quantiles",
     y="Sum of the network's length (km)",
     caption ="Based on network's components obtained from pgrouting"
   ) +
-  scale_fill_manual(values= c("#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fc8d62"),labels=c("Q5 (n=1)",
-                              "Q4 (n=645)",
+  scale_fill_manual(values= c("#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fc8d62"),labels=c("Q1 (n=656)",
+                              "Q2 (n=632)",
                             "Q3 (n=647)",
-                              "Q2 (n=632) ",
-                              "Q1 (n=656)")) +
+                              "Q4 (n=645) ",
+                              "Q5 (n=1)")) +
   coord_flip() +
   theme_minimal() +
   theme(legend.position = "bottom")
 
 ```
 
+From a quantitative point of view, we selected the 1 component Q5 (orange) because it represented the 96% of the total road network discarding the rest 2580 components that only summed up a 4%.
 
+### Components locations
 
-
-### Analysing components locations
-
-
-Map
+From a qualitative point of view, we carried out a visual inspection to better understand the high number of components or self-connected networks.
 
 ```{=html}
 <iframe width="780" height="500" src="data/media/map_graphs_components.html" title="Quarto Documentation"></iframe>
 ```
 
-
-
 ```{r}
 #| eval: false
 #| echo: true
-#| code-summary: "Creating a map for visualization"
+#| code-summary: "How to create a map for qualitative inspection"
 
 ### Tidy component to be used as categorical variable
 library(forcats)
@@ -328,13 +335,16 @@ m5_net <- df_geom |>
 m1_net + m2_net + m3_net+  m4_net+m5_net
 ```
 
+We observed that the relatively small size of some objects appeared next to OSM objects categorized as "barriers", meaning that they were part of private properties. This is the case for the Villa's Home Resort. This qualitative inspection supported our decision to discard these areas as we did not consider it relatively important for an emergency response for this use case.
 
-## Core Metropolotian centrality
+## Network for Core Metropolotian centrality
+
+The query [ORN-5] analysed again the totaly of the _ors_raw_network_ but limiting the results to 1 ordered by its length in descending order. Using the field "fromid" and "node" allowed to create the pre-disaster network named as _ghs_aoi_net_largest_, which will be used to calculate the Core Metropolitan conectivity.
 
 ```{sql}
 #| eval: false
 #| echo: true
-#| code-summary: "The table ghs_aoi_net_largest selected the largest components of the network"
+#| code-summary: "[ORN-5] How to select the component Q5"
 
 CREATE TABLE ghs_aoi_net_largest AS
 --- Same as classifying the components in previous step
@@ -385,34 +395,19 @@ ghs_aoi_net_component_geom AS (
 							net_largest_component_network_ghs_aoi AS net_largest_component
 						WHERE 
 							net_multi_component."fromId" IN (net_largest_component.node);
+							
+---time: 6799.939 ms
 
 ```
 
-
-```{sql}
-#| eval: false
-#| echo: true
-#| code-summary: "Editing ORS network to be routable for pgrouting"
-
-ALTER TABLE ors_raw_network 
-	ALTER COLUMN "toId" type bigint,
-	ALTER COLUMN "fromId" type bigint,
-	ALTER COLUMN "id" type bigint;
-
-
-SELECT pgr_createverticesTable('ors_raw_network',
-the_geom:='geom',
-source:='fromId',
-target:='toId');
-```
-
-## Intracity connectivity
+## Network for Intracity connectivity
 
 We created tables in the "public" schema lowering the case of columns. There were several reasons. Firsly to reduce the number of tables in the schema "agile_gis_2025_rs" for better understanding. Secondly, we used the library glue [@glue], so we preferred to lower the case of the fields to parse SQL queries with ease. Similarly, the difficulty of parsing SQL queries is reported for the python module sql_alchemy ^[[https://stackoverflow.com/questions/68638554/change-all-column-names-to-lowercase-postgresql](https://stackoverflow.com/questions/68638554/change-all-column-names-to-lowercase-postgresql)]. We used a query[[https://www.postgresonline.com/article_pfriendly/141.html](https://www.postgresonline.com/article_pfriendly/141.html)] to create the statements to alter the columns' table.
 
 ```{sql}
 #| eval: false
 #| echo: true
+#| code-summary: "Creating a copy of the network in public schema"
 
 --- First, copy the tables from the schema agile_gis_2025_rs to public
 CREATE TABLE ghs_aoi_net_largest AS
@@ -443,16 +438,14 @@ ALTER TABLE public.ghs_aoi_net_largest_post RENAME "bdrctId" TO bdrctid;
 ALTER TABLE public.ghs_aoi_net_largest_post RENAME "fromId" TO fromid;
 ALTER TABLE public.ghs_aoi_net_largest_post RENAME "toId" TO toid;
 ALTER TABLE public.ghs_aoi_net_largest_post RENAME "undrctI" TO undrcti;
-ALTER TABLE public.net_1 RENAME "bdrctId" TO bdrctid;
-ALTER TABLE public.net_1 RENAME "fromId" TO fromid;
-ALTER TABLE public.net_1 RENAME "toId" TO toid;
-ALTER TABLE public.net_1 RENAME "undrctI" TO undrcti;
 ```
 
+The code chunk [ORN-6] created a table for each of the municipalities using a loop. In each iteration it intersected the pre-disaster network named _ghs_aoi_net_largest_ to each municipality, cast the variables for pgrouting, analysed the components and created a routable network for pgrouting . The result were 9 main tables (e.g. net_1) with the road network and 9 pgrouting auxiliary tables (e.g. net_1_vertices_pgr). On this occasion, we specify the names of the fields for pgr_dijkstra(). For example, the field "fromId" obtained using ORS is renamed as "source" for pgrouting.
 
 ```{r}
 #| eval: false
 #| echo: true
+#| code-summary: "[ORN-6] How to create a network for each municipality"
 
 library(glue)
 library(tictoc)
@@ -568,7 +561,17 @@ result_q4 <- dbGetQuery(conn= connection, query_4)
   
 	toc()
 }
+# time: 15077 ms
 ```
 
+**troubleshooting 7** When the pgr_dijkstra is not found, we copied the tables to the public schema and run again the code.
 
+```{r}
+#| echo: false
+#| messag: false
+
+library(kableExtra)
+library(dplyr)
+kbl(slice(table_rq_1_2_net, 1:5))
+```
 

@@ -1,8 +1,62 @@
-# Calculate short path
+# Extras
 
-Wundertüte
+Wundertüte, it will be finished by the deadline 2025.04.09
 
 Population 2010, possibility to sample proportionally to municipalities' population.
+
+```{r}
+#| eval: false
+#| echo: true
+library(units)
+
+## options(scipen=999)
+
+plot_resilience_v2 <-  resilience_visintini_table |>
+  mutate(rank = rank(resilience_visintini_table$lack_pre),
+         municipality = resilience_visintini_table$shapename,
+         letter = LETTERS[1:length(resilience_visintini_table$ds_cnes)],
+         area_hm_2 = round(st_area(isochrone_ghs_aoi)),
+          lack_norm = (lack_pre - min(lack_pre)) / (max(lack_pre) - min(lack_pre)),
+         ds_cnes=stringr::str_to_title(ds_cnes)) |> 
+  sf::st_drop_geometry() |> 
+  select(c(rank,letter,ds_cnes, municipality, lack_pre,beds, lack_post,lack_norm, beds, code, area_hm_2)) |>
+  arrange(lack_pre)
+
+plot_resilience_v2$area_hm_2 <-  units::set_units(plot_resilience_v2$area_hm_2, "hm^2") 
+x_mid <- mean(c(max(plot_resilience_v2$lack_pre, na.rm = TRUE), min(plot_resilience_v2$lack_pre, na.rm = TRUE)))
+y_mid <- mean(c(max(plot_resilience_v2$area_hm_2, na.rm = TRUE), min(plot_resilience_v2$area_hm_2, na.rm = TRUE)))
+
+
+ggplot(plot_resilience_v2, aes(x = lack_pre, y = area_hm_2, shape=code, colour=municipality)) +
+    geom_vline(xintercept = x_mid, linetype="dashed", linewidth=0.5, colour="darkgray") +
+    geom_hline(yintercept = y_mid, linetype="dashed", linewidth=0.5, colour="darkgray") +
+    ggplot2::geom_text(aes(label=letter), vjust=-1.5, size=5, show.legend = FALSE) +
+    geom_point(aes(shape = code, colour = municipality, fill=municipality, size = beds)) +
+   scale_size(range = c(3.5,10)) +
+  scale_shape_manual(values = c(23, 24))  +
+  expand_limits(y= units::set_units(c(2800, 9500),"hm^2"), x=c(150,850)) +
+  scale_x_reverse() +
+  annotate("text",
+           x = filter(plot_resilience_v2, lack_post ==0)$lack_pre[1],
+           y = filter(plot_resilience_v2, lack_post ==0)$area_hm_2[1],
+           label=filter(plot_resilience_v2, lack_post ==0)$ds_cnes[1],
+           colour="red") +
+  annotate("text",
+           x = filter(plot_resilience_v2, lack_post ==0)$lack_pre[2],
+           y = filter(plot_resilience_v2, lack_post ==0)$area_hm_2[2],
+           label=filter(plot_resilience_v2, lack_post ==0)$ds_cnes[2],
+           colour="red") +
+    annotate("text",
+           x = filter(plot_resilience_v2, lack_post ==0)$lack_pre[3],
+           y = filter(plot_resilience_v2, lack_post ==0)$area_hm_2[3],
+           label=filter(plot_resilience_v2, lack_post ==0)$ds_cnes[3],
+           colour="red") +
+  xlab("Lack of redundancy") +
+  ylab("10-minutes isochrone coverage") +
+  theme_minimal() +
+  theme(legend.position = "bottom") 
+```
+
 
 ```{r}
 #| echo: true
@@ -202,3 +256,185 @@ SELECT * FROM table_end_v2;
 
 ```
 
+
+Move this leaflet thingy to wundertute
+
+```{sql}
+#| eval: false
+#| echo: false
+
+---- Hospitals with ICU and their bed capacity -> ***Input for leaflet map****
+EXPLAIN ANALYZE
+CREATE TABLE hospital_bed_aux_leaflet AS
+SELECT 
+	h.fid,
+	initcap(h.ds_cnes) AS ds_cnes,
+	h.tp_risco,
+	h.nm_municip,
+	h.ds_bairro,
+	h.addr_ct,
+	h.geom_hospital,
+	h.distance,
+		aux_data."QTLEITP1",
+	aux_data."QTLEITP2",
+	aux_data."QTLEITP3",
+	"QTLEITP1"+"QTLEITP2"+"QTLEITP3" AS beds,
+	aux_data."NAT_JUR",
+	CASE
+		WHEN "NAT_JUR" IN (3069,3999)
+		THEN 'Private' ELSE 'Public'  
+	END AS nat_jur_cat,
+	initcap(h.nm_razao_s) AS nm_razao_s
+FROM 
+	etlcnes_hospital_selected AS aux_data
+JOIN
+	municipalities_ghs_hospitals AS h
+ON
+	h.cd_cnes = aux_data."CNES"; ---- Execution Time: 43.901 ms
+	
+--- Municipality of the AoI with additonial data from:
+------- A) IBGR: "https://www.ibge.gov.br/cidades-e-estados/rs/"
+--------B) DEE-SPGG: "https://mup.rs.gov.br/" 
+--- -> ***Input for leaflet map****
+EXPLAIN ANALYZE
+CREATE TABLE municipalities_ghs_leaflet AS
+SELECT shapename,
+	 wkb_geometry
+FROM municipalities_ghs; ----  8.511 ms
+--- Add new fields (A,B)
+ALTER TABLE municipalities_ghs_leaflet
+	ADD COLUMN "Pop.Aff" text,
+	ADD COLUMN "GDP" text ; --- 0.012S execute time
+--- Populate columns
+EXPLAIN ANALYZE
+	UPDATE municipalities_ghs_leaflet
+SET "Pop.Aff" = data."Pop.Aff",
+    "GDP" = data."GDP"
+FROM (VALUES
+    ('Alvorada', '26K (29%)', '15K'),
+    ('Cachoeirinha', '12K (9%)', '49K'),
+    ('Canoas', '157K (45%)', '63K'),
+    ('Esteio', '20K (26%)', '45K'),
+    ('Gravataí', '6K (2%)', '36K'),
+    ('Nova Santa Rita', '7K (24%)', '81K'),
+    ('Porto Alegre', '125K (9%)', '55K'),
+    ('Sapucaia do Sul', '6K (4%)', '29K'),
+    ('Viamão', '2K (1%)', '17K')
+) AS data(shapename, "Pop.Aff", "GDP")
+WHERE municipalities_ghs_leaflet.shapename = data.shapename; --- Execution Time: 0.596 ms
+
+```
+
+```{r}
+#| eval: false
+#| echo: true
+
+planet_osm_roads <- sf::st_read(connection,
+                                Id(schema="public", table = "planet_osm_roads"))
+library(stringr)
+freeway <- planet_osm_roads[stringr::str_which(planet_osm_roads$name, "Freeway"), ]
+avenida_salgado <- planet_osm_roads[stringr::str_which(planet_osm_roads$name, "Avenida Senador Salgado Filho"), ]
+castelo_branco <- planet_osm_roads[stringr::str_which(planet_osm_roads$name, "Castello Branco"), ]
+pereira_de_vargas <- planet_osm_roads[stringr::str_which(planet_osm_roads$name, "Pereira de Vargas"), ]
+rua_florianopolis <- planet_osm_roads[stringr::str_which(planet_osm_roads$name, "Rua Florianópolis"), ]
+
+sf::st_write(dsn=connection,obj=freeway)
+sf::st_write(dsn=connection,obj=castelo_branco)
+sf::st_write(dsn=connection,obj=pereira_de_vargas)
+sf::st_write(dsn=connection,obj=rua_florianopolis)
+sf::st_write(dsn=connection,obj=avenida_salgado)
+
+avenida_salgado_buffer <- st_buffer(avenida_salgado, dist = 30)
+freeway_buffer <- st_buffer(freeway, dist = 30)
+castelo_branco_buffer <- st_buffer(castelo_branco, dist = 30)
+pereira_de_vargas_buffer <- st_buffer(pereira_de_vargas, dist = 30)
+rua_florianopolis_buffer <- st_buffer(rua_florianopolis, dist = 30)
+
+## Freeway
+ic_pre_freeway <-  st_intersection(st_transform(local_connectivity_pre,3857), freeway_buffer)
+ic_post_freeway <-  st_intersection(st_transform(local_connectivity_post,3857), freeway_buffer)
+(sum(ic_post_freeway$centrality) - sum(ic_pre_freeway$centrality))/sum(ic_pre_freeway$centrality)*100
+
+## avenida_salgado
+ic_pre_avenida_salgado <-  st_intersection(st_transform(local_connectivity_pre,3857), avenida_salgado_buffer)
+ic_post_avenida_salgado <-  st_intersection(st_transform(local_connectivity_post,3857), avenida_salgado_buffer)
+(sum(ic_post_avenida_salgado$centrality) - sum(ic_pre_avenida_salgado$centrality))/sum(ic_pre_avenida_salgado$centrality)*100
+
+## pereira_de_vargas
+ic_pre_pereira_de_vargas <-  st_intersection(st_transform(local_connectivity_pre,3857), pereira_de_vargas_buffer)
+ic_post_pereira_de_vargas <-  st_intersection(st_transform(local_connectivity_post,3857), pereira_de_vargas_buffer)
+(sum(ic_post_pereira_de_vargas$centrality) - sum(ic_pre_pereira_de_vargas$centrality))/sum(ic_pre_pereira_de_vargas$centrality)*100
+## castelo_branco
+ic_pre_castelo_branco <-  st_intersection(st_transform(local_connectivity_pre,3857), castelo_branco_buffer)
+ic_post_castelo_branco <-  st_intersection(st_transform(local_connectivity_post,3857), castelo_branco_buffer)
+(sum(ic_post_castelo_branco$centrality) - sum(ic_pre_castelo_branco$centrality))/sum(ic_pre_castelo_branco$centrality)*100
+## rua_florianopolis
+ic_pre_rua_florianopolis <-  st_intersection(st_transform(local_connectivity_pre,3857), rua_florianopolis)
+ic_post_rua_florianopolis <-  st_intersection(st_transform(local_connectivity_post,3857), rua_florianopolis)
+(sum(ic_post_rua_florianopolis$centrality) - sum(ic_pre_rua_florianopolis$centrality))/sum(ic_pre_rua_florianopolis$centrality)*100
+## F
+
+
+```
+
+
+```{r}
+#| eval: false
+#| echo: true
+
+library(tidyverse)
+computation_agile <- read.csv("/home/ricardors/heigit_data/computation_times_agile_2025 _fresults.csv")
+library(ggplot2)
+
+library(ggiraph)
+library(tidyverse)
+library(patchwork)
+# First plot: Scatter plot
+bar1 <- ggplot(
+  data = mutate(summarise(group_by(subset(computation_agile, select=c(lane, time)), lane), time=sum(time)), time_total = time/sum(time)*100),
+  mapping = aes(
+    x = reorder(lane, time_total), y = time_total,
+    tooltip = paste("Car:", lane, "<br>Time (ms):", time_total),
+    data_id = lane
+  )
+) +
+  geom_col_interactive(fill = "skyblue") +
+  coord_flip() +
+  labs(
+    title = "Miles per GalSlon by Car",
+    x = "Car", y = "Miles per Gallon"
+  ) +
+  theme_bw()
+
+# Second plot: Bar plot
+bar <- ggplot(
+  data = computation_agile,
+  mapping = aes(
+    x = reorder(activity, time), y = time,
+    tooltip = paste("Car:", activity, "<br>Time (ms):", time),
+    data_id = activity
+  )
+) +
+  geom_col_interactive(fill = "skyblue") +
+  coord_flip() +
+  labs(
+    title = "Miles per Gallon by Car",
+    x = "Car", y = "Miles per Gallon"
+  ) +
+  theme_bw()
+
+# Combine the plots using patchwork
+combined_plot <- bar1 + bar +
+  plot_layout(ncol = 2)
+
+# Create a single interactive plot with both subplots
+interactive_plot <- girafe(ggobj = combined_plot)
+
+# Set options for the interactive plot
+interactive_plot <- girafe_options(
+  interactive_plot,
+  opts_hover(css = "fill:cyan;stroke:black;cursor:pointer;"),
+  opts_selection(type = "single", css = "fill:red;stroke:black;")
+)
+
+```

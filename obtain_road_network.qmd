@@ -8,7 +8,7 @@
 1+1
 ```
 
-## Clipping network from Area of Interest (AOI)
+## Select boundaries of the network
 
 The following PostgreSQL created the command to extract the OpenStreetMap (OSM)
 network from our area of interest (AOI) using osmium. Firstly, the Global Human Settle-
@@ -19,6 +19,7 @@ by osmium.
 ```{sql}
 #| echo: true
 #| eval: false
+#| code-summary: "[AoI -8] How to obtain the road network extent"
 
 --- The road network of the AOI is extracted as follows:
 --- 1.The GHS urban area that intersected with Porto Alegre city is selected
@@ -36,23 +37,23 @@ WITH porto_alegre_ghs AS (
 ),
 --- 2. The Bounding box that contained the core metropolitan area that intersects with the GHS
 core_metropolitan_area_ghs AS (
-	SELECT 
-		st_union(wkb_geometry) AS core_geom
-	FROM 
-		nuts
-	JOIN 
-		porto_alegre_ghs
-	ON 
-		st_intersects(nuts.wkb_geometry,
-					  porto_alegre_ghs.geom)),
+    SELECT 
+        st_union(wkb_geometry) AS core_geom
+    FROM 
+        nuts
+    JOIN 
+        porto_alegre_ghs
+    ON 
+        st_intersects(nuts.wkb_geometry,
+                      porto_alegre_ghs.geom)),
 --- 3. The Bounding box that contained the core metropolitan area is created
     core_metropolitan_area_ghs_bbox AS (
         SELECT
             st_setsrid(st_extent(core_geom), 4326) AS geom_bbox
         FROM
             core_metropolitan_area_ghs
-    ),					  
---- 3. An osmius command is generated using the core metropolitan area and its bounding box
+    ),                    
+--- 4. An osmius command is generated using the core metropolitan area and its bounding box
     core_metropolitan_bbox_osmium_command AS (
         SELECT
             ST_XMin(ST_SnapToGrid(geom_bbox, 0.0001)) AS min_lon,
@@ -68,19 +69,24 @@ core_metropolitan_area_ghs AS (
     AS osmium_command
     FROM
         core_metropolitan_bbox_osmium_command;
+  
+---time: 6.569 ms
 
 ```
 
-The result of the previous query returned the following command
+## Clip network using boundaries
+
+The result of the previous query returned the following osmium^[[Osmium: https://osmcode.org/docs.html](https://osmcode.org/docs.html)] command,
 
 ```{bash}
 #| eval: false
 #| echo: true
+#| code-summary: "[AoI-9] How to clip OSM data using osmium"
 
 osmium extract -b-51.2791,-30.1722,-50.9407,-29.8048 sul-240501.osm.pbf -o porto_alegre_urban_center.osm.pbf
-
+# time: 14029 ms
 ```
 
-The OSM network obtained with this osmium command was the road network input required for OpenRouteService (ORS) to generate a routable graph of the core metropolitan area of Porto Alegre instead of the entire Rio Grande do Sul network.
+The OSM network obtained with this osmium command was the road network input required for OpenRouteService (ORS) to generate a routable graph of the core metropolitan area of Porto Alegre instead of the entire Rio Grande do Sul network. We named _porto_alegre_urban_center.osm.pbf_ to the road network of our AoI.
 
-We obtained the data from Geofabrik ^[[https://quarto.org/docs/authoring/markdown-basics.html#footnotes](https://quarto.org/docs/authoring/markdown-basics.html#footnotes)] raw directory index 
+We obtained the OSM data from Geofabrik ^[[Geofabrik: https://quarto.org/docs/authoring/markdown-basics.html#footnotes](https://quarto.org/docs/authoring/markdown-basics.html#footnotes)] raw directory index 

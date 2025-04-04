@@ -151,7 +151,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Data and Software Availability</span></a>
+ <span class="menu-text">Welcome</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -246,17 +246,8 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#weighted-od" id="toc-weighted-od" class="nav-link active" data-scroll-target="#weighted-od">Weighted OD</a></li>
-  <li><a href="#regular-od" id="toc-regular-od" class="nav-link" data-scroll-target="#regular-od">Regular OD</a></li>
-  <li><a href="#calculate-connectivity" id="toc-calculate-connectivity" class="nav-link" data-scroll-target="#calculate-connectivity">Calculate connectivity</a></li>
-  <li><a href="#calculate-redundancy" id="toc-calculate-redundancy" class="nav-link" data-scroll-target="#calculate-redundancy">Calculate redundancy</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -280,33 +271,20 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This section describes the lane of the workflow that <span class="font-color"><strong>analyse centrality and resilience</strong></span>.</p>
+<p>This section describes the lane of the workflow that analyse centrality and resilience</p>
 <ul>
-<li>We <span class="font-color"><strong>transform into graph</strong></span> the road network from OSM using openrouteservice, which finally led to create the pre-disaster network.</li>
-<li>The flood extent is used to <span class="font-color"> <strong>extract the difference</strong></span> with the pre-disaster network obtaining the post-disaster network graph.</li>
+<li><span class="font-color"><strong>Origin-Destination matrix</strong></span> is the activity where we sampled Origin and Destination (OD) required to calculate the connectvity based on the edge betweenness centrality.</li>
+<li>We <span class="font-color"><strong>calculate connectivity</strong></span> using the centrality indicator edge betweenness. A weighted sampling based on the built-up volumen on a intracity scale for each municipality and on a core metropolitan scale for the whole AoI identified urban arteries of the road network.</li>
+<li>We <span class="font-color"><strong>calculate redundancy</strong></span> on the hospital access using regular sampling on isochrones from each of the hospitals found in the AoI.</li>
 </ul>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="data/figures/obtaining_routable_network.svg" class="img-fluid figure-img"></p>
-<figcaption>Fig.1 Flowchart</figcaption>
-</figure>
-</div>
-<p>The pre-processing phase is finished providing the main objects of the study, the flood extent, municipalities, road network and hospitals. We used these objects in the centrality and accessibility study. ## Regular OD</p>
-<section id="weighted-od" class="level2">
-<h2 class="anchored" data-anchor-id="weighted-od">Weighted OD</h2>
-</section>
-<section id="regular-od" class="level2">
-<h2 class="anchored" data-anchor-id="regular-od">Regular OD</h2>
-</section>
-<section id="calculate-connectivity" class="level2">
-<h2 class="anchored" data-anchor-id="calculate-connectivity">Calculate connectivity</h2>
-</section>
-<section id="calculate-redundancy" class="level2">
-<h2 class="anchored" data-anchor-id="calculate-redundancy">Calculate redundancy</h2>
-<p>Work in progress, waiting for acceptance.</p>
+<p><img src="data/figures/analyse_centrality_resilience.png" class="img-fluid" alt="Fig.1 Flowchart"> The Research Questions (RQ) asked in the introduction were the following:</p>
+<ul>
+<li>RQ1: <em>“How is road connectivity affected in pre-disasteer and post-disaster scenarios based on edge betweenness centrality?”</em>. The centrality results that shown the main urban arteries supported the answers given.</li>
+<li>RQ2: <em>“Which municipalities were most affected by the flood based on the edge betweenness centrality metric?”</em>. The aggregation of the centrality results on both scales provided the basis for the answer to this RQ.</li>
+<li>RQ3: <em>Which healthcare facility was less resilient in terms of lack of redundancy?</em>. The comparison between three alternative paths to the hospitals’ access revealed their lack of redundancy, giving the argumentation to answer this RQ.</li>
+</ul>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

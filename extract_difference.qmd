@@ -1,149 +1,10 @@
 # Extract difference
 
-```{r}
-#| eval: false
-#| echo: false
-#| include: false
-1+1
-```
+We extracted the difference between the road network and the flood extent creating the post-disaster network as result. In this section we described the process required to calculate the core metropolitan connectivity. For the intracity connectivity the process is the same but applied to each of the 9 networks.
 
-## Multi-step approach
-### Road in flood extent
+We used a multi-step approach to extract the difference due to the demanding process in terms of computing resources. Similarly to the section detect flood, we also tested the naive approach extracting the difference at once creating spatial indexes in PostGIS or using duckdb (without spatial index^[[DuckDB: https://github.com/duckdb/duckdb-spatial](https://github.com/duckdb/duckdb-spatial)].Given the results, we recommend the use of DuckDB for tasks with a high computational cost.  However, due to the modest CPU used in this analysis, this multi-step was the feasible option. 
 
-```{sql}
-#| eval: false
-#| echo: true
-
-CREATE TABLE porto_ghs_road_in AS
-  SELECT 
-      net.id,
-  CASE
-    WHEN ST_Contains(flood.geom, net.geom)
-    THEN net.geom
-    ELSE st_intersection(net.geom, flood.geom)
-  END AS geom
-FROM
-  ghs_aoi_net_largest AS net
-JOIN
-  flooding_cleaned_porto_union AS flood
-ON st_intersects(net.geom, flood.geom);
-
-```
-
-
-### Road out from flood extent
-
-```{sql}
-#| eval: false
-#| echo: true
-
---- 2) Network outside the flooding mask
-CREATE TABLE porto_ghs_road_out AS
-SELECT 
-  net.*
-FROM 
-  ghs_aoi_net_largest AS net
-WHERE 
-  net.id NOT IN (SELECT 
-  				            	id
-                  FROM 
-                        porto_ghs_road_in);
-
-```
-
-
-### Road on the flood extent boundary
-
-```{sql}
-#| eval: false
-#| echo: true
-
-
-CREATE TABLE porto_ghs_alegre_boundary AS
-WITH exterior_flood AS (
-SELECT
-	ST_ExteriorRing((ST_dump(union_geom)).geom) AS geom
-FROM
-	(
-	SELECT
-		ST_Union(flood.geom) AS union_geom
-	FROM
-		flooding_cleaned_porto AS flood
-	) AS subquery
-)
-SELECT 
-	net."id",
-	CASE
-		WHEN NOT ST_Contains(flood.geom, net.geom)
-		THEN net.geom
-		ELSE st_intersection(net.geom, flood.geom)
-	END AS geom,
-		net."toId",
-		net."fromId",
-		weight,
-		"undrctI",
-		"bdrctId"
-FROM
-	ghs_aoi_net_largest AS net
-JOIN
-	exterior_flood AS flood
-	ON
-	st_intersects(net.geom, flood.geom);
-	
-
-```
-
-```{sql}
-#| echo: true
-#| eval: false
-
-CREATE TABLE difference_outside_boundary AS
-SELECT
-    net.id,
-    net."toId",
-    net."fromId",
-    weight,
-    net."undrctI",
-    net."bdrctId",
-    st_difference(net.geom, flood.geom) AS geom
-FROM 
-    porto_ghs_alegre_boundary AS net,
-    flooding_cleaned_porto_union AS flood;
-```
-
-```{sql}
-#| echo: true
-#| eval: false
-#| code-summary: Create post-disaster network
-
-CREATE TABLE ghs_aoi_net_largest_post AS
-SELECT
-	id,
-	geom,
-	"toId",
-	"fromId",
-	weight,
-	"undrctI",
-	"bdrctId"
-FROM
-  porto_ghs_road_out
-UNION
-SELECT 
-	id,
-	geom,
-	"toId",
-	"fromId",
-	weight,
-	"undrctI",
-	"bdrctId"
-FROM 
-  difference_outside_boundary;
-```
-
-## Visualiza post-disaster network and each step
-
-Note: Important to use the united flood extent at the end, after using the subdivided for st_difference. Also mention the order of the columns
-
+The following map shows how we brokedown the process selecting several networks in each step. The layers pre-disaster network and post-disaster are the final results, while the networks roads in flood extent, boundary, outside and boundary-outside are intermediate steps.
 
 ```{=html}
 <iframe width="780" height="500" src="data/media/extract_post_network.html" title="Multi-step"></iframe>
@@ -271,3 +132,176 @@ mapview(porto_ghs_road_net_post_subset,
 ```
 
  
+
+```{r}
+#| eval: false
+#| echo: false
+#| include: false
+1+1
+```
+
+## Multi-step approach
+### Road in flood extent
+
+We selected the road segments in the flood extent applying the function st_intersection() with high computational cost only to the road segments inside the flood extent using the function st_contains(). The first two lines of the code [ORN-7] created spatial indexes to improve the performance.
+
+```{sql}
+#| eval: false
+#| echo: true
+#| code-summary: "[ORN-7] How to select road segments in the flood"
+
+CREATE INDEX idx_flooding_cleaned_porto_union_geom ON flooding_cleaned_porto_union USING gist(geom);
+CREATE INDEX idx_ghs_aoi_net_largest ON ghs_aoi_net_largest USING gist(geom);
+EXPLAIN ANALYZE
+CREATE TABLE porto_ghs_road_in AS
+  SELECT 
+      net.id,
+  CASE
+    WHEN ST_Contains(flood.geom, net.geom)
+    THEN net.geom
+    ELSE st_intersection(net.geom, flood.geom)
+  END AS geom
+FROM
+  ghs_aoi_net_largest AS net
+JOIN
+  flooding_cleaned_porto_union AS flood
+ON st_intersects(net.geom, flood.geom);
+
+---time:  11061.938 ms
+
+```
+
+### Road out from flood extent
+
+The code chunk [ORN-8] filtered out the road segments inside the flood by using a subquery of the table created in the code chunk [ORN-7]. Unlike the function st_intersection() in the previous code chunk that returned new geometries taking 11061 ms, using the numeric values in the where clause only took 359 ms.  
+
+```{sql}
+#| eval: false
+#| echo: true
+#| code-summary: "[ORN-8] How to select road segments outside the flood extent"
+
+--- 2) Network outside the flooding mask
+EXPLAIN ANALYZE
+CREATE TABLE porto_ghs_road_out AS
+SELECT 
+  net.*
+FROM 
+  ghs_aoi_net_largest AS net
+WHERE 
+  net.id NOT IN (SELECT 
+                                id
+                  FROM 
+                        porto_ghs_road_in);
+---time: 359.177 ms
+```
+
+### Road on the flood extent boundary
+
+We selected the road segments located in the boundary of the flood using the function st_exteriorring(). First, a CTE table named _exterior_flood_ created a geometry that only contained the boundaries of the flood extent. Then a similar query to [ORN-7] selected the road network in the flood boundary.
+
+```{sql}
+#| eval: false
+#| echo: true
+#| code-summary: "[ORN-9] How to select road segments on the flood boundary"
+
+CREATE INDEX idx_flooding_cleaned_porto ON flooding_cleaned_porto USING gist(geom);
+EXPLAIN ANALYZE
+CREATE TABLE porto_ghs_alegre_boundary AS
+WITH exterior_flood AS (
+SELECT
+    ST_ExteriorRing((ST_dump(union_geom)).geom) AS geom
+FROM
+    (
+    SELECT
+        ST_Union(flood.geom) AS union_geom
+    FROM
+        flooding_cleaned_porto AS flood
+    ) AS subquery
+)
+SELECT 
+    net."id",
+    CASE
+        WHEN NOT ST_Contains(flood.geom, net.geom)
+        THEN net.geom
+        ELSE st_intersection(net.geom, flood.geom)
+    END AS geom,
+        net."toId",
+        net."fromId",
+        weight,
+        "undrctI",
+        "bdrctId"
+FROM
+    ghs_aoi_net_largest AS net
+JOIN
+    exterior_flood AS flood
+    ON
+    st_intersects(net.geom, flood.geom);
+    
+---time: 17600.814 ms
+```
+
+For the post-disaster network we were only interested in those segments that fell outside from the flood boundary. The code chunk [ORN-10] calculate the difference on the road segments found in the flood boundary. Although the function st_difference() has high computing costs, we only applied it to the small fraction of the road network located in the flood boundary.    
+
+```{sql}
+#| echo: true
+#| eval: false
+#| code-summary: "[ORN-10] How to select road network outside the flood boundary"
+
+
+CREATE INDEX idx_porto_ghs_alegre_boundary_geom ON porto_ghs_alegre_boundary USING gist(geom);
+EXPLAIN ANALYZE
+CREATE TABLE difference_outside_boundary AS
+SELECT
+    net.id,
+    net."toId",
+    net."fromId"",
+    weight,
+    net."undrctI",
+    net."bdrctId",
+    st_difference(net.geom, flood.geom) AS geom
+FROM 
+    porto_ghs_alegre_boundary AS net,
+    flooding_cleaned_porto_union AS flood;
+    
+---time: 11235.65 ms  
+```
+
+The next query created the post-disaster network merging the road segments outside the flood extent with those located in the external side of the flood boundary. We included the name of the variables to ensure the same order, so the union is created sucessfuly. 
+
+```{sql}
+#| echo: true
+#| eval: false
+#| code-summary: "[ORN-11] How to create the post-disaster network"
+
+
+CREATE INDEX idx_difference_outside_boundary ON difference_outside_boundary USING btree(id); 
+CREATE INDEX idx_porto_ghs_road_out_id_ ON porto_ghs_road_out USING btree(id);
+EXPLAIN ANALYZE
+CREATE TABLE ghs_aoi_net_largest_post AS
+SELECT
+    id,
+    geom,
+    "toId",
+    "fromId",
+    weight,
+    "undrctI",
+    "bdrctId"
+FROM
+  porto_ghs_road_out
+UNION
+SELECT 
+    id,
+    geom,
+    "toId",
+    "fromId",
+    weight,
+    "undrctI",
+    "bdrctId"
+FROM 
+  difference_outside_boundary;
+---time: 581.093 ms
+```
+
+**Troubleshooting 8** Important to use the united flood extent at the end, after using the subdivided for st_difference. Also mention the order of the columns
+**Troubleshooting 9** When using the queries, a column is not found. Depending on how we imported the data, the name of the variables may change slightly. For example _undrctI_ also is named unidirectid. Checking the names of the variables solved this problem 
+

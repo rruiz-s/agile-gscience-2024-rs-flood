@@ -1,248 +1,29 @@
 # Origin-Destination matrix
 
 ```{r}
-#| eval: false
-#| include: false
+#| eval: true
 #| echo: false
+#| message: false
 
-
-# Snapping
-od_200_each <- st_read(connection, Id(schema="agile_gis_2025_rs", table="od_200_each" ))
-od_200_each_group_id <- st_read(connection, Id(schema="public", table="od_200_each_group_id"))  |> 
-                          mutate(dense_rank = as.character(dense_rank)) 
-```
-
-Work in progress, waiting for acceptance. A
-
-## Weighted OD
-
-### Create weighted sampling points
-#### For the Core Metropolitan Area
-
-```{r}
-#| eval: false
-#| echo: true
-
-# Import data
-library(sf) # handle vector files
-library(terra) # handle raster files
-buildings <- terra::rast("/home/ricardors/agile-gscience-2024-rs-flood/data/source_data/GHS_BUILT_V_E2020_GLOBE_R2023A_4326_100_V1_0_RioGrandeDoSul.tif")
-pop_ghs <- 300 # set up number of sampling points
-## Select area of interest from the database
-municipalities_ghs <- sf::read_sf(connection,
-                                  DBI::Id(schema="agile_gis_2025_rs",
-                                          table="municipalities_ghs"))
-municipalities_ghs_reproj <- municipalities_ghs |>
-                                            st_transform(crs(buildings))
-build_cropped <- crop(buildings,
-                      municipalities_ghs_reproj)
-## Reproject for sampling
-build_4326 <- terra::project(build_cropped,
-                             crs(municipalities_ghs))
-build_masked <- terra::mask(build_4326,
-                            municipalities_ghs)
-## Weighted sampling
-set.seed(123)
-od <- spatSample(build_masked,
-                     pop_ghs,
-                    "weights",
-                     as.points = TRUE) |>
-                st_as_sf() |>
-                st_transform(4326)
-## Rename column
-names(od)[1] <- "building"
-## Upload the sampling points to the database
-sf::dbWriteTable(connection, DBI::Id(schema = "agile_gis_2025_rs",
-table = "od_300_v2"), od)
-```
-
-#### For the Intracity connectivity
-
-```{r}
-#| eval: false
-#| echo: true
-
-
-# Load the municipalities 
-municipalities_ghs <- sf::st_read(connection,
-                                  Id(schema="agile_gis_2025_rs",
-                                     table="municipalities_ghs"))
-# Select size of sample population
-n_samples <- 200
-
-# Create a list before looping for each municipality to generate sampling points
-sampled_points_list_200 <- list()
-library(tidyverse)
-for (idx in 1:nrow(municipalities_ghs)){
-  shapename <- municipalities_ghs$shapename[idx]
-  municipality_geom <- municipalities_ghs$wkb_geometry[idx]
-  n_od_samples <- n_samples
-  masked_ghs_aoi <- mask(build_masked, vect(municipality_geom))
-  
-od <- spatSample(masked_ghs_aoi, size = n_od_samples, method = "weights", as.points = TRUE) 
- od_sf <- st_as_sf(od) |> st_transform(4326)
-  
-  # df with the point id and muncipality (shapename)
-  od_sf <- od_sf |> 
-    mutate(
-      id_sample = row_number(),
-      shapename = shapename
-    ) |> 
-    select(id_sample, shapename, geometry = geometry)
-  
-  # list that stores all the points
-  sampled_points_list_200[[idx]] <- od_sf
-}
-# Create a dataframe from the previous list created during the loop
-sampled_points_df_200 <- bind_rows(sampled_points_list_200)
-# Export from R to PostgreSQL
-DBI::dbWriteTable(connection, Id(schema="agile_gis_2025_rs","od_200_each"),sampled_points_df_200)
-```
-
-### Snap weighted sampling points
-
-#### For the Core Metropolitan Area
-
-```{sql}
-#| eval: false
-#| echo: true
-#| code-summary: snapping
-
-# Create "id" column as a pre-requisite for snapping
-ALTER TABLE od_300_v2
-ADD COLUMN id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY;
-
-# Split this comments into several chunks
-ALTER TABLE ghs_aoi_net_largest 
-    ALTER COLUMN "toId" type bigint,
-    ALTER COLUMN "fromId" type bigint,
-    ALTER COLUMN "id" type bigint;
-
-# Similar to chunk X
-SELECT pgr_createverticesTable('ghs_aoi_net_largest',
-the_geom:='geom',
-source:='fromId',
-target:='toId');
-
-CREATE TABLE od_300_snapped_v2 AS
-SELECT DISTINCT ON (net.id)
-  pt.id AS pt_id, --- original position of the Origin-Destination
-  net.id AS snapped_id, --- snapped position of the Origin-Destination
-  net.geometry
-FROM
-(SELECT * FROM od_300_v2 AS pt) as pt
-CROSS JOIN
-LATERAL (SELECT
-            *
-        FROM
-          ghs_aoi_net_largest_vertices_pgr AS net
-        ORDER BY net.geom <->pt.geometry
-        LIMIT 1) AS net;
-
-```
-
-#### For the Intracity connectivity
-
-We created a numeric column named shapename_id to iterate for each of the municipalities' networks.
-
-```{sql}
-#| eval: false
-#| echo: true
-
-
-CREATE TABLE od_200_each_group_id AS
-SELECT 
-	*,
-dense_rank() OVER (ORDER BY shapename) 
-FROM od_200_each;
-
-```
-
-First, we create an empty table that contained the final columns. 
-
-```{r}
-#| echo: true
-#| eval: false
-library(glue)
 library(DBI)
-od_200_each_group_id <- st_read(connection,"od_200_each_group_id")
-
-table_snapped <- glue_sql("CREATE TABLE table_snapped 
-                (pt_id numeric,
-                snapped_id numeric,
-                shapename_id varchar(200),
-                shapename varchar(200),
-                geom geometry)", .con =connection)
-table_snapped_db <- dbGetQuery(conn=connection, table_snapped )
-
-```
-
-We snapped the sampling points to the closest vertice of the network. The table net_largest_1_vertices_pgr was created in the loop shown in code chunk Y. The final table table_snapped contained the sampling point weighted on the building density for each of the municipalities. Indicar aquí también que se puso en el public.
-
-```{r}
-#| echo: true
-#| eval: false
-
-## od_200_each_group_id
-for (idx in unique(od_200_each_group_id$dense_rank)){
-table_name_vertices <- glue("net_largest_{as.character(idx)}_vertices_pgr")
-table_name_result <- glue("od_200_each_snapped_{as.character(idx)}")
-
-dbExecute(glue_sql("DROP TABLE IF EXISTS {`table_name_result`}", .con=connection),
-          conn=connection)  
-query_1_snap <- glue_sql("CREATE TABLE {`table_name_result`} AS
-SELECT DISTINCT ON (net.id)
-       pt.id_sample AS pt_id,
-       net.id AS snapped_id,
-       pt.dense_rank AS shapename_id,
-       pt.shapename,
-       net.the_geom
-FROM 
-(SELECT * 
-FROM 
-    od_200_each_group_id
-    WHERE
-    dense_rank = {as.character(idx)}) as pt
-CROSS JOIN
-LATERAL (SELECT
-        * 
-        FROM {`table_name_vertices`} AS net
-         ORDER BY net.the_geom <-> pt.geometry 
-        LIMIT 1) AS net;", .con= connection)
-result_1_snap <- dbGetQuery(conn=connection, query_1_snap)
- insert_query <- glue_sql("INSERT INTO table_snapped (pt_id, snapped_id, shapename_id,shapename, geom)
-                            SELECT pt_id, snapped_id, shapename_id,shapename, the_geom 
-                            FROM {`table_name_result`}", .con = connection)
-  dbExecute(conn = connection, insert_query)
-}
-
+library(dplyr)
+library(RPostgres)
+## connect to PostgreSQL
+connection <- DBI::dbConnect(RPostgres::Postgres(),
+                             user="docker",
+                             password="docker",
+                             host="localhost",
+                             dbname="gis",
+                             port=25432)
+od_300_v2 <- sf::st_read(connection, Id(schema="agile_gis_2025_rs",table="od_300_v2"))
+od_200_each <- sf::st_read(connection, Id(schema="agile_gis_2025_rs",table="od_200_each"))
+od_300_snapped_v2 <- sf::st_read(connection, Id(schema="agile_gis_2025_rs",table="od_300_snapped_v2"))
 ```
 
 
-Parche, falló lo de la tabla. Por si acaso,
+We created Origin and Destination (OD) points to create shortest path in each of the combinations using the costs from ORS instead of the distance. 
 
-```{r}
-#| eval: false
-#| echo: false
-
-for (idx in 1:9) {
-  table_name_result <- glue("od_200_each_snapped_{idx}")
-  
-  insert_query <- glue_sql("
-    INSERT INTO table_snapped (pt_id, snapped_id, shapename_id, shapename, geom)
-    SELECT pt_id, snapped_id, shapename_id, shapename, the_geom
-    FROM {`table_name_result`};
-  ", .con = connection)
-  
-  dbExecute(conn = connection, insert_query)
-}
-
-```
-
-
-### Visualize Weigted OD
-
-Add you removed OpenBuilding for QGIS.
+For the centrality, we used the Global Human Settlement Built-up volume raster to obtain a <span class='font-color'>**weighted OD**</span>. Those regions with a higher built-up volume had a higher number of OD. The following map shows the weighted OD based on the building density that were used to calculate the core metropolitan centrality of the AoI (Core Metropolitan Area) and to calculate the intracity connectivity (Municipality).
 
 ```{=html}
 <iframe width= "780" height="500" src="data/media/weighted_od.html" title "Weighted OD"></iframe>
@@ -252,6 +33,7 @@ Add you removed OpenBuilding for QGIS.
 ```{r}
 #| eval: false
 #| echo: true
+#| code-summary: "How to create the map that shows weighted OD sampling to calculate centrality of the road network"
 
 library(sf)
 library(DBI)
@@ -324,6 +106,338 @@ leaflet() |>
   hideGroup(c("Municipalities","Core Metropolitan Area","Weighted OD - Municipality")) |>
   setView( lng =-51.21566 , lat = -30.04176, zoom = 12 ) 
 ```
+
+For the the redundancy, a component of the resiliene, we used a <span class='font-color'>**regular OD**</span> sampling in isochrones of 10 minutes for the hospitals equiped with ICU beds in the Area of Interest. The following map shows these Isochornes, hospitals as Point of Interest (PoI) and the regular OD samples.
+
+```{=html}
+<iframe width="780" height=500 src="data/media/regular_od.html" title="Regular OD"></iframe>
+```
+
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-summary: "How to create the map that shows regular OD sampling to calculate redundancy of the hospitals"
+
+## Import data:
+regular_sampling_isochrones_snapped_ghs_aoi <- 
+  sf::st_read(connection, Id(schema="agile_gis_2025_rs",table="regular_sampling_isochrones_snapped_ghs_aoi"))
+
+## style:
+factpal <- colorFactor(topo.colors(22), isochrones_poi_hospitals$ds_cnes)
+## Map
+leaflet() |>
+  addTiles()  |>
+  addProviderTiles("CartoDB.Positron", group = "CartoDB.Positron")  |>
+  addProviderTiles("Esri.WorldImagery", group = "Esri.WorldImagery")  |>   
+  addProviderTiles("CartoDB.DarkMatter", group = "CartoDB.DarkMatter") |> 
+  addCircleMarkers(data=hospitals_poi,
+                    fillColor = "yellow",
+                    fillOpacity = 0.6,
+                    weight = 3,
+                    radius = 5,
+                    color = "red",
+                    dashArray = "1",
+                    group= "Hospitals PoI") |> 
+  addPolygons(data=isochrones_poi_hospitals,
+                    fillOpacity = 0.2,
+                    weight = 2,
+                    color = ~factpal(ds_cnes),
+                    dashArray = "1",
+                    group= "Isochrones") |> 
+  addCircleMarkers(data=regular_sampling_isochrones_snapped_ghs_aoi,
+                    fillOpacity = 0.8,
+                    weight = 1.5,
+                    radius= 3,
+                    color =~factpal(ds_cnes),
+                    dashArray = "1",
+                    group= "Regular OD") |> 
+ addLayersControl(
+    baseGroups = c("CartoDB.Positron", "Esri.WorldImagery","CartoDB.DarkMatter"),
+    overlayGroups = c("Hospitals PoI","Isochrones", "Regular OD"),
+    options = layersControlOptions(collapsed = FALSE)
+  ) |> 
+    setView( lng =-51.01134 , lat = -29.93259, zoom = 11.5 ) 
+```
+
+**Troubleshootin 10** There were several tables when exporting _od_300_v2_ to GIS from PostgreSQL database. The reason is that unlike PostgreSQL, QGIS only admit one geometry type column. We solved this checking the attribute table in QGIS and choosing the table accordingly. 
+
+```{r}
+#| eval: false
+#| include: false
+#| echo: false
+
+
+# Snapping
+od_200_each <- st_read(connection, Id(schema="agile_gis_2025_rs", table="od_200_each" ))
+od_200_each_group_id <- st_read(connection, Id(schema="public", table="od_200_each_group_id"))  |> 
+                          mutate(dense_rank = as.character(dense_rank)) 
+```
+
+
+## Weighted OD
+
+### Create weighted sampling points
+#### For the Core Metropolitan Area
+
+We masked the global dataset GHS-Built-up volume to the area of interest named Core Metropolitan Area and took 300 samples based the building density. A higher number of points caused the `ERROR:  invalid memory alloc request size 2450771848`, however, a possible solution is to iterate using batch queries. Although the limitation of the OD to 300 points could be an underrepresented of the phenomena, we did observed similar patterns in the centrality with visual inspections. The function spatSample from the library terra [@terra] created the table _od_300_v2_ that is used to calculate the core metropolitan centrality.
+
+```{r}
+#| eval: false
+#| echo: true
+#| code-summary: "[ACR-1] How to take weighted OD samples in the Core Metropolitan Area"
+
+# Import data
+library(sf) # handle vector files
+library(terra) # handle raster files
+buildings <- terra::rast("/home/ricardors/agile-gscience-2024-rs-flood/data/source_data/GHS_BUILT_V_E2020_GLOBE_R2023A_4326_100_V1_0_RioGrandeDoSul.tif")
+pop_ghs <- 300 # set up number of sampling points
+## Select area of interest from the database
+municipalities_ghs <- sf::read_sf(connection,
+                                  DBI::Id(schema="agile_gis_2025_rs",
+                                          table="municipalities_ghs"))
+municipalities_ghs_reproj <- municipalities_ghs |>
+                                            st_transform(crs(buildings))
+build_cropped <- crop(buildings,
+                      municipalities_ghs_reproj)
+## Reproject for sampling
+build_4326 <- terra::project(build_cropped,
+                             crs(municipalities_ghs))
+build_masked <- terra::mask(build_4326,
+                            municipalities_ghs)
+## Weighted sampling
+set.seed(123)
+od <- spatSample(build_masked,
+                     pop_ghs,
+                    "weights",
+                     as.points = TRUE) |>
+                st_as_sf() |>
+                st_transform(4326)
+## Rename column
+names(od)[1] <- "building"
+## Upload the sampling points to the database
+sf::dbWriteTable(connection, DBI::Id(schema = "agile_gis_2025_rs",
+table = "od_300_v2"), od)
+
+# time: 721 ms
+```
+
+```{r}
+#| echo: false
+#| message: false
+library(kableExtra)
+kbl(slice(od_300_v2,1:5))
+```
+
+#### For the Intracity connectivity
+
+We iterated through each municipality masking the GHS-Built-up volume and taking 200 weighted OD samples. The list that stored all the iterations is converted into a spatial dataframe (sf).
+
+```{r}
+#| eval: false
+#| echo: true
+#| code-summary: "[ACR-2] How to take weighted OD samples for each Municipality"
+
+# Load the municipalities 
+municipalities_ghs <- sf::st_read(connection,
+                                  Id(schema="agile_gis_2025_rs",
+                                     table="municipalities_ghs"))
+# Select size of sample population
+n_samples <- 200
+
+# Create a list before looping for each municipality to generate sampling points
+sampled_points_list_200 <- list()
+library(tidyverse)
+for (idx in 1:nrow(municipalities_ghs)){
+  shapename <- municipalities_ghs$shapename[idx]
+  municipality_geom <- municipalities_ghs$wkb_geometry[idx]
+  n_od_samples <- n_samples
+  masked_ghs_aoi <- mask(build_masked, vect(municipality_geom))
+  
+od <- spatSample(masked_ghs_aoi, size = n_od_samples, method = "weights", as.points = TRUE) 
+ od_sf <- st_as_sf(od) |> st_transform(4326)
+  
+  # df with the point id and muncipality (shapename)
+  od_sf <- od_sf |> 
+    mutate(
+      id_sample = row_number(),
+      shapename = shapename
+    ) |> 
+    select(id_sample, shapename, geometry = geometry)
+  
+  # list that stores all the points
+  sampled_points_list_200[[idx]] <- od_sf
+}
+# Create a dataframe from the previous list created during the loop
+sampled_points_df_200 <- bind_rows(sampled_points_list_200)
+# Export from R to PostgreSQL
+DBI::dbWriteTable(connection, Id(schema="agile_gis_2025_rs","od_200_each"),sampled_points_df_200)
+# time: 1468 ms
+```
+
+The following table shows the first 5 observations from the table _od_200_each_ where the municipality is indicated in the field shapename.
+
+```{r}
+#| echo: false
+#| message: false
+library(kableExtra)
+kbl(slice(od_200_each,1:5))
+```
+
+### Snap weighted sampling points
+#### For the Core Metropolitan Area
+
+The sampling points of the OD matrix are not necessary located on the road network, therefore it is necessary to snap these points. Previous to snap the points, we made the largest component of the road network routable. (i.e. _ghs_ao_net_largest_). Subsequently, we indexed the geometries and ID variables to improve computational efficiency. We calculated the Euclidean distance between each sampling point and the nodes from the road network nodes. By limiting the results by one, we selected the closest node for each sampling point.
+
+```{sql}
+#| eval: false
+#| echo: true
+#| code-summary: "[ACR-3] How to snap the sampling points from the OD matrix to the road network"
+
+--- (optional) Create "id" column as a pre-requisite for snapping if it is not created before.
+ALTER TABLE od_300_v2
+ADD COLUMN id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY;
+
+--- Similar to [ORN-3], we make the largest component routable
+---   First we cast the variables according to pgrouting requirements
+ALTER TABLE ghs_aoi_net_largest 
+    ALTER COLUMN "toId" type bigint,
+    ALTER COLUMN "fromId" type bigint,
+    ALTER COLUMN "id" type bigint;
+--- Second we create the auxiliary table ghs_aoi_net_largest_vertices_pgr
+SELECT pgr_createverticesTable('ghs_aoi_net_largest',
+the_geom:='geom',
+source:='fromId',
+target:='toId');
+
+--- Create  indexes to improve queries performance.
+CREATE INDEX idx_od_300_v2_id ON od_300_v2 USING btree(id);
+CREATE INDEX idx_od_300_v2_geom ON od_300_v2 USING gist(geometry);
+CREATE INDEX idx_ghs_aoi_net_largest_vertices_pgr ON ghs_aoi_net_largest_vertices_pgr USING btree(fid);
+--- Snap the OD to the nodes of ghs_aoi_net_largest_vertices_pgr
+EXPLAIN ANALYZE
+CREATE TABLE od_300_snapped_v2 AS
+SELECT DISTINCT ON (net.id)
+  pt.id AS pt_id, --- original position of the Origin-Destination
+  net.id AS snapped_id, --- snapped position of the Origin-Destination
+  net.the_geom
+FROM
+(SELECT * FROM od_300_v2 AS pt) as pt
+CROSS JOIN
+LATERAL (SELECT
+            *
+        FROM
+          ghs_aoi_net_largest_vertices_pgr AS net
+        ORDER BY net.the_geom <->pt.geometry
+        LIMIT 1) AS net;
+---time: 35.474 ms
+```
+
+#### For the Intracity connectivity
+
+The OD matrix is limited to each municipality instead of the core metropolitan area.  We created a numeric column named shapename_id to iterate each municipalities' networks.
+
+```{sql}
+#| eval: false
+#| echo: true
+#| code-summary: "[ACR-4-1] How to snap the sampling points from the OD matrix to each municipality road network"
+
+--- Create a ID for each municipality
+CREATE TABLE od_200_each_group_id AS
+SELECT 
+	*,
+dense_rank() OVER (ORDER BY shapename) 
+FROM od_200_each;
+---time: 13.858 ms
+
+
+```
+
+First, we create an empty table that contained the final columns. 
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-summary: "[ACR-4-2] How to snap the sampling points from the OD matrix to each municipality road network"
+library(glue)
+library(DBI)
+od_200_each_group_id <- st_read(connection,"od_200_each_group_id")
+
+table_snapped <- glue_sql("CREATE TABLE table_snapped 
+                (pt_id numeric,
+                snapped_id numeric,
+                shapename_id varchar(200),
+                shapename varchar(200),
+                geom geometry)", .con =connection)
+table_snapped_db <- dbGetQuery(conn=connection, table_snapped )
+
+```
+
+Then, we snapped the sampling points to the closest vertice of the network. The table _net_largest_1_vertices_pgr_ was created in the loop shown in code chunk [ORN-6]. The final table table_snapped contained the sampling point weighted on the building density for each of the municipalities. 
+
+```{r}
+#| echo: true
+#| eval: false
+
+## od_200_each_group_id
+for (idx in unique(od_200_each_group_id$dense_rank)){
+table_name_vertices <- glue("net_largest_{as.character(idx)}_vertices_pgr")
+table_name_result <- glue("od_200_each_snapped_{as.character(idx)}")
+
+dbExecute(glue_sql("DROP TABLE IF EXISTS {`table_name_result`}", .con=connection),
+          conn=connection)  
+query_1_snap <- glue_sql("CREATE TABLE {`table_name_result`} AS
+SELECT DISTINCT ON (net.id)
+       pt.id_sample AS pt_id,
+       net.id AS snapped_id,
+       pt.dense_rank AS shapename_id,
+       pt.shapename,
+       net.the_geom
+FROM 
+(SELECT * 
+FROM 
+    od_200_each_group_id
+    WHERE
+    dense_rank = {as.character(idx)}) as pt
+CROSS JOIN
+LATERAL (SELECT
+        * 
+        FROM {`table_name_vertices`} AS net
+         ORDER BY net.the_geom <-> pt.geometry 
+        LIMIT 1) AS net;", .con= connection)
+result_1_snap <- dbGetQuery(conn=connection, query_1_snap)
+ insert_query <- glue_sql("INSERT INTO table_snapped (pt_id, snapped_id, shapename_id,shapename, geom)
+                            SELECT pt_id, snapped_id, shapename_id,shapename, the_geom 
+                            FROM {`table_name_result`}", .con = connection)
+  dbExecute(conn = connection, insert_query)
+}
+
+```
+
+
+```{r}
+#| eval: false
+#| echo: false
+
+for (idx in 1:9) {
+  table_name_result <- glue("od_200_each_snapped_{idx}")
+  
+  insert_query <- glue_sql("
+    INSERT INTO table_snapped (pt_id, snapped_id, shapename_id, shapename, geom)
+    SELECT pt_id, snapped_id, shapename_id, shapename, the_geom
+    FROM {`table_name_result`};
+  ", .con = connection)
+  
+  dbExecute(conn = connection, insert_query)
+}
+
+```
+
+
+**Troubleshooting 9** The query did not find the required tables. Since this iteration required the tables net_largest_x, where x is one of the municipalities id, we observed that these tables were in the public schema. We solved this by defining the search_path or the schema.  
+
+
+
 
 ## Regular OD
 
@@ -606,59 +720,7 @@ CROSS JOIN LATERAL
 
 ```
 
-### Visualize Regular OD
 
-Add drop geometry porque tiene dos columnas, cuidadito
-
-```{=html}
-<iframe width="780" height=500 src="data/media/regular_od.html" title="Regular OD"></iframe>
-```
-
-
-```{r}
-#| echo: true
-#| eval: false
-
-## Import data:
-regular_sampling_isochrones_snapped_ghs_aoi <- 
-  sf::st_read(connection, Id(schema="agile_gis_2025_rs",table="regular_sampling_isochrones_snapped_ghs_aoi"))
-
-## style:
-factpal <- colorFactor(topo.colors(22), isochrones_poi_hospitals$ds_cnes)
-## Map
-leaflet() |>
-  addTiles()  |>
-  addProviderTiles("CartoDB.Positron", group = "CartoDB.Positron")  |>
-  addProviderTiles("Esri.WorldImagery", group = "Esri.WorldImagery")  |>   
-  addProviderTiles("CartoDB.DarkMatter", group = "CartoDB.DarkMatter") |> 
-  addCircleMarkers(data=hospitals_poi,
-                    fillColor = "yellow",
-                    fillOpacity = 0.6,
-                    weight = 3,
-                    radius = 5,
-                    color = "red",
-                    dashArray = "1",
-                    group= "Hospitals PoI") |> 
-  addPolygons(data=isochrones_poi_hospitals,
-                    fillOpacity = 0.2,
-                    weight = 2,
-                    color = ~factpal(ds_cnes),
-                    dashArray = "1",
-                    group= "Isochrones") |> 
-  addCircleMarkers(data=regular_sampling_isochrones_snapped_ghs_aoi,
-                    fillOpacity = 0.8,
-                    weight = 1.5,
-                    radius= 3,
-                    color =~factpal(ds_cnes),
-                    dashArray = "1",
-                    group= "Regular OD") |> 
- addLayersControl(
-    baseGroups = c("CartoDB.Positron", "Esri.WorldImagery","CartoDB.DarkMatter"),
-    overlayGroups = c("Hospitals PoI","Isochrones", "Regular OD"),
-    options = layersControlOptions(collapsed = FALSE)
-  ) |> 
-    setView( lng =-51.01134 , lat = -29.93259, zoom = 11.5 ) 
-```
 
 
 

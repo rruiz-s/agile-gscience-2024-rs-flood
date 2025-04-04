@@ -26,6 +26,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 /* CSS for citations */
 div.csl-bib-body { }
 div.csl-entry {
@@ -96,6 +130,29 @@ div.csl-indent {
     "search-label": "Search"
   }
 }</script>
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+<script src="site_libs/datatables-binding-0.33/datatables.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
+<script src="site_libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/dt-ext-buttons-1.13.6/css/buttons.dataTables.min.css" rel="stylesheet">
+<script src="site_libs/dt-ext-buttons-1.13.6/js/dataTables.buttons.min.js"></script>
+<script src="site_libs/dt-ext-buttons-1.13.6/js/buttons.html5.min.js"></script>
+<script src="site_libs/dt-ext-buttons-1.13.6/js/buttons.colVis.min.js"></script>
+<script src="site_libs/dt-ext-buttons-1.13.6/js/buttons.print.min.js"></script>
+<link href="site_libs/nouislider-7.0.10/jquery.nouislider.min.css" rel="stylesheet">
+<script src="site_libs/nouislider-7.0.10/jquery.nouislider.min.js"></script>
+<link href="site_libs/selectize-0.12.0/selectize.bootstrap3.css" rel="stylesheet">
+<script src="site_libs/selectize-0.12.0/selectize.min.js"></script>
+<link href="site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+<script src="site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+<script src="site_libs/pdfmake-1.13.6/pdfmake.js"></script>
+<script src="site_libs/pdfmake-1.13.6/vfs_fonts.js"></script>
+<link href="site_libs/dt-ext-rowgroup-1.13.6/css/rowGroup.dataTables.min.css" rel="stylesheet">
+<script src="site_libs/dt-ext-rowgroup-1.13.6/js/dataTables.rowGroup.min.js"></script>
 
 
 <link rel="stylesheet" href="styles.css">
@@ -148,7 +205,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Body of Knowledge</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Welcome</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -176,7 +233,7 @@ div.csl-indent {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Body of Knowledge</span></span></a>
+ <span class="menu-text">Welcome</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -191,13 +248,13 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./detect_flood.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Detect flood</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Detect flood</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./obtain_road_network.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Obtain road network using OSM data</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Obtain road network using OSM data</span></span></a>
   </div>
 </li>
       </ul>
@@ -214,13 +271,13 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./transform_into_graph.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Transform into graph</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Transform into graph</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./extract_difference.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Extract difference</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Extract difference</span></span></a>
   </div>
 </li>
       </ul>
@@ -237,25 +294,25 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./od.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Origin-Destination matrix</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Origin-Destination matrix</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./calculate_short_path.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Calculate short path</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Calculate short path</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./calculate_connectivity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Calculate connectivity</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Calculate connectivity</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./calculate_redundancy.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Calculate redundancy</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Calculate redundancy</span></span></a>
   </div>
 </li>
       </ul>
@@ -276,17 +333,19 @@ div.csl-indent {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#body-of-knowledge" id="toc-body-of-knowledge" class="nav-link active" data-scroll-target="#body-of-knowledge"><span class="header-section-number">1</span> Body of Knowledge</a></li>
-  <li><a href="#data-and-software-availability" id="toc-data-and-software-availability" class="nav-link" data-scroll-target="#data-and-software-availability">Data and Software Availability</a>
+  <li><a href="#welcome" id="toc-welcome" class="nav-link active" data-scroll-target="#welcome">Welcome</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a>
   <ul class="collapse">
-  <li><a href="#datasets" id="toc-datasets" class="nav-link" data-scroll-target="#datasets"><span class="header-section-number">1.1</span> Datasets</a></li>
-  <li><a href="#computational-workflows" id="toc-computational-workflows" class="nav-link" data-scroll-target="#computational-workflows"><span class="header-section-number">1.2</span> Computational workflows</a>
+  <li><a href="#data-description" id="toc-data-description" class="nav-link" data-scroll-target="#data-description">Data description</a></li>
+  <li><a href="#input-data" id="toc-input-data" class="nav-link" data-scroll-target="#input-data">Input data</a></li>
+  </ul></li>
+  <li><a href="#computational-workflow" id="toc-computational-workflow" class="nav-link" data-scroll-target="#computational-workflow">Computational Workflow</a>
   <ul class="collapse">
-  <li><a href="#computational-environment" id="toc-computational-environment" class="nav-link" data-scroll-target="#computational-environment"><span class="header-section-number">1.2.1</span> Computational environment</a></li>
-  <li><a href="#computation-steps" id="toc-computation-steps" class="nav-link" data-scroll-target="#computation-steps"><span class="header-section-number">1.2.2</span> Computation steps</a></li>
+  <li><a href="#computation-steps" id="toc-computation-steps" class="nav-link" data-scroll-target="#computation-steps">Computation steps</a></li>
+  <li><a href="#computational-environment" id="toc-computational-environment" class="nav-link" data-scroll-target="#computational-environment">Computational environment</a></li>
+  <li><a href="#expected-execution-times" id="toc-expected-execution-times" class="nav-link" data-scroll-target="#expected-execution-times">Expected execution times</a></li>
   </ul></li>
-  </ul></li>
-  <li><a href="#fundings" id="toc-fundings" class="nav-link" data-scroll-target="#fundings"><span class="header-section-number">2</span> Fundings</a></li>
+  <li><a href="#sponsors" id="toc-sponsors" class="nav-link" data-scroll-target="#sponsors">Sponsors</a></li>
   </ul>
 </nav>
     </div>
@@ -360,33 +419,60 @@ div.csl-indent {
 </header>
 
 
-<section id="body-of-knowledge" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Body of Knowledge</h1>
+<section id="welcome" class="level1 unnumbered">
+<h1 class="unnumbered">Welcome</h1>
+<p>The Association of Geographic Information Laboratories in Europe (AGILE) has held annual <span class="font-color"><strong>conferences</strong></span> focused on Geographic Information Science since 1998. The next <a href="https://agile-gi.eu/conference-2025/call-for-papers-2025">AGILE 2025</a> conference is held in Dresden, Germany, on 10-13 June 2025.</p>
+<p>The conference <span class="font-color"><strong>theme</strong></span> <em>“Geographic Information Science responding to Global Challenges”</em> recognizes the pivotal role of geospatial data and analysis in informing decision-making for current global issues affecting humanity, the environment, and global resilience.</p>
+<p>In this website you can find in detailed how the full paper presented in AGILE 2025 was carried out in <a href="https://heigit.org/">HeiGIT</a> mostly in the <a href="https://heigit.org/geoinformation-for-humanitarian-aid/">Geoinformation for Humanitarian Aid</a> department. The goal is to increase transparency, reproducibility, and openness of computational GIScience research as stated in the <a href="https://osf.io/numa5">Reproducible Paper Guidelines</a> from AGILE.</p>
 </section>
-<section id="data-and-software-availability" class="level1 unnumbered">
-<h1 class="unnumbered">Data and Software Availability</h1>
-<p>This document is written following the <a href="https://osf.io/numa5">Reproducibiltiy paper guidelines</a> for the AGILE conference 2025 <span class="citation" data-cites="https://doi.org/10.17605/osf.io/cb7z8">(<a href="references.html#ref-https://doi.org/10.17605/osf.io/cb7z8" role="doc-biblioref">Belliard et al. 2019</a>)</span> .The following flowchart explains the methodology to analyse the centrality and resilience of the road network and healthcare facilities in the core metropolitan area of Rio Grande do Sul.</p>
-<ol type="1">
-<li><p>
-<span class="font-color"><strong>Select Area of Interest (AOI)</strong></span> includes importing the flood extent, municipalities and the road network affecting the core metropolitan area of Porto Alegre. We name core metropolitan area to the 9 municipalities in the urban dense human settlement that intersects with the municipality of Porto Alegre.
-</p></li>
-<li><p>
-<span class="font-color"><strong>Obtain routable network</strong></span> created the two output post-disaster and pre-disaster network. Firstly, OpenRouteService is used to transform the OpenStreetMap data into a routable graph named pre-disaster network. Extracting the difference between the flood extent obtained in the previous lane with the pre-disaster network generated the post-disaster network. Both road networks are graphs, which allow to use the extension pgrotuing.</p></li>
-<li><p>
-<span class="font-color"><strong>Analysis centrality and resilience</strong></span> is carried out calculating shortest paths with the inputs weighted and regular origin-destination. While calculating connectivity using the edge betweenness indicator provides results to answer the 1st and 2nd research question, calculating the lack of redundancy with alternative paths provides results to answer the third research question..</p></li>
-</ol>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="data/figures/research_design_v6.png" class="img-fluid figure-img"></p>
-<figcaption>Fig.1 Flowchart</figcaption>
-</figure>
-</div>
-<section id="datasets" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="datasets"><span class="header-section-number">1.1</span> Datasets</h2>
+<section id="data" class="level1">
+<h1>Data</h1>
+<p>The <span class="font-color"><strong>topic</strong></span> of this study includes <em>Open Spatial Data</em>, <em>Open Science</em>, <em>Open-source Geospatial Tools and Applications</em> , <em>Disaster and Risk Management</em>, <em>Way Finding</em>, <em>Routing</em> and <em>Indoor Navigation</em> or <em>Spatial Databases</em> and <em>Data Management</em>.</p>
+<p>The <span class="font-color"><strong>submission type</strong></span> of this study is <em>use case</em>, while the <span class="font-color"><strong>Body of Knowledge</strong></span> (<a href="https://bok.eo4geo.eu/GIST">BoK</a>) is the following:</p>
+<ul>
+<li><a href="https://bok.eo4geo.eu/GIST">[GIST] Geographic Information Science and Technology</a>
+<ul>
+<li>[<a href="https://bok.eo4geo.eu/AM">AM</a>] Analytical Methods. We derive analytical results from such as connectivity or redundancy from public Geospatial data.
+<ul>
+<li>[<a href="https://bok.eo4geo.eu/AM11">AM11</a>] Network analysis. We used the road network of the Core Metropolitan area of Porto Alegre to derive results based on the graph theory. In the graph theory edges and nodes are represented as a system of intercon- nected networks (Freeman, 1977; Wasserman and Faust, 1994)
+<ul>
+<li>[<a href="https://bok.eo4geo.eu/AM11-2">AM11-2</a>] Graph theoretic descriptive measures of networks. We used edge betweenness indicator to measure the level of connectivity on the road network of Porto Alegre</li>
+<li>[<a href="https://bok.eo4geo.eu/AM11-3">AM11-3</a>] Least-cost shortest path. We used pgrouting to compute the optimum path through a network with Dijkstras algorithm based on the weights given by OpenRouteService (ORS).</li>
+<li>[<a href="https://bok.eo4geo.eu/AM11-7">AM11-7</a>] Accessibility modeling. We defined a method for measuring redundancy on the access to hospitals.</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+<section id="data-description" class="level2">
+<h2 class="anchored" data-anchor-id="data-description">Data description</h2>
 <p>The table 1 summaries the initial data from which intermediate and final results are derived. The section link includes the origin of the data, so third parties to reuse. In addition, the public <a href="https://github.com/rruiz-s/agile-gscience-2024-rs-flood">github repository</a> with open data license also provide the data of the study.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>How to load csv file and generate table</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DT)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>input_data_csv <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/agile-gscience-2024-rs-flood/data/source_data/input_data_csv.csv"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>input_data_csv<span class="sc">$</span>Link <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">'&lt;a href="'</span>, input_data_csv<span class="sc">$</span>Link, <span class="st">'"&gt;'</span>, <span class="st">'Link to input: '</span>,<span class="st">"&lt;br /&gt;"</span>,input_data_csv<span class="sc">$</span>Data, <span class="st">'&lt;/a&gt;'</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>input_data_csv <span class="sc">|&gt;</span> </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>DT<span class="sc">::</span><span class="fu">datatable</span>(<span class="at">extensions =</span> <span class="st">'Buttons'</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">filter =</span> <span class="st">"top"</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>              <span class="at">options=</span><span class="fu">list</span>(</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>                          <span class="at">dom =</span> <span class="st">'Bfrtip'</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>                          <span class="at">columnDefs =</span> <span class="fu">list</span>(<span class="fu">list</span>(<span class="at">className =</span> <span class="st">'dt-center'</span>, <span class="at">targets =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>))),</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>                          <span class="at">pageLength =</span> <span class="dv">7</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>                           <span class="at">buttons =</span> <span class="fu">c</span>(<span class="st">'copy'</span>, <span class="st">'csv'</span>)),</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>              <span class="at">escape =</span> <span class="cn">FALSE</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-b409e2542ad49a9c65a1" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-b409e2542ad49a9c65a1">{"x":{"filter":"top","vertical":false,"filterHTML":"<tr>\n  <td><\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","extensions":["Buttons"],"data":[["1","2","3","4","5","6","7"],["GHSL-Built-V","GHSL-SMOD","cheias_rhguaiba_2024_db_v11.gpkg","ETLCNES_SR_RS_21_12_t.csv","Hospitais_com_Leitos_de_UTIs_no_RS.geojson","GeoBoundaries-BRA-ADM2","OpenStreetMap data"],["total built-up volume in m³","Degree of Urbanisation","Flood extent","It includes ICU beds of healthcare facilities","It includes healthcare facilities with ICU","It contains subnational administrative boundaries in Brazil","It represents the road network in the region of Sul, in Brazil"],["<a href=\"https://human-settlement.emergency.copernicus.eu/download.php?ds=builtV\">Link to input: <br />GHSL-Built-V<\/a>","<a href=\"https://human-settlement.emergency.copernicus.eu/download.php?ds=smod\">Link to input: <br />GHSL-SMOD<\/a>","<a href=\"https://zenodo.org/records/12593168\">Link to input: <br />cheias_rhguaiba_2024_db_v11.gpkg<\/a>","<a href=\"https://www.synapse.org/Synapse:syn32211006\">Link to input: <br />ETLCNES_SR_RS_21_12_t.csv<\/a>","<a href=\"https://iede.rs.gov.br/server/rest/services/SES/Hospitais_Leitos_UTI_RS/FeatureServer\">Link to input: <br />Hospitais_com_Leitos_de_UTIs_no_RS.geojson<\/a>","<a href=\"https://data.humdata.org/dataset/geoboundaries-admin-boundaries-for-brazil\">Link to input: <br />GeoBoundaries-BRA-ADM2<\/a>","<a href=\"https://download.geofabrik.de/south-america/brazil/sul.html#\">Link to input: <br />OpenStreetMap data<\/a>"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Data<\/th>\n      <th>Description<\/th>\n      <th>Link<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"Bfrtip","columnDefs":[{"className":"dt-center","targets":[1,2,3]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Data","targets":1},{"name":"Description","targets":2},{"name":"Link","targets":3}],"pageLength":7,"buttons":["copy","csv"],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true,"lengthMenu":[7,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
 <p>The total built-up volume weighted the sampling of the origin and destination and is accessible via the following DOI:<a href="https://human-settlement.emergency.copernicus.eu/ghs_buV2023.php">10.2905/AB2F107A-03CD-47A3-85E5-139D8EC63283</a>. The degree of urbanization determined the urban dense settlement analysed contained the 9 municipalities that comprises the studied area named core metropolitan area and is accessible via the following DOI:<a href="https://doi.org/10.2905/A0DF7A6F-49DE-46EA-9BDE-563437A6E2BA">10.2905/A0DF7A6F-49DE-46EA-9BDE-563437A6E2BA</a>.Similarly, the subset of the flood is derived from the cheias_rhguaiba_2024_db_v11.gpkg accesible in the <a href="https://doi.org/10.5281/zenodo.11164049">DOI:10.5281/zenodo.11164049</a>. We also incorporated data from the Brazilian Institute of Geography and Statistics (IBGR) <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> to add the GPD of the municipalities or from the Economy and Statistics Department of Rio Grande do Sul State(DEE-SPGG) <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> about the population affected by the flood. For the hospitals, we used the dataset Hospitais_com_Leitos_de_UTIs_no_RS.geojson that included the bed capacity and is accessible via the DOI:<a href="https://doi.org/10.7303/syn32211006.1">10.7303/syn32211006.1</a>. The location of the healthcare facility is obtained using the <a href="https://iede.rs.gov.br/server/rest/services/SES/Hospitais_Leitos_UTI_RS/FeatureServer">WFS</a> provided by “Secretaria Estadual da Saúde/DGTI”.</p>
+</section>
+<section id="input-data" class="level2">
+<h2 class="anchored" data-anchor-id="input-data">Input data</h2>
 <table class="caption-top table">
-<caption>Table 1: Original raw datasets</caption>
 <thead>
 <tr class="header">
 <th>Data</th>
@@ -433,81 +519,30 @@ div.csl-indent {
 </tbody>
 </table>
 </section>
-<section id="computational-workflows" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="computational-workflows"><span class="header-section-number">1.2</span> Computational workflows</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 23%">
-<col style="width: 47%">
-<col style="width: 28%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Lane</th>
-<th style="text-align: left;">Activity</th>
-<th style="text-align: left;">Time</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Select Area of Interest (AOI)</td>
-<td style="text-align: left;">Flood extent:</td>
-<td style="text-align: left;">Xs</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Select Area of Interest (AOI)</td>
-<td style="text-align: left;">Obtain road network</td>
-<td style="text-align: left;">Xs</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Obtain routable network</td>
-<td style="text-align: left;">Transform into graph: Convert into graph</td>
-<td style="text-align: left;">Xs</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Obtain routable network</td>
-<td style="text-align: left;">Transform into graph: Export geometry</td>
-<td style="text-align: left;">Xs</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Obtain routable network</td>
-<td style="text-align: left;">Extract difference: Subset flood extent</td>
-<td style="text-align: left;">Xs</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Obtain routable network</td>
-<td style="text-align: left;">Extract difference: Post-disaster network</td>
-<td style="text-align: left;">Xs</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Analyse centrality and resilience</td>
-<td style="text-align: left;">Weighted OD</td>
-<td style="text-align: left;">Xs</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Analyse centrality and resilience</td>
-<td style="text-align: left;">Regular OD</td>
-<td style="text-align: left;">Xs</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Analyse centrality and resilience</td>
-<td style="text-align: left;">Calculate connectivity: RQ1: C.Metropolitan scale</td>
-<td style="text-align: left;">Xs</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Analyse centrality and resilience</td>
-<td style="text-align: left;">Calculate connectivity: RQ2: Intracity Scale</td>
-<td style="text-align: left;">Xs</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Analyse centrality and resilience</td>
-<td style="text-align: left;">Calculate resilience: RQ3: Resilience-lack of redundancy</td>
-<td style="text-align: left;">Xs</td>
-</tr>
-</tbody>
-</table>
-<section id="computational-environment" class="level3" data-number="1.2.1">
-<h3 data-number="1.2.1" class="anchored" data-anchor-id="computational-environment"><span class="header-section-number">1.2.1</span> Computational environment</h3>
+</section>
+<section id="computational-workflow" class="level1">
+<h1>Computational Workflow</h1>
+<section id="computation-steps" class="level2">
+<h2 class="anchored" data-anchor-id="computation-steps">Computation steps</h2>
+<p>This document is written following the <a href="https://osf.io/numa5">Reproducibiltiy paper guidelines</a> for the AGILE conference 2025 <span class="citation" data-cites="https://doi.org/10.17605/osf.io/cb7z8">(<a href="references.html#ref-https://doi.org/10.17605/osf.io/cb7z8" role="doc-biblioref">Belliard et al. 2019</a>)</span>.The following flowchart explains the methodology to analyse the centrality and resilience of the road network and healthcare facilities in the core metropolitan area of Rio Grande do Sul.</p>
+<ol type="1">
+<li><p>
+<span class="font-color"><strong>Select Area of Interest (AOI)</strong></span> includes importing the flood extent, municipalities and the road network affecting the core metropolitan area of Porto Alegre. We name core metropolitan area to the 9 municipalities in the urban dense human settlement that intersects with the municipality of Porto Alegre.
+</p></li>
+<li><p>
+<span class="font-color"><strong>Obtain routable network</strong></span> created the two output post-disaster and pre-disaster network. Firstly, OpenRouteService is used to transform the OpenStreetMap data into a routable graph named pre-disaster network. Extracting the difference between the flood extent obtained in the previous lane with the pre-disaster network generated the post-disaster network. Both road networks are graphs, which allow to use the extension pgrotuing.</p></li>
+<li><p>
+<span class="font-color"><strong>Analysis centrality and resilience</strong></span> is carried out calculating shortest paths with the inputs weighted and regular origin-destination. While calculating connectivity using the edge betweenness indicator provides results to answer the 1st and 2nd research question, calculating the lack of redundancy with alternative paths provides results to answer the third research question..</p></li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="data/figures/research_design_v6.png" class="img-fluid figure-img"></p>
+<figcaption>Fig.1 Flowchart</figcaption>
+</figure>
+</div>
+</section>
+<section id="computational-environment" class="level2">
+<h2 class="anchored" data-anchor-id="computational-environment">Computational environment</h2>
 <ul>
 <li>PostgreSQL 15.3 is used from the <a href="https://github.com/kartoza/docker-postgis?tab=readme-ov-file">docker file container</a> that includes the extension PostGIS 16-3.4-v2024.03.17 and pgrouting 3.5.</li>
 <li>The libraries that includes the study analysis, visualization and creation of this documentation is available with the renv file.</li>
@@ -517,14 +552,65 @@ div.csl-indent {
 <li>openrouteservice:v8.0.0 used following the described <a href="https://giscience.github.io/openrouteservice/run-instance/running-with-docker">docker file container</a> instructions</li>
 </ul>
 </section>
-<section id="computation-steps" class="level3" data-number="1.2.2">
-<h3 data-number="1.2.2" class="anchored" data-anchor-id="computation-steps"><span class="header-section-number">1.2.2</span> Computation steps</h3>
-<p>This Quarto book describes the detailed steps carried out for this use case in three chapters that contains the workflow described in the Fig 1 with 8 activities.</p>
+<section id="expected-execution-times" class="level2">
+<h2 class="anchored" data-anchor-id="expected-execution-times">Expected execution times</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DT)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>computation_agile <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"/home/ricardors/heigit_data/computation_times_agile_2025 _fresults.csv"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>computation_agile_dt <span class="ot">&lt;-</span> computation_agile <span class="sc">|&gt;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">mutate</span>( </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                            <span class="at">time_sec =</span> <span class="fu">round</span>(time<span class="sc">/</span><span class="dv">1000</span>),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                            <span class="at">total_perc=</span><span class="fu">round</span>(time<span class="sc">/</span><span class="fu">sum</span>(time)<span class="sc">*</span><span class="dv">100</span>,<span class="dv">2</span>)) </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>DT<span class="sc">::</span><span class="fu">datatable</span>(<span class="at">data=</span>computation_agile_dt,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>              <span class="at">extensions=</span><span class="fu">c</span>(<span class="st">"Buttons"</span>,<span class="st">'RowGroup'</span>),</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">options=</span><span class="fu">list</span>(<span class="at">rowGroup=</span><span class="fu">list</span>(<span class="at">dataSrc=</span> <span class="dv">1</span>),</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>                                              <span class="at">dom=</span><span class="st">"Bfrtip"</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>                                              <span class="at">pageLength=</span><span class="dv">11</span>,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>                                              <span class="at">buttons=</span><span class="fu">c</span>(<span class="st">"copy"</span>,<span class="st">"csv"</span>,<span class="st">"pdf"</span>,<span class="st">"colvis"</span>),</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>                                              <span class="at">columnDefs =</span><span class="fu">list</span>(<span class="fu">list</span>(<span class="at">visible=</span><span class="cn">FALSE</span>, <span class="at">targets=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>)))),</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">selection=</span><span class="st">"none"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  DT<span class="sc">::</span><span class="fu">formatStyle</span>(<span class="st">"total_perc"</span>,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>              <span class="at">background=</span>DT<span class="sc">::</span><span class="fu">styleColorBar</span>(<span class="fu">c</span>(<span class="fu">range</span>(computation_agile_dt<span class="sc">$</span>total_perc)[<span class="dv">1</span>],<span class="dv">100</span>),<span class="st">'lightblue'</span>),</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>                <span class="at">backgroundSize =</span> <span class="st">'98% 88%'</span>,</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">backgroundRepeat =</span> <span class="st">'no-repeat'</span>,</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">backgroundPosition =</span> <span class="st">'center'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-eea51e813cf741056506" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-eea51e813cf741056506">{"x":{"filter":"none","vertical":false,"extensions":["Buttons","RowGroup"],"data":[["1","2","3","4","5","6","7","8","9","10","11"],["Select Area of Interest (AoI)","Select Area of Interest (AoI)","Obtain routable network (ORN)","Obtain routable network (ORN)","Obtain routable network (ORN)","Obtain routable network (ORN)","Analyse Centrality and Resilience (ACR)","Analyse Centrality and Resilience (ACR)","Analyse Centrality and Resilience (ACR)","Analyse Centrality and Resilience (ACR)","Analyse Centrality and Resilience (ACR)"],["Flood extent","Obtain road network","Transform into graph: Convert into graph","Transform into graph: Export geometry","Transform into graph: Pre-disaster network","Transform into graph: Post-disaster network","Weigted OD","Regular OD","Calculate connnectivity RQ1-C.Metropolitan scale","Calculate connnectivity RQ2-Intracity scale","Calculate resilience RQ3 - Lack of redundancy"],[39491.558,14035.569,38373,626039,17380.608,40838.672,56043.332,6754.75,81344.84,53805,3097471],[39,14,38,626,17,41,56,7,81,54,3097],[0.97,0.34,0.9399999999999999,15.38,0.43,1,1.38,0.17,2,1.32,76.08]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>lane<\/th>\n      <th>activity<\/th>\n      <th>time<\/th>\n      <th>time_sec<\/th>\n      <th>total_perc<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"rowGroup":{"dataSrc":1},"dom":"Bfrtip","pageLength":11,"buttons":["copy","csv","pdf","colvis"],"columnDefs":[{"visible":false,"targets":[1,3]},{"className":"dt-right","targets":[3,4,5]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"lane","targets":1},{"name":"activity","targets":2},{"name":"time","targets":3},{"name":"time_sec","targets":4},{"name":"total_perc","targets":5}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[10,11,25,50,100],"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[5]; $(this.api().cell(row, 5).node()).css({'background':isNaN(parseFloat(value)) || value <= 0.170000 ? '' : 'linear-gradient(90.000000deg, transparent ' + Math.max(100.000000 - value, 0)/99.830000 * 100 + '%, lightblue ' + Math.max(100.000000 - value, 0)/99.830000 * 100 + '%)','background-size':'98% 88%','background-repeat':'no-repeat','background-position':'center'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</div>
+</div>
 </section>
 </section>
-</section>
-<section id="fundings" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Fundings</h1>
+<section id="sponsors" class="level1">
+<h1>Sponsors</h1>
+<div class="grid">
+<div class="g-col-6">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="data/figures/klaus-logo.png" class="img-fluid figure-img" width="229"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div class="g-col-6">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="data/figures/cofounded-erasmus.png" class="img-fluid figure-img" width="512"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">

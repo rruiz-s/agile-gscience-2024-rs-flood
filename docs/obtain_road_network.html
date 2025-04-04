@@ -185,7 +185,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Data and Software Availability</span></a>
+ <span class="menu-text">Welcome</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -285,7 +285,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#clipping-network-from-area-of-interest-aoi" id="toc-clipping-network-from-area-of-interest-aoi" class="nav-link active" data-scroll-target="#clipping-network-from-area-of-interest-aoi"><span class="header-section-number">2.1</span> Clipping network from Area of Interest (AOI)</a></li>
+  <li><a href="#select-boundaries-of-the-network" id="toc-select-boundaries-of-the-network" class="nav-link active" data-scroll-target="#select-boundaries-of-the-network"><span class="header-section-number">2.1</span> Select boundaries of the network</a></li>
+  <li><a href="#clip-network-using-boundaries" id="toc-clip-network-using-boundaries" class="nav-link" data-scroll-target="#clip-network-using-boundaries"><span class="header-section-number">2.2</span> Clip network using boundaries</a></li>
   </ul>
 </nav>
     </div>
@@ -311,12 +312,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="clipping-network-from-area-of-interest-aoi" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="clipping-network-from-area-of-interest-aoi"><span class="header-section-number">2.1</span> Clipping network from Area of Interest (AOI)</h2>
+<section id="select-boundaries-of-the-network" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="select-boundaries-of-the-network"><span class="header-section-number">2.1</span> Select boundaries of the network</h2>
 <p>The following PostgreSQL created the command to extract the OpenStreetMap (OSM) network from our area of interest (AOI) using osmium. Firstly, the Global Human Settle- ment (GHS-SMOD) that intersected with Porto Alegre is selected as the AOI. Secondly, this GHS is used to dynamically generate the bounding box and command line required by osmium.</p>
 <div class="cell">
 <details class="code-fold">
-<summary>Show the code</summary>
+<summary>[AoI -8] How to obtain the road network extent</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">--- The road network of the AOI is extracted as follows:</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">--- 1.The GHS urban area that intersected with Porto Alegre city is selected</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> porto_alegre_ghs <span class="kw">AS</span> (</span>
@@ -349,7 +350,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>        <span class="kw">FROM</span></span>
 <span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>            core_metropolitan_area_ghs</span>
 <span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    ),                    </span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co">--- 3. An osmius command is generated using the core metropolitan area and its bounding box</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co">--- 4. An osmius command is generated using the core metropolitan area and its bounding box</span></span>
 <span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    core_metropolitan_bbox_osmium_command <span class="kw">AS</span> (</span>
 <span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>        <span class="kw">SELECT</span></span>
 <span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>            ST_XMin(ST_SnapToGrid(geom_bbox, <span class="fl">0.0001</span>)) <span class="kw">AS</span> min_lon,</span>
@@ -364,25 +365,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>        <span class="st">' sul-240501.osm.pbf -o porto_alegre_urban_center.osm.pbf'</span></span>
 <span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>    <span class="kw">AS</span> osmium_command</span>
 <span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>        core_metropolitan_bbox_osmium_command;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>        core_metropolitan_bbox_osmium_command;</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="co">---time: 6.569 ms</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>The result of the previous query returned the following command</p>
+</section>
+<section id="clip-network-using-boundaries" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="clip-network-using-boundaries"><span class="header-section-number">2.2</span> Clip network using boundaries</h2>
+<p>The result of the previous query returned the following osmium<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> command,</p>
 <div class="cell">
 <details class="code-fold">
-<summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">osmium</span> extract <span class="at">-b-51.2791,-30.1722,-50.9407,-29.8048</span> sul-240501.osm.pbf <span class="at">-o</span> porto_alegre_urban_center.osm.pbf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<summary>[AoI-9] How to clip OSM data using osmium</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">osmium</span> extract <span class="at">-b-51.2791,-30.1722,-50.9407,-29.8048</span> sul-240501.osm.pbf <span class="at">-o</span> porto_alegre_urban_center.osm.pbf</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># time: 14029 ms</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>The OSM network obtained with this osmium command was the road network input required for OpenRouteService (ORS) to generate a routable graph of the core metropolitan area of Porto Alegre instead of the entire Rio Grande do Sul network.</p>
-<p>We obtained the data from Geofabrik <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> raw directory index</p>
+<p>The OSM network obtained with this osmium command was the road network input required for OpenRouteService (ORS) to generate a routable graph of the core metropolitan area of Porto Alegre instead of the entire Rio Grande do Sul network. We named <em>porto_alegre_urban_center.osm.pbf</em> to the road network of our AoI.</p>
+<p>We obtained the OSM data from Geofabrik <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> raw directory index</p>
 
 
 </section>
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn1"><p><a href="https://quarto.org/docs/authoring/markdown-basics.html#footnotes">https://quarto.org/docs/authoring/markdown-basics.html#footnotes</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p><a href="https://osmcode.org/docs.html">Osmium: https://osmcode.org/docs.html</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p><a href="https://quarto.org/docs/authoring/markdown-basics.html#footnotes">Geofabrik: https://quarto.org/docs/authoring/markdown-basics.html#footnotes</a><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 

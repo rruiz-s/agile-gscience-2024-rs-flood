@@ -1,22 +1,17 @@
 # Analysis Centrality and Resilience
 
 
-This section describes the lane of the workflow that <span class="font-color">**analyse centrality and resilience**</span>. 
+This section describes the lane of the workflow that analyse centrality and resilience
 
-* We <span class= "font-color">**transform into graph**</span> the road network from OSM using openrouteservice, which finally led to create the pre-disaster network. 
-* The flood extent is used to <span class="font-color"> **extract the difference**</span> with the pre-disaster network obtaining the post-disaster network graph. 
+* <span class= "font-color">**Origin-Destination matrix**</span> is the activity where we sampled Origin and Destination (OD) required to calculate the connectvity based on the edge betweenness centrality.
+* We <span class="font-color">**calculate connectivity**</span> using the centrality indicator edge betweenness. A weighted sampling based on the built-up volumen on a intracity scale for each municipality and on a core metropolitan scale for the whole AoI identified urban arteries of the road network. 
+* We <span class="font-color">**calculate redundancy**</span> on the hospital access using regular sampling on isochrones from each of the hospitals found in the AoI.
 
-![Fig.1 Flowchart](data/figures/obtaining_routable_network.svg)
 
-The pre-processing phase is finished providing the main objects of the study, the flood extent, municipalities, road network and hospitals. We used these objects in the centrality and accessibility study.
-## Regular OD
+![Fig.1 Flowchart](data/figures/analyse_centrality_resilience.png)
+The Research Questions (RQ) asked in the introduction were the following:
 
-## Weighted OD
+* RQ1: _"How is road connectivity affected in pre-disasteer and post-disaster scenarios based on edge betweenness centrality?"_. The centrality results that shown the main urban arteries supported the answers given.
+* RQ2: _"Which municipalities were most affected by the flood based on the edge betweenness centrality metric?"_. The aggregation of the centrality results on both scales provided the basis for the answer to this RQ.
+* RQ3: _Which healthcare facility was less resilient in terms of lack of redundancy?_. The comparison between three alternative paths to the hospitals' access revealed their lack of redundancy, giving the argumentation to answer this RQ.
 
-## Regular OD
-
-## Calculate connectivity
-
-## Calculate redundancy
-
-Work in progress, waiting for acceptance.
