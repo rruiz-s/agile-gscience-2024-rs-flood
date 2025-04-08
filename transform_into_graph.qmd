@@ -27,7 +27,19 @@ ors_raw_network_vertices_pgr <-  st_read(connection, Id(schema="agile_gis_2025_r
 
 Having obtained the OpenStreetMap (OSM) road network of the AOI, we run the docker for <span class="font-color">**OpenRouteService (OSM)**</span>  ^[[https://giscience.github.io/openrouteservice/run-instance/running-with-docker](https://giscience.github.io/openrouteservice/run-instance/running-with-docker)],which transforms the OSM geometry into a routable graph. 
 
-Firstly, in the _ors-config.yml_ from OpenRotueService (ORS), the “source file” parameter located in the line 102 is set to find the directory containing the OSM road network. In this case, we set the directory to _/home/ors/files/porto_alegre_urban_center.osm.pbf_. Secondly, before running the docker, we added the file "porto_alegre_urban_center.osm.pbf" obtained in the lane obtain routable network to the directory files inside the docker. The last step is to run the ORS docker using the command [ORN-1] `docker compose up` in the terminal where the file _docker-compose.yml_ is located. Do not close this window or run the docker with the parameter -d.
+Firstly, in the _ors-config.yml_ from OpenRotueService (ORS), the “source file” parameter located in the line 102 is set to find the directory containing the OSM road network. In this case, we set the directory to _/home/ors/files/porto_alegre_urban_center.osm.pbf_. Secondly, before running the docker, we added the file "porto_alegre_urban_center.osm.pbf" obtained in the lane obtain routable network to the directory files inside the docker. 
+
+
+The last step is to run the ORS docker using th following command [ORN-1] `docker compose up` in the terminal where the file _docker-compose.yml_ is located. Do not close this window or run the docker with the parameter -d.
+
+```{bash}
+#| eval: false
+#| echo: true
+#| code-summary:  "[ORN-1] How to run ORS using docker"
+
+ docker compose up
+```
+
 
 OpenRouteService (ORS) created a routable network with costs and adding information for each node such as the origin, “fromId”, and the destination, “toId”. We named _ors_raw_network_ to the table containing this network made up of 109653 edges and 83202 nodes.
 

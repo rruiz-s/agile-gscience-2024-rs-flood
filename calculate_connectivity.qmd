@@ -1,43 +1,135 @@
 # Calculate connectivity
 ## Research question 1
 
+> How is road connectivity affected in pre-disaster and post-disaster scenarios based on edge betweenness centrality?
+
 ### Core Metropolitan scale
+
 
 ```{r}
 #| echo: false
-#| include: false
+#| eval: true
+#| warning: false
+#| message: false
+#| output: false
 
-# This code chunk is created to avoid running python notebook when the first chunk code is not in R.
-1+1
+# Load all the temp_data ending in gpkg saving you time
+library(tictoc)
+library(tidyverse)
+library(sf)
+tic()
+temp_data <- list.files(path= "/home/ricardors/agile-gscience-2024-rs-flood/data/temp_data", pattern="\\.gpkg")
+for (i in seq_along(temp_data)) {
+    file_name <- tools::file_path_sans_ext(temp_data[i])
+    assign(file_name, sf::read_sf(paste0("~/agile-gscience-2024-rs-flood/data/temp_data/", temp_data[i])))
+}
+# Load non-gpkg files
+centrality_both_sankey_v3 <- read.csv("~/agile-gscience-2024-rs-flood/data/temp_data/centrality_both_sankey_v3.csv")
+df_centrality_both_sankey <- read.csv("~/agile-gscience-2024-rs-flood/data/temp_data/df_centrality_both_sankey.csv")
+# Work on flat 
+sf::sf_use_s2(FALSE)
+# Load gpkg files for RQ
+results_data <-list.files(path= "/home/ricardors/agile-gscience-2024-rs-flood/data/results_data", pattern="\\.gpkg")
+for (i in seq_along(results_data)) {
+    file_name <- tools::file_path_sans_ext(results_data[i])
+    assign(file_name, sf::read_sf(paste0("~/agile-gscience-2024-rs-flood/data/results_data/", results_data[i])))
+} 
+toc()
+
+```
+
+
+::: {#fig-cmc}
+
+<iframe width="780" height="500" src="data/media/pre_post_cm_centrality.html" title="Quarto Documentation"></iframe>
+
+A comparison of the centrality before and after the floods in the core metropolitan area
+:::
+
+
+```{r}
+#| eval: false
+#| echo: true
+
+library(mapview)
+library(leaflet)
+library(leafpop)
+
+# color: https://gis.stackexchange.com/questions/312027/r-and-mapview-how-can-i-chose-different-colors-for-different-layers
+
+### For pre-event: 1644, 468, 142
+pal <- c("#b3cde2","#8a95c5","#8854a7","#7a0f76")
+centrality_pre$centrality_fct <- cut(centrality_pre$centrality,
+                                     breaks=c(0,725,2114,4870,11205),
+                                     labels =c("low [1-726]","intermediate [726-2114]","high [2114-4870]","urban arteries [4780-1125]"),
+                                     include.lowest= TRUE,
+                                     right =FALSE)
+#### natural breaks:  81, 230, 582
+centrality_post$centrality_fct <- cut(centrality_post$centrality,
+                                      breaks=c(0,725,2114,4870,11205),
+                                      labels =c("low [1-726]","intermediate [726-2114]","high [2114-4870]","urban arteries [4780-1125]"),
+                                      include.lowest= TRUE,
+                                      right =FALSE)
+### 
+library(scales)
+centrality_pre$scaled_lwd <- rescale(centrality_pre$centrality, to = c(0.5, 8)) 
+centrality_pre_map <- mapview::mapview(centrality_pre,
+                                       zcol="centrality_fct",
+                                       lwd = centrality_pre$scaled_lwd,
+                                       col.regions=list("#b3cde2","#8a95c5","#8854a7","#7a0f76"),
+                                       col=list("#b3cde2","#8a95c5","#8854a7","#7a0f76"),
+                                       map.type=c("OpenStreetMap","CartoDB.DarkMatter"),
+                                       layer.name ="Centrality Pre-Event",
+                                       popup=leafpop::popupTable(centrality_pre, 
+                                                        zcol=c("centrality","bidirectId"))) 
+centrality_post_map <- mapview::mapview(centrality_post,
+                                        zcol="centrality_fct",
+                                        col.regions=list("#b3cde2","#8a95c5","#8854a7","#7a0f76"),
+                                        col=list("#b3cde2","#8a95c5","#8854a7","#7a0f76"),
+                                        map.type=c("OpenStreetMap","CartoDB.DarkMatter"),
+                                        lwd = centrality_pre$scaled_lwd,
+                                        layer.name ="Centrality Post-Event",
+                                        popup=leafpop::popupTable(centrality_post, 
+                                                         zcol=c("centrality","bidirectId"))) 
+
+centrality_pre_map | centrality_post_map + mapview::mapview(flood_extent,
+                                                   col.regions="#dbc3b0",
+                                                   map.type=c("OpenStreetMap","CartoDB.DarkMatter"),
+                                                   alpha.regions= 0.5,
+                                                   layer.name="Flooding layer") 
 ```
 
 
 ```{sql}
 #| eval: false
 #| echo: true
+#| code-summary: "[ACR 10] How to calculate edge betweenness centrality in the Core Metropolitan Area"
 
+EXPLAIN ANALYZE
 CREATE TABLE centrality_ghs_aoi_pre AS
 SELECT
-	b.Id,
-	b.geom,
-	count(geom) as centrality
+    b.id,
+    b.geom,
+    count(geom) as centrality
 FROM pgr_dijkstra(
-	'SELECT 
-		id AS id,
-		"fromId" AS source,
-		"toId" AS target,
-		weight as cost
-	FROM 
-	  ghs_aoi_net_largest',
-	ARRAY(SELECT snapped_id AS start_id FROM od_300_snapped_v2),
-	ARRAY(SELECT snapped_id AS end_id FROM od_300_snapped_v2),
-		directed:=TRUE) j
-	LEFT JOIN 
-	  ghs_aoi_net_largest AS b
-	ON
-	  j.edge=b.Id
-	GROUP BY
-		b.Id, b.geom;
+    'SELECT 
+        id AS id,
+        "fromId" AS source,
+        "toId" AS target,
+        weight as cost
+    FROM 
+      ghs_aoi_net_largest',
+    ARRAY(SELECT snapped_id AS start_id FROM od_300_snapped_v2),
+    ARRAY(SELECT snapped_id AS end_id FROM od_300_snapped_v2),
+        directed:=TRUE) j
+    LEFT JOIN 
+      ghs_aoi_net_largest AS b
+    ON
+      j.edge=b.id
+    GROUP BY
+        b.id, b.geom;        
+		
+--- Time: 80542.531 ms
 
 ```
 
@@ -45,6 +137,7 @@ FROM pgr_dijkstra(
 ```{sql}
 #| eval: false
 #| echo: true
+#| code-summary: "[ACR 11] How to add a bidirectId when not present"
 
 CREATE TABLE centrality_ghs_aoi_bidirect_pre AS
 SELECT 
@@ -56,6 +149,7 @@ JOIN
 	ghs_aoi_net_largest AS t2
 ON
 t1.id = t2.id;
+--- Time: 164.685 ms
 ```
 
 
@@ -84,6 +178,7 @@ where "bdrctId" is null; ---0
 ```{sql}
 #| eval: false
 #| echo: true
+#| code-summary: "[ACR 12] How to use bidirectid to calculcalte centrality"
 
 create table centrality_ghs_aoi_bidirect_pre_group as
 select
@@ -91,6 +186,7 @@ select
 sum(centrality) as centrality
 from centrality_ghs_aoi_bidirect_pre
 group by "bdrctId";
+--- Time: 65.993 ms
 ```
 
 
@@ -111,6 +207,7 @@ on t1."bdrctId" = t2."bdrctId";
 ```{sql}
 #| eval: false
 #| echo: true
+#| code-summary: "[ACR 13] How to calculate final edge betweenness centrality in the Core Metropolitan Area"
 
 create table centrality_ghs_aoi_bidirect_pre_cleaned as
 select
@@ -126,16 +223,93 @@ join
 	ghs_aoi_net_largest t2
 on
 t1.id = t2.id;
-
+--- Time: 565.951 ms
 ```
 
 
 ### Intracity scale
 
+::: {#fig-cmc}
+
+<iframe width="780" height="500" src="data/media/pre_post_ic_centrality.html" title="Quarto Documentation"></iframe>
+
+A comparison of the centrality before and after the floods in the core metropolitan area
+:::
+
+
+```{r}
+#| echo: true
+#| eval: false
+#| message: false
+#| warning: false
+
+
+library(leaflet)
+library(mapview)
+library(leafpop)
+
+### For pre-event: 1644, 468, 142
+pal <- c("#b3cde2","#8a95c5","#8854a7","#7a0f76")
+local_connectivity_canoas <- filter(local_connectivity_pre, shapename=="Canoas")
+local_connectivity_canoas_post <- filter(local_connectivity_post, shapename=="Canoas")
+library(BAMMtools)
+natural_jenks_breaks_cmc_pre_canoas <- BAMMtools::getJenksBreaks(local_connectivity_canoas$centrality, k=5)
+
+local_connectivity_canoas$centrality_fct <- cut(local_connectivity_canoas$centrality,
+                                     breaks=c(
+                                              natural_jenks_breaks_cmc_pre_canoas[1],
+                                              natural_jenks_breaks_cmc_pre_canoas[2],
+                                              natural_jenks_breaks_cmc_pre_canoas[3],
+                                              natural_jenks_breaks_cmc_pre_canoas[4],
+                                              natural_jenks_breaks_cmc_pre_canoas[5]),
+                                     labels =c("low [1-533]","intermediate [533-1510]","high [1510-2899]","urban arteries [2899-5727]"),
+                                     include.lowest= TRUE,
+                                     right =FALSE)
+#### natural breaks:  81, 230, 582
+local_connectivity_canoas_post$centrality_fct <- cut(local_connectivity_canoas_post$centrality,
+                                      breaks=c(
+                                              natural_jenks_breaks_cmc_pre_canoas[1],
+                                              natural_jenks_breaks_cmc_pre_canoas[2],
+                                              natural_jenks_breaks_cmc_pre_canoas[3],
+                                              natural_jenks_breaks_cmc_pre_canoas[4],
+                                              natural_jenks_breaks_cmc_pre_canoas[5]),
+                                      labels =c("low [1-533]","intermediate [533-1510]","high [1510-2899]","urban arteries [2899-5727]"),
+                                      include.lowest= TRUE,
+                                      right =FALSE)
+### 
+library(scales)
+local_connectivity_canoas$scaled_lwd <- rescale(local_connectivity_canoas$centrality, to = c(0.5, 8)) 
+local_connectivity_canoas_pre_map <- mapview::mapview(local_connectivity_canoas,
+                                       zcol="centrality_fct",
+                                       lwd = local_connectivity_canoas$scaled_lwd,
+                                       col.regions=list("#b3cde2","#8a95c5","#8854a7","#7a0f76"),
+                                       col=list("#b3cde2","#8a95c5","#8854a7","#7a0f76"),
+                                       map.types=c("OpenStreetMap","CartoDB.DarkMatter"),
+                                       layer.name ="IC connectivity Pre-Event",
+                                       popup=leafpop::popupTable(local_connectivity_canoas, 
+                                                        zcol=c("centrality","bidirectid"))) 
+local_connectivity_canoas_post_map <- mapview::mapview(local_connectivity_canoas_post,
+                                       zcol="centrality_fct",
+                                       lwd = local_connectivity_canoas$scaled_lwd,
+                                       col.regions=list("#b3cde2","#8a95c5","#8854a7","#7a0f76"),
+                                       col=list("#b3cde2","#8a95c5","#8854a7","#7a0f76"),
+                                       map.types=c("OpenStreetMap","CartoDB.DarkMatter"),
+                                       layer.name ="IC connectivity Post-Event",
+                                       popup=leafpop::popupTable(local_connectivity_canoas_post, 
+                                                        zcol=c("centrality","bidirectid"))) 
+
+local_connectivity_canoas_pre_map | local_connectivity_canoas_post_map + mapview::mapview(flood_extent,
+                                                   col.regions="#dbc3b0",
+                                                   map.types=c("OpenStreetMap","CartoDB.DarkMatter"),
+                                                   alpha.regions= 0.5,
+                                                   layer.name="Flooding layer")
+```
+
 
 ```{r}
 #| eval: false
 #| echo: true
+#| code-summary: "[ACR 14] "
 
 ## Table with networks
 library(sf)
@@ -143,6 +317,7 @@ table_rq_1_2_net <- st_read(connection, "table_rq_1_2_net")
 table_snapped <- st_read(connection, "table_snapped")
 municipalities_ghs <- st_read(connection, "municipalities_ghs")
   
+tic()  
 for(idx in 1:9){
   tic(glue("run {idx}/9")) 
   table_name_1_centrality <- glue("net_largest_{as.character(idx)}")
@@ -176,12 +351,13 @@ query_1_central <- glue_sql("CREATE TABLE {`temp_table_name`} AS
 dbExecute(con=connection, query_1_central)
 toc()
 }
-
+toc()
+# Time: 53805 ms
 ```
 
-Falta probar al menos uno. Este es el de Canoas
+asdasd
 
-```{r}
+```{sql}
 #| eval: false
 #| echo: false
 
@@ -236,3 +412,63 @@ on
 ```
 
 ## Research question 2
+
+> Which municipalities were most affected by the flood based on the edge betweenness centrality metrics?
+
+```{r}
+library(DT)
+ sf::st_drop_geometry(connectivity_municipality_lc_rq) |>
+  left_join(sf::st_drop_geometry(connectivity_municipality_cmc_rq),
+            by=join_by(gid)) |> 
+  mutate(diff_ic = (round((post_lc -pre_lc)/pre_lc*100)),
+         diff_cmc = (round((post_gc - pre_gc)/pre_gc*100)),
+         pop_aff = paste0(pop_aff.x/1000,"K (", round(pop_aff.x/pop.x*100),"%)"),
+         gdp = paste0(pib_mun.x/1000,"K")) |>
+  select(municipality.x, pop_aff, diff_cmc, diff_ic,gdp) |> 
+DT::datatable(colnames=c("Municipality","Pop.Aff","CMC","IC","GDP(R$"),
+              extensions = 'Buttons',
+              filter = "top",
+              options=list(
+                          dom = 'Bfrtip',
+                          columnDefs = list(list(className = 'dt-center', targets = c(1:4))),
+                          pageLength = 5,
+                           buttons = c('copy', 'csv')),
+              escape = FALSE) 
+```
+
+
+```{r}
+#| echo: true
+#| warning: false
+#| message: false
+#| eval: true
+
+library(scales)
+library(RColorBrewer)
+library(mapview)
+# Define a red-to-green palette
+palette_red_green <- colorRampPalette(c("red", "yellow", "green"))
+
+connectivity_municipality_cmc_rq$diff_cmc <-  round(((connectivity_municipality_cmc_rq$post_gc - connectivity_municipality_cmc_rq$pre_gc) / connectivity_municipality_cmc_rq$pre_gc*100))
+connectivity_municipality_lc_rq$diff_lc <-  round(((connectivity_municipality_lc_rq$post_lc - connectivity_municipality_lc_rq$pre_lc) / connectivity_municipality_lc_rq$pre_lc*100))
+
+municipalities_pre_map <- mapview::mapview(connectivity_municipality_cmc_rq,
+                                       zcol="diff_cmc",
+                                       map.types=c("OpenStreetMap","CartoDB.DarkMatter"),
+                                       layer.name ="Core Metropoplitan Connectivity (CM)",
+                                       col.regions = palette_red_green(6),
+                                       popup=leafpop::popupTable(connectivity_municipality_cmc_rq, 
+                                                        zcol=c("municipality","diff","pop_aff","pib_mun"))) 
+municipalities_post_map <-  mapview::mapview(connectivity_municipality_lc_rq,
+                                       zcol="diff_lc",
+                                       map.types=c("OpenStreetMap","CartoDB.DarkMatter"),
+                                       layer.name ="IntraCity Connectivity (IC)",
+                                       col.regions = palette_red_green(6),
+                                       hide=TRUE,
+                                       popup=leafpop::popupTable(connectivity_municipality_lc_rq, 
+                                                        zcol=c("municipality","diff","pop_aff","pib_mun"))) 
+
+municipalities_pre_map + (municipalities_post_map + mapview(flood_extent, hide =TRUE, col.regions="#dbc3b0", alpha.regions=.5) )
+
+```
+

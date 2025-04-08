@@ -1,9 +1,42 @@
 # Calculate redundancy
 
 ```{r}
-#| eval: false
-#| echo: true
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+#| output: false
 
+# Load all the temp_data ending in gpkg saving you time
+library(tictoc)
+library(tidyverse)
+library(sf)
+tic()
+temp_data <- list.files(path= "/home/ricardors/agile-gscience-2024-rs-flood/data/temp_data", pattern="\\.gpkg")
+for (i in seq_along(temp_data)) {
+    file_name <- tools::file_path_sans_ext(temp_data[i])
+    assign(file_name, sf::read_sf(paste0("~/agile-gscience-2024-rs-flood/data/temp_data/", temp_data[i])))
+}
+# Load non-gpkg files
+centrality_both_sankey_v3 <- read.csv("~/agile-gscience-2024-rs-flood/data/temp_data/centrality_both_sankey_v3.csv")
+df_centrality_both_sankey <- read.csv("~/agile-gscience-2024-rs-flood/data/temp_data/df_centrality_both_sankey.csv")
+# Work on flat 
+sf::sf_use_s2(FALSE)
+# Load gpkg files for RQ
+results_data <-list.files(path= "/home/ricardors/agile-gscience-2024-rs-flood/data/results_data", pattern="\\.gpkg")
+for (i in seq_along(results_data)) {
+    file_name <- tools::file_path_sans_ext(results_data[i])
+    assign(file_name, sf::read_sf(paste0("~/agile-gscience-2024-rs-flood/data/results_data/", results_data[i])))
+} 
+toc()
+```
+
+```{r}
+#| eval: false
+#| echo: false
+#| warning: false
+#| message: false
+#| output: false
 
 library(sf)
 library(DBI)
@@ -21,14 +54,73 @@ group_by(cd_cnes) |>
 
 ```
 
-## RQ3
+## Research Question 3
+
+> Which healthcare facility was the least resilient in terms of redundancy?
+
+```{r}
+#| echo: false
+#| eval: true
+#| message: false
+#| warning: false
+
+knitr::include_graphics("~/agile-gscience-2024-rs-flood/data/figures/rq3_v7.png")
+```
+
+```{r}
+#| echo: false
+#| eval: true
+#| message: false
+#| warning: false
+#| output: false
+
+resilience_visintini_table_a <- mutate(arrange(resilience_visintini_table,ds_cnes),
+                                                  letter = stringr::str_to_upper(
+                                                        letters[1:length(resilience_visintini_table$ds_cnes)]),
+                                                  lack_pre=round(lack_pre)) |>
+                                                  sf::st_drop_geometry()
+library(units)
+isochrone_ghs_aoi_df <- isochrone_ghs_aoi |> mutate(area=st_area(geom))
+isochrone_ghs_aoi_df$area <-  isochrone_ghs_aoi_df$area |> units::set_units("hm²") |> round()
+isochrone_ghs_aoi_df |> sf::st_drop_geometry()
+table_redundancy <-  isochrone_ghs_aoi_df |> left_join(resilience_visintini_table_a,
+                                  join_by(ds_cnes)) 
+library(DT)
+dt_redundancy <- table_redundancy |> 
+  select(c(letter,
+           ds_cnes,
+           code_type,
+           beds,
+           shapename,
+           lack_pre,
+           area)) |>
+  mutate(
+    ds_cnes=stringr::str_to_title(table_redundancy$ds_cnes)) |> 
+  sf::st_drop_geometry() |> 
+  DT::datatable(extensions = 'Buttons',
+              filter = "top",
+              options=list(
+                          dom = 'Bfrtip',
+                          columnDefs = list(list(className = 'dt-center', targets = c(1:6))),
+                          pageLength = 5,
+                           buttons = c('copy', 'csv')),
+              escape = FALSE) 
+
+```
+
+```{r}
+#| echo: false
+#| eval: true
+
+dt_redundancy
+```
+
 
 ### Alternative route function
 
 ```{sql}
 #| eval: false
-#| echo: true
-
+#| echo: false
 
 CREATE TABLE ghs_aoi_net_largest_renamed AS
 SELECT 
@@ -253,7 +345,8 @@ toc()
 }
 }
 ```
-### Prepare for war: creating index
+
+### Applying spatial indexes
 
 ```{sql}
 #| eval: false
@@ -303,7 +396,7 @@ for (idx_hospital in 1:length(unique(isochrones_sampling_points$cd_cnes))){
     df_isochrone_points=points_for_isochrone)
   toc()
 }
-
+# Time: 3095546 ms
 ```
 
 

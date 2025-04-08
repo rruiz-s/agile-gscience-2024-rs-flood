@@ -251,20 +251,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./calculate_short_path.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Calculate short path</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./calculate_connectivity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Calculate connectivity</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Calculate connectivity</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./calculate_redundancy.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Calculate redundancy</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Calculate redundancy</span></span></a>
   </div>
 </li>
       </ul>
@@ -273,6 +267,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./calculate_short_path.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Extras</span></span></a>
   </div>
 </li>
     </ul>
@@ -295,7 +295,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./intro.html">Select AoI</a></li><li class="breadcrumb-item"><a href="./obtain_road_network.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Obtain road network using OSM data</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Obtain road network using OSM data</span></h1>
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Obtain road network using OSM data</span></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
 </div>
 
 
@@ -318,56 +318,56 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>[AoI -8] How to obtain the road network extent</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">--- The road network of the AOI is extracted as follows:</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">--- 1.The GHS urban area that intersected with Porto Alegre city is selected</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> porto_alegre_ghs <span class="kw">AS</span> (</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>        ghs.<span class="op">*</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        urban_center_4326 <span class="kw">AS</span> ghs</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">JOIN</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>        municipalities_ghs <span class="kw">AS</span> nuts</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        st_intersects(nuts.wkb_geometry, ghs.geom)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        nuts.shapename<span class="op">=</span><span class="st">'Porto Alegre'</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>),</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">--- 2. The Bounding box that contained the core metropolitan area that intersects with the GHS</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>core_metropolitan_area_ghs <span class="kw">AS</span> (</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> </span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>        st_union(wkb_geometry) <span class="kw">AS</span> core_geom</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> </span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        nuts</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">JOIN</span> </span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        porto_alegre_ghs</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> </span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        st_intersects(nuts.wkb_geometry,</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>                      porto_alegre_ghs.geom)),</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co">--- 3. The Bounding box that contained the core metropolitan area is created</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    core_metropolitan_area_ghs_bbox <span class="kw">AS</span> (</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>        <span class="kw">SELECT</span></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>            st_setsrid(st_extent(core_geom), <span class="dv">4326</span>) <span class="kw">AS</span> geom_bbox</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>        <span class="kw">FROM</span></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>            core_metropolitan_area_ghs</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    ),                    </span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co">--- 4. An osmius command is generated using the core metropolitan area and its bounding box</span></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    core_metropolitan_bbox_osmium_command <span class="kw">AS</span> (</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>        <span class="kw">SELECT</span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>            ST_XMin(ST_SnapToGrid(geom_bbox, <span class="fl">0.0001</span>)) <span class="kw">AS</span> min_lon,</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>            ST_XMax(ST_SnapToGrid(geom_bbox, <span class="fl">0.0001</span>)) <span class="kw">AS</span> max_lon,</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>            ST_YMin(ST_SnapToGrid(geom_bbox, <span class="fl">0.0001</span>)) <span class="kw">AS</span> min_lat,</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>            ST_YMax(ST_SnapToGrid(geom_bbox, <span class="fl">0.0001</span>)) <span class="kw">AS</span> max_lat</span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>        <span class="kw">FROM</span></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>            core_metropolitan_area_ghs_bbox)</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>        <span class="st">'osmium extract -b'</span></span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>        <span class="op">||</span> min_lon <span class="op">||</span> <span class="st">','</span> <span class="op">||</span> min_lat <span class="op">||</span> <span class="st">','</span> <span class="op">||</span> max_lon <span class="op">||</span> <span class="st">','</span> <span class="op">||</span> max_lat <span class="op">||</span></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>        <span class="st">' sul-240501.osm.pbf -o porto_alegre_urban_center.osm.pbf'</span></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>    <span class="kw">AS</span> osmium_command</span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>        core_metropolitan_bbox_osmium_command;</span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="co">---time: 6.569 ms</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">--- The road network of the AOI is extracted as follows:</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="co">--- 1.The GHS urban area that intersected with Porto Alegre city is selected</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">WITH</span> porto_alegre_ghs <span class="kw">AS</span> (</span>
+<span id="cb1-4"><a href="#cb1-4"></a>    <span class="kw">SELECT</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a>        ghs.<span class="op">*</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a>    <span class="kw">FROM</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a>        urban_center_4326 <span class="kw">AS</span> ghs</span>
+<span id="cb1-8"><a href="#cb1-8"></a>    <span class="kw">JOIN</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a>        municipalities_ghs <span class="kw">AS</span> nuts</span>
+<span id="cb1-10"><a href="#cb1-10"></a>    <span class="kw">ON</span></span>
+<span id="cb1-11"><a href="#cb1-11"></a>        st_intersects(nuts.wkb_geometry, ghs.geom)</span>
+<span id="cb1-12"><a href="#cb1-12"></a>    <span class="kw">WHERE</span></span>
+<span id="cb1-13"><a href="#cb1-13"></a>        nuts.shapename<span class="op">=</span><span class="st">'Porto Alegre'</span></span>
+<span id="cb1-14"><a href="#cb1-14"></a>),</span>
+<span id="cb1-15"><a href="#cb1-15"></a><span class="co">--- 2. The Bounding box that contained the core metropolitan area that intersects with the GHS</span></span>
+<span id="cb1-16"><a href="#cb1-16"></a>core_metropolitan_area_ghs <span class="kw">AS</span> (</span>
+<span id="cb1-17"><a href="#cb1-17"></a>    <span class="kw">SELECT</span> </span>
+<span id="cb1-18"><a href="#cb1-18"></a>        st_union(wkb_geometry) <span class="kw">AS</span> core_geom</span>
+<span id="cb1-19"><a href="#cb1-19"></a>    <span class="kw">FROM</span> </span>
+<span id="cb1-20"><a href="#cb1-20"></a>        nuts</span>
+<span id="cb1-21"><a href="#cb1-21"></a>    <span class="kw">JOIN</span> </span>
+<span id="cb1-22"><a href="#cb1-22"></a>        porto_alegre_ghs</span>
+<span id="cb1-23"><a href="#cb1-23"></a>    <span class="kw">ON</span> </span>
+<span id="cb1-24"><a href="#cb1-24"></a>        st_intersects(nuts.wkb_geometry,</span>
+<span id="cb1-25"><a href="#cb1-25"></a>                      porto_alegre_ghs.geom)),</span>
+<span id="cb1-26"><a href="#cb1-26"></a><span class="co">--- 3. The Bounding box that contained the core metropolitan area is created</span></span>
+<span id="cb1-27"><a href="#cb1-27"></a>    core_metropolitan_area_ghs_bbox <span class="kw">AS</span> (</span>
+<span id="cb1-28"><a href="#cb1-28"></a>        <span class="kw">SELECT</span></span>
+<span id="cb1-29"><a href="#cb1-29"></a>            st_setsrid(st_extent(core_geom), <span class="dv">4326</span>) <span class="kw">AS</span> geom_bbox</span>
+<span id="cb1-30"><a href="#cb1-30"></a>        <span class="kw">FROM</span></span>
+<span id="cb1-31"><a href="#cb1-31"></a>            core_metropolitan_area_ghs</span>
+<span id="cb1-32"><a href="#cb1-32"></a>    ),                    </span>
+<span id="cb1-33"><a href="#cb1-33"></a><span class="co">--- 4. An osmius command is generated using the core metropolitan area and its bounding box</span></span>
+<span id="cb1-34"><a href="#cb1-34"></a>    core_metropolitan_bbox_osmium_command <span class="kw">AS</span> (</span>
+<span id="cb1-35"><a href="#cb1-35"></a>        <span class="kw">SELECT</span></span>
+<span id="cb1-36"><a href="#cb1-36"></a>            ST_XMin(ST_SnapToGrid(geom_bbox, <span class="fl">0.0001</span>)) <span class="kw">AS</span> min_lon,</span>
+<span id="cb1-37"><a href="#cb1-37"></a>            ST_XMax(ST_SnapToGrid(geom_bbox, <span class="fl">0.0001</span>)) <span class="kw">AS</span> max_lon,</span>
+<span id="cb1-38"><a href="#cb1-38"></a>            ST_YMin(ST_SnapToGrid(geom_bbox, <span class="fl">0.0001</span>)) <span class="kw">AS</span> min_lat,</span>
+<span id="cb1-39"><a href="#cb1-39"></a>            ST_YMax(ST_SnapToGrid(geom_bbox, <span class="fl">0.0001</span>)) <span class="kw">AS</span> max_lat</span>
+<span id="cb1-40"><a href="#cb1-40"></a>        <span class="kw">FROM</span></span>
+<span id="cb1-41"><a href="#cb1-41"></a>            core_metropolitan_area_ghs_bbox)</span>
+<span id="cb1-42"><a href="#cb1-42"></a>    <span class="kw">SELECT</span></span>
+<span id="cb1-43"><a href="#cb1-43"></a>        <span class="st">'osmium extract -b'</span></span>
+<span id="cb1-44"><a href="#cb1-44"></a>        <span class="op">||</span> min_lon <span class="op">||</span> <span class="st">','</span> <span class="op">||</span> min_lat <span class="op">||</span> <span class="st">','</span> <span class="op">||</span> max_lon <span class="op">||</span> <span class="st">','</span> <span class="op">||</span> max_lat <span class="op">||</span></span>
+<span id="cb1-45"><a href="#cb1-45"></a>        <span class="st">' sul-240501.osm.pbf -o porto_alegre_urban_center.osm.pbf'</span></span>
+<span id="cb1-46"><a href="#cb1-46"></a>    <span class="kw">AS</span> osmium_command</span>
+<span id="cb1-47"><a href="#cb1-47"></a>    <span class="kw">FROM</span></span>
+<span id="cb1-48"><a href="#cb1-48"></a>        core_metropolitan_bbox_osmium_command;</span>
+<span id="cb1-49"><a href="#cb1-49"></a>  </span>
+<span id="cb1-50"><a href="#cb1-50"></a><span class="co">---time: 6.569 ms</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -377,13 +377,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>[AoI-9] How to clip OSM data using osmium</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">osmium</span> extract <span class="at">-b-51.2791,-30.1722,-50.9407,-29.8048</span> sul-240501.osm.pbf <span class="at">-o</span> porto_alegre_urban_center.osm.pbf</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># time: 14029 ms</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="ex">osmium</span> extract <span class="at">-b-51.2791,-30.1722,-50.9407,-29.8048</span> sul-240501.osm.pbf <span class="at">-o</span> porto_alegre_urban_center.osm.pbf</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="co"># time: 14029 ms</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>The OSM network obtained with this osmium command was the road network input required for OpenRouteService (ORS) to generate a routable graph of the core metropolitan area of Porto Alegre instead of the entire Rio Grande do Sul network. We named <em>porto_alegre_urban_center.osm.pbf</em> to the road network of our AoI.</p>
 <p>We obtained the OSM data from Geofabrik <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> raw directory index</p>
 
+
+<!-- -->
 
 </section>
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
@@ -484,6 +486,57 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       container: window.document.getElementById('quarto-embedded-source-code-modal')
     });
     clipboardModal.on('success', onCopySuccess);
+  }
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
@@ -826,7 +879,101 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         <span class="nav-page-text">Obtain routable network</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
-</nav>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb3" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu"># Obtain road network using OSM data</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="in">```{r}</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="co">#| echo: false</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="co">#| include: false</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="co">#| eval: false</span></span>
+<span id="cb3-9"><a href="#cb3-9"></a></span>
+<span id="cb3-10"><a href="#cb3-10"></a><span class="dv">1</span><span class="sc">+</span><span class="dv">1</span></span>
+<span id="cb3-11"><a href="#cb3-11"></a><span class="in">```</span></span>
+<span id="cb3-12"><a href="#cb3-12"></a></span>
+<span id="cb3-13"><a href="#cb3-13"></a><span class="fu">## Select boundaries of the network</span></span>
+<span id="cb3-14"><a href="#cb3-14"></a></span>
+<span id="cb3-15"><a href="#cb3-15"></a>The following PostgreSQL created the command to extract the OpenStreetMap (OSM)</span>
+<span id="cb3-16"><a href="#cb3-16"></a>network from our area of interest (AOI) using osmium. Firstly, the Global Human Settle-</span>
+<span id="cb3-17"><a href="#cb3-17"></a>ment (GHS-SMOD) that intersected with Porto Alegre is selected as the AOI. Secondly,</span>
+<span id="cb3-18"><a href="#cb3-18"></a>this GHS is used to dynamically generate the bounding box and command line required</span>
+<span id="cb3-19"><a href="#cb3-19"></a>by osmium. </span>
+<span id="cb3-20"><a href="#cb3-20"></a></span>
+<span id="cb3-23"><a href="#cb3-23"></a><span class="in">```{sql}</span></span>
+<span id="cb3-24"><a href="#cb3-24"></a><span class="co">#| echo: true</span></span>
+<span id="cb3-25"><a href="#cb3-25"></a><span class="co">#| eval: false</span></span>
+<span id="cb3-26"><a href="#cb3-26"></a><span class="co">#| code-summary: "[AoI -8] How to obtain the road network extent"</span></span>
+<span id="cb3-27"><a href="#cb3-27"></a></span>
+<span id="cb3-28"><a href="#cb3-28"></a><span class="co">--- The road network of the AOI is extracted as follows:</span></span>
+<span id="cb3-29"><a href="#cb3-29"></a><span class="co">--- 1.The GHS urban area that intersected with Porto Alegre city is selected</span></span>
+<span id="cb3-30"><a href="#cb3-30"></a><span class="kw">WITH</span> porto_alegre_ghs <span class="kw">AS</span> (</span>
+<span id="cb3-31"><a href="#cb3-31"></a>    <span class="kw">SELECT</span></span>
+<span id="cb3-32"><a href="#cb3-32"></a>        ghs<span class="ch">.</span><span class="op">*</span></span>
+<span id="cb3-33"><a href="#cb3-33"></a>    <span class="kw">FROM</span></span>
+<span id="cb3-34"><a href="#cb3-34"></a>        urban_center_4326 <span class="kw">AS</span> ghs</span>
+<span id="cb3-35"><a href="#cb3-35"></a>    <span class="kw">JOIN</span></span>
+<span id="cb3-36"><a href="#cb3-36"></a>        municipalities_ghs <span class="kw">AS</span> nuts</span>
+<span id="cb3-37"><a href="#cb3-37"></a>    <span class="kw">ON</span></span>
+<span id="cb3-38"><a href="#cb3-38"></a>        st_intersects(nuts<span class="ch">.</span>wkb_geometry, ghs<span class="ch">.</span>geom)</span>
+<span id="cb3-39"><a href="#cb3-39"></a>    <span class="kw">WHERE</span></span>
+<span id="cb3-40"><a href="#cb3-40"></a>        nuts<span class="ch">.</span>shapename<span class="op">=</span><span class="st">'Porto Alegre'</span></span>
+<span id="cb3-41"><a href="#cb3-41"></a>),</span>
+<span id="cb3-42"><a href="#cb3-42"></a><span class="co">--- 2. The Bounding box that contained the core metropolitan area that intersects with the GHS</span></span>
+<span id="cb3-43"><a href="#cb3-43"></a>core_metropolitan_area_ghs <span class="kw">AS</span> (</span>
+<span id="cb3-44"><a href="#cb3-44"></a>    <span class="kw">SELECT</span> </span>
+<span id="cb3-45"><a href="#cb3-45"></a>        st_union(wkb_geometry) <span class="kw">AS</span> core_geom</span>
+<span id="cb3-46"><a href="#cb3-46"></a>    <span class="kw">FROM</span> </span>
+<span id="cb3-47"><a href="#cb3-47"></a>        nuts</span>
+<span id="cb3-48"><a href="#cb3-48"></a>    <span class="kw">JOIN</span> </span>
+<span id="cb3-49"><a href="#cb3-49"></a>        porto_alegre_ghs</span>
+<span id="cb3-50"><a href="#cb3-50"></a>    <span class="kw">ON</span> </span>
+<span id="cb3-51"><a href="#cb3-51"></a>        st_intersects(nuts<span class="ch">.</span>wkb_geometry,</span>
+<span id="cb3-52"><a href="#cb3-52"></a>                      porto_alegre_ghs<span class="ch">.</span>geom)),</span>
+<span id="cb3-53"><a href="#cb3-53"></a><span class="co">--- 3. The Bounding box that contained the core metropolitan area is created</span></span>
+<span id="cb3-54"><a href="#cb3-54"></a>    core_metropolitan_area_ghs_bbox <span class="kw">AS</span> (</span>
+<span id="cb3-55"><a href="#cb3-55"></a>        <span class="kw">SELECT</span></span>
+<span id="cb3-56"><a href="#cb3-56"></a>            st_setsrid(st_extent(core_geom), <span class="dv">4326</span>) <span class="kw">AS</span> geom_bbox</span>
+<span id="cb3-57"><a href="#cb3-57"></a>        <span class="kw">FROM</span></span>
+<span id="cb3-58"><a href="#cb3-58"></a>            core_metropolitan_area_ghs</span>
+<span id="cb3-59"><a href="#cb3-59"></a>    ),                    </span>
+<span id="cb3-60"><a href="#cb3-60"></a><span class="co">--- 4. An osmius command is generated using the core metropolitan area and its bounding box</span></span>
+<span id="cb3-61"><a href="#cb3-61"></a>    core_metropolitan_bbox_osmium_command <span class="kw">AS</span> (</span>
+<span id="cb3-62"><a href="#cb3-62"></a>        <span class="kw">SELECT</span></span>
+<span id="cb3-63"><a href="#cb3-63"></a>            ST_XMin(ST_SnapToGrid(geom_bbox, <span class="fl">0.0001</span>)) <span class="kw">AS</span> min_lon,</span>
+<span id="cb3-64"><a href="#cb3-64"></a>            ST_XMax(ST_SnapToGrid(geom_bbox, <span class="fl">0.0001</span>)) <span class="kw">AS</span> max_lon,</span>
+<span id="cb3-65"><a href="#cb3-65"></a>            ST_YMin(ST_SnapToGrid(geom_bbox, <span class="fl">0.0001</span>)) <span class="kw">AS</span> min_lat,</span>
+<span id="cb3-66"><a href="#cb3-66"></a>            ST_YMax(ST_SnapToGrid(geom_bbox, <span class="fl">0.0001</span>)) <span class="kw">AS</span> max_lat</span>
+<span id="cb3-67"><a href="#cb3-67"></a>        <span class="kw">FROM</span></span>
+<span id="cb3-68"><a href="#cb3-68"></a>            core_metropolitan_area_ghs_bbox)</span>
+<span id="cb3-69"><a href="#cb3-69"></a>    <span class="kw">SELECT</span></span>
+<span id="cb3-70"><a href="#cb3-70"></a>        <span class="st">'osmium extract -b'</span></span>
+<span id="cb3-71"><a href="#cb3-71"></a>        <span class="op">||</span> min_lon <span class="op">||</span> <span class="st">','</span> <span class="op">||</span> min_lat <span class="op">||</span> <span class="st">','</span> <span class="op">||</span> max_lon <span class="op">||</span> <span class="st">','</span> <span class="op">||</span> max_lat <span class="op">||</span></span>
+<span id="cb3-72"><a href="#cb3-72"></a>        <span class="st">' sul-240501.osm.pbf -o porto_alegre_urban_center.osm.pbf'</span></span>
+<span id="cb3-73"><a href="#cb3-73"></a>    <span class="kw">AS</span> osmium_command</span>
+<span id="cb3-74"><a href="#cb3-74"></a>    <span class="kw">FROM</span></span>
+<span id="cb3-75"><a href="#cb3-75"></a>        core_metropolitan_bbox_osmium_command;</span>
+<span id="cb3-76"><a href="#cb3-76"></a>  </span>
+<span id="cb3-77"><a href="#cb3-77"></a><span class="co">---time: 6.569 ms</span></span>
+<span id="cb3-78"><a href="#cb3-78"></a></span>
+<span id="cb3-79"><a href="#cb3-79"></a><span class="in">```</span></span>
+<span id="cb3-80"><a href="#cb3-80"></a></span>
+<span id="cb3-81"><a href="#cb3-81"></a><span class="fu">## Clip network using boundaries</span></span>
+<span id="cb3-82"><a href="#cb3-82"></a></span>
+<span id="cb3-83"><a href="#cb3-83"></a>The result of the previous query returned the following osmium^[<span class="co">[</span><span class="ot">Osmium: https://osmcode.org/docs.html</span><span class="co">](https://osmcode.org/docs.html)</span>] command,</span>
+<span id="cb3-84"><a href="#cb3-84"></a></span>
+<span id="cb3-87"><a href="#cb3-87"></a><span class="in">```{bash}</span></span>
+<span id="cb3-88"><a href="#cb3-88"></a><span class="co">#| eval: false</span></span>
+<span id="cb3-89"><a href="#cb3-89"></a><span class="co">#| echo: true</span></span>
+<span id="cb3-90"><a href="#cb3-90"></a><span class="co">#| code-summary: "[AoI-9] How to clip OSM data using osmium"</span></span>
+<span id="cb3-91"><a href="#cb3-91"></a></span>
+<span id="cb3-92"><a href="#cb3-92"></a><span class="ex">osmium</span> extract <span class="at">-b-51.2791,-30.1722,-50.9407,-29.8048</span> sul-240501.osm.pbf <span class="at">-o</span> porto_alegre_urban_center.osm.pbf</span>
+<span id="cb3-93"><a href="#cb3-93"></a><span class="co"># time: 14029 ms</span></span>
+<span id="cb3-94"><a href="#cb3-94"></a><span class="in">```</span></span>
+<span id="cb3-95"><a href="#cb3-95"></a></span>
+<span id="cb3-96"><a href="#cb3-96"></a>The OSM network obtained with this osmium command was the road network input required for OpenRouteService (ORS) to generate a routable graph of the core metropolitan area of Porto Alegre instead of the entire Rio Grande do Sul network. We named _porto_alegre_urban_center.osm.pbf_ to the road network of our AoI.</span>
+<span id="cb3-97"><a href="#cb3-97"></a></span>
+<span id="cb3-98"><a href="#cb3-98"></a>We obtained the OSM data from Geofabrik ^[<span class="co">[</span><span class="ot">Geofabrik: https://quarto.org/docs/authoring/markdown-basics.html#footnotes</span><span class="co">](https://quarto.org/docs/authoring/markdown-basics.html#footnotes)</span>] raw directory index </span>
+</code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">

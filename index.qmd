@@ -9,7 +9,7 @@ In this website you can find in detailed how the full paper presented in AGILE 2
 reproducibility, and openness of computational GIScience research as stated in the [Reproducible Paper Guidelines](https://osf.io/numa5) from AGILE.
 
 
-# Data
+# Body of Knowledge
 
 The <span class="font-color">**topic**</span> of this study includes _Open Spatial Data_, _Open Science_, _Open-source Geospatial Tools and Applications_ , _Disaster and Risk Management_, _Way Finding_, _Routing_ and _Indoor Navigation_ or _Spatial Databases_ and _Data Management_.
 
@@ -22,6 +22,8 @@ The <span class="font-color">**submission type**</span> of this study is _use ca
       - [[AM11-2](https://bok.eo4geo.eu/AM11-2)] Graph theoretic descriptive measures of networks. We used edge betweenness indicator to measure the level of connectivity on the road network of Porto Alegre
       - [[AM11-3](https://bok.eo4geo.eu/AM11-3)] Least-cost shortest path. We used pgrouting to compute the optimum path through a network with Dijkstras algorithm based on the weights given by OpenRouteService (ORS).
       - [[AM11-7](https://bok.eo4geo.eu/AM11-7)] Accessibility modeling. We defined a method for measuring redundancy on the access to hospitals.
+
+![This study is located in the network analysis of the body of knowledge including centrality metrics of the road network and accessibility of the hospitals based on least-cost paths.](data/figures/bok_network.png){width=40%}
 
 ## Data description
 

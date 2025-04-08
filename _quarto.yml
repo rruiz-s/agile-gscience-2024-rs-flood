@@ -84,10 +84,10 @@ book:
     - part: analyse_centrality_resilience.qmd
       chapters:
         - od.qmd
-        - calculate_short_path.qmd
         - calculate_connectivity.qmd
         - calculate_redundancy.qmd
     - references.qmd
+    - calculate_short_path.qmd
   navbar:
     right:
       - href: /data/AGILE_porto_alegre_study_anonymised.pdf
@@ -114,6 +114,10 @@ format:
     css: styles.css
     code-fold: true
     code-summary: "Show the code"
+    code-tools: true
+    code-block-bg: true
+    code-block-border-left: "#1b4f9d"
+    code-line-numbers: true
   
   pdf:
     documentclass: scrreprt

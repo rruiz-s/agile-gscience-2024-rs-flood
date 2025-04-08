@@ -378,40 +378,45 @@ Then, we snapped the sampling points to the closest vertice of the network. The 
 ```{r}
 #| echo: true
 #| eval: false
+#| code-summary: "[ACR-5] How to snap all the weighted OD on each of the municipalities to calculate IC"
 
-## od_200_each_group_id
-for (idx in unique(od_200_each_group_id$dense_rank)){
-table_name_vertices <- glue("net_largest_{as.character(idx)}_vertices_pgr")
-table_name_result <- glue("od_200_each_snapped_{as.character(idx)}")
-
-dbExecute(glue_sql("DROP TABLE IF EXISTS {`table_name_result`}", .con=connection),
+tic()  
+for(idx in 1:9){
+  tic(glue("run {idx}/9")) 
+  table_name_1_centrality <- glue("net_largest_{as.character(idx)}")
+  temp_table_name <- glue("temp_centrality_{idx}")
+  table_bidirect_id <- glue("t_bidirect_id_{idx}")
+  dbExecute(glue_sql("DROP TABLE IF EXISTS {`temp_table_name`}", .con=connection),
           conn=connection)  
-query_1_snap <- glue_sql("CREATE TABLE {`table_name_result`} AS
-SELECT DISTINCT ON (net.id)
-       pt.id_sample AS pt_id,
-       net.id AS snapped_id,
-       pt.dense_rank AS shapename_id,
-       pt.shapename,
-       net.the_geom
-FROM 
-(SELECT * 
-FROM 
-    od_200_each_group_id
-    WHERE
-    dense_rank = {as.character(idx)}) as pt
-CROSS JOIN
-LATERAL (SELECT
-        * 
-        FROM {`table_name_vertices`} AS net
-         ORDER BY net.the_geom <-> pt.geometry 
-        LIMIT 1) AS net;", .con= connection)
-result_1_snap <- dbGetQuery(conn=connection, query_1_snap)
- insert_query <- glue_sql("INSERT INTO table_snapped (pt_id, snapped_id, shapename_id,shapename, geom)
-                            SELECT pt_id, snapped_id, shapename_id,shapename, the_geom 
-                            FROM {`table_name_result`}", .con = connection)
-  dbExecute(conn = connection, insert_query)
-}
+query_1_central <- glue_sql("CREATE TABLE {`temp_table_name`} AS
+ SELECT   
+ b.id,
+ b.geom,
+ count(b.geom) AS centrality 
+ FROM  pgr_dijkstra('SELECT id,
+                            fromid AS source,
+                            toid AS target,
+                            weight AS cost
+                      FROM {`table_name_1_centrality`}',
+                      ARRAY(SELECT 
+                        snapped_id AS start_id 
+                        FROM table_snapped 
+                        WHERE shapename_id = {idx}::text),
+                      ARRAY(SELECT
+                        snapped_id AS end_id 
+                        FROM table_snapped
+                        WHERE shapename_id = {idx}::text),
+                      directed := TRUE) j
+                      LEFT JOIN {`table_name_1_centrality`} AS b
+                      ON j.edge = b.id
+                      GROUP BY  b.id, geom;", .con=connection)
 
+dbExecute(con=connection, query_1_central)
+toc()
+}
+toc()
+
+# Time: 53805 ms
 ```
 
 
@@ -437,38 +442,43 @@ for (idx in 1:9) {
 **Troubleshooting 9** The query did not find the required tables. Since this iteration required the tables net_largest_x, where x is one of the municipalities id, we observed that these tables were in the public schema. We solved this by defining the search_path or the schema.  
 
 
-
-
 ## Regular OD
 
+The subject of the study that uses a regular OD is the hospital accessibility and their lack of redundancy. First we create the field location using isochrones generated with ORS. Then we create regular samples and finally we snap these OD to the road networks' nodes. 
+
 ### Select Point of Interest (PoI)
+
+We used ORS to create 10 minutes ischrones for each of our point of interest, the hospitals. Before selecting running the PostgreSQL query, we created indexes in the geometry column and id column. The first common table expressin (CTE) _all_hospitals_ included the non-spatial information from the hospitals with their location joining both tables by the hospital code cne. Subsequently, the CTE _poi_hospitals_ filtered all the hospitals selecting only those that intersected with the core metropolitan area. Lastly, the table _ghs_aoi_net_largest_vertices_pgr_ created by pgrouting provided the nodes or vertices to which the hospitals are snapped.
 
 ```{sql}
 #| eval: false
 #| echo: true
-#| code-summary: Hospitals
+#| code-summary: "[ACR-6] How to select the hospitals and snap them to the road network"
 
+CREATE INDEX idx_etlcnes_hospital_selected_cnes ON etlcnes_hospital_selected USING btree("CNES");
+CREATE INDEX idx_hospitals_cd_cnes ON hospitals USING btree(cd_cnes);
+EXPLAIN ANALYZE
 CREATE TABLE hospitals_poi AS
 --- Add ICU bed capacity from ETLCNES to the hospitals
 WITH all_hospitals AS (SELECT DISTINCT ON (cd_cnes)
-	cd_cnes,
+    cd_cnes,
     ds_cnes,
     wkb_geometry AS geom,
-		"QTLEITP1",
-	"QTLEITP2",
-	"QTLEITP3",
-	"NAT_JUR",
-	tp_risco,
-	nm_razao_s,
-	nm_municip
+        "QTLEITP1",
+    "QTLEITP2",
+    "QTLEITP3",
+    "NAT_JUR",
+    tp_risco,
+    nm_razao_s,
+    nm_municip
 FROM
-	hospitals AS geom_hospital
+    hospitals AS geom_hospital
 LEFT JOIN
-	etlcnes_hospital_selected AS df_hospital
+    etlcnes_hospital_selected AS df_hospital
 ON
-	df_hospital."CNES"=geom_hospital.cd_cnes),
+    df_hospital."CNES"=geom_hospital.cd_cnes),
 --- Define Point Of Interest (POI) using Area of Interest (AoI)
-	 poi_hospitals AS (
+     poi_hospitals AS (
 SELECT 
     h.*
 FROM 
@@ -477,7 +487,7 @@ FROM
 WHERE st_intersects(h.geom, poi.geom))
 --- Add the original geometry and the snapped position
 SELECT DISTINCT ON (h.cd_cnes)
-	h.*,
+    h.*,
     f.the_geom <-> h.geom AS distance,
     h.geom AS geom_hospital,
     f.the_geom AS geom_node
@@ -491,28 +501,32 @@ ORDER BY
     net.the_geom <-> h.geom
 LIMIT 1) AS f ON true
 
+--- Time: 814.451 ms
+
 ```
 
 
 ### Create Isochrones from PoI
 
+The ORS API^[[https://openrouteservice.org/dev/#/login?redirect=https://openrouteservice.org/dev/%23/api-docs](https://openrouteservice.org/dev/#/login?redirect=https://openrouteservice.org/dev/%23/api-docs)] created the area that is reached in 10 minutes from each of the hospitals, where we took the regular OD.
+
 Error: Openrouteservice API request failed
-[3004] Parameter 'locations=22' is out of range. Maximum possible value is 5.
+[3004] Parameter 'locations=22' is out of range. Maximum possible value is 5. The function _ors_api_key_ registered a personal token required to run the ORS services by the API. Then, the arguments of the function _ors_isochrones_ took the first 5 hospitals location, the range and interval of 600 seconds (10 minutes) and the output format, a sf object. The reason to repeat this process five times was that the maximum possible values for location was 5. This approach is quite rudimentary, yet it worked.  The last step was to remove the "center" column that resulted on an non-valid format to copy the R object into PostgreSQL using the function _st_write_.
 
 ```{r}
 #| eval: false
 #| echo: true
-
+#| code-summary: "[ACR-7] How to run ORS to create isochrones for each hospital"
 
 library(sf)
 library(openrouteservice)
-
-# Remember to forget your API Rick, written by Rick.
-openrouteservice::ors_api_key("5b3ce3597851110001cf6248ba03ca736c924d61aadb844a004da6fe")
+# Use the free API from ORS replacing "<>" for the key value.
+openrouteservice::ors_api_key("<https://openrouteservice.org/dev/#/login?redirect=https://openrouteservice.org/dev/%23/api-docs>")
 
 hospitals_poi <- sf::st_read(connection, DBI::Id(schema="agile_gis_2025_rs" ,"hospitals_poi"))
 library(tidyverse)
 ## Part I: PoI (1-5) 
+tic()
 isochrone_part_1 <- 
   ors_isochrones(st_coordinates(hospitals_poi$geom_node[1:5]),
                                 range = 600,
@@ -564,17 +578,16 @@ isochrones_poi_hospitals <- rbind(isochrone_part_1,
                                   isochrone_part_3,
                                   isochrone_part_4,
                                   isochrone_part_5 )  |>
-                                select(-center) # the variable "center" is a list. Writting will return  no applicable method for st_write.
-st_write(obj = isochrones_poi_hospitals,
-         dsn = connection,
-         Id(schema="agile_gis_2025_rs",
-            table = "isochrones_poi_hospitals"))
+                                select(-center) 
+# the variable ""center"" is a list. Writting will return  no applicable method for st_write.
+toc()
+# time: 1925 ms
 ```
 
 
 ### Create regular sampling points
 
-FIrst he fcuntion: guck mal wo war diese Post 
+We used a function in PostGIS to sample regularly^[[https://gis.stackexchange.com/questions/4663/creating-regular-point-grid-inside-polygon-in-postgis](https://gis.stackexchange.com/questions/4663/creating-regular-point-grid-inside-polygon-in-postgis)]  the OD to assesss the hospitals accessibility and lack of redundancy. In this case, the function is limited to the Spatial Reference IDentifier (SRID) 4326. Since this SRID use degrees and their distance depends on the distance from the equator, the accuracy could be improved by using another SRID adapted to the project. We used this SRID because the accuracy between the OD were not as important as using a SRID that could be used on a global scale.
 
 ```{sql}
 #| eval: false
@@ -624,14 +637,12 @@ $BODY$ LANGUAGE plpgsql IMMUTABLE STRICT;
 
 ```
 
-For the weig
+The following code created a bounding box required to run the created function in the previous step.
 
 ```{sql}
 #| eval: false
 #| echo: true
-#| code-summary: bbox
-
-# Move core bbox 
+#| code-summary: How to create a bounding box that entails the core metropolitan area.
 
 CREATE TABLE core_metropolitan_bbox AS
 SELECT 
@@ -641,14 +652,16 @@ FROM
 
 ```
 
+Based on the core metropolitan bounding box, we regularly sampled the OD separated by 0.037º. We used this OD to calculate the core metropolitan connectivity regularly. <span style="color:red;">Revise, maybe this is unnecesary in the delivered final version </span>
 
 ```{sql}
 #| eval: false
 #| echo: true
-#| code-summary: Regular OD
+#| code-summary: "[ACR-7] How to create regular samples to calculate the Core Metropolitan Connectivity"
 
 # Move this to centrality hospitals
 
+EXPLAIN ANALYZE
 CREATE TABLE regular_point_od AS (
 WITH multipoint_regular AS(
 SELECT 
@@ -663,14 +676,18 @@ SELECT
     geom
 FROM 
     point_regular);
+--- Time: 505.147 ms
 ```
 
-For the Isochrones:
+We repeated this process for each of the isochrones of the hospitals regularly sampling every 0.00912º. 
 
 ```{sql}
 #| eval: false
 #| echo: true
+#| code-summary: "[ACR-8] How to create regular samples to calculate lack of redundancy of hospitals."
 
+
+EXPLAIN ANALYZE
 CREATE TABLE  regular_sampling_isochrones_ghs_aoi AS
 WITH multipoint_regular AS(
 SELECT 
@@ -678,7 +695,7 @@ SELECT
     ds_cnes,
     cd_cnes
 FROM 
-	isochrones_poi_hospitals),
+    isochrones_poi_hospitals),
 point_regular AS(
 SELECT 
     st_setsrid((st_dump(geom)).geom, 4326)::geometry(Point, 4326) AS geom,
@@ -686,37 +703,41 @@ SELECT
     cd_cnes
 FROM  multipoint_regular)
 SELECT 
-	cd_cnes,
+    cd_cnes,
     ds_cnes,
     geom,
-	row_number() over() AS id
+    row_number() over() AS id
 FROM 
     point_regular; 
+--- Time: 6083.595 ms
 
 ```
 
 ### Snap regular sampling points
 
-Regular
+The code chunk ACR-9 snapped the OD to the closest node of the road network of each hospital isochrone. We noticed that the final number of OD may be slightly different from the _temp_data_ of the github repository. This difference was not determinant to draw different conclusions from ours, therefore we acknowledge them and do not consider them.
 
 ```{sql}
 #| eval: false
 #| echo: true
+#| code-summary: "[ACR-9] How to snap the regular samples to calculate lack of redundancy of hospitals."
 
+EXPLAIN ANALYZE
 CREATE TABLE regular_sampling_isochrones_snapped_ghs_aoi AS
 SELECT DISTINCT ON (net.id)
-   	net.id,
-   	ds_cnes,
-   	cd_cnes,
-   	net.the_geom  AS geom
+    net.id,
+    ds_cnes,
+    cd_cnes,
+    net.the_geom  AS geom
 FROM regular_sampling_isochrones_ghs_aoi AS pt
 CROSS JOIN LATERAL 
-	(SELECT 
-		*
-	FROM  ghs_aoi_net_largest_vertices_pgr AS net
-	ORDER BY
-	net.the_geom <-> pt.geom
-	LIMIT 1) AS net;
+    (SELECT 
+        *
+    FROM  ghs_aoi_net_largest_vertices_pgr AS net
+    ORDER BY
+    net.the_geom <-> pt.geom
+    LIMIT 1) AS net;        
+--- Time: 166.008 ms
 
 ```
 

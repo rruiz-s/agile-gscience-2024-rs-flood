@@ -251,20 +251,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./calculate_short_path.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Calculate short path</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./calculate_connectivity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Calculate connectivity</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Calculate connectivity</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./calculate_redundancy.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Calculate redundancy</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Calculate redundancy</span></span></a>
   </div>
 </li>
       </ul>
@@ -273,6 +267,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./calculate_short_path.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Extras</span></span></a>
   </div>
 </li>
     </ul>
@@ -296,7 +296,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./intro.html">Select AoI</a></li><li class="breadcrumb-item"><a href="./detect_flood.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Detect flood</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Detect flood</span></h1>
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Detect flood</span></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
 </div>
 
 
@@ -319,40 +319,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Visualization of flood extent</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DBI)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the flood extent and remove Z dimension</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>flooding_subdivided_porto <span class="ot">&lt;-</span> <span class="fu">st_zm</span>(sf<span class="sc">::</span><span class="fu">st_read</span>(connection,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                                        DBI<span class="sc">::</span><span class="fu">Id</span>(<span class="at">schema=</span><span class="st">"agile_gis_2025_rs"</span>,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">table=</span><span class="st">"flooding_subdivided_porto"</span>)))</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>core_metropolitan_area <span class="ot">&lt;-</span> <span class="fu">st_zm</span>(sf<span class="sc">::</span><span class="fu">st_read</span>(connection,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>                                        DBI<span class="sc">::</span><span class="fu">Id</span>(<span class="at">schema=</span><span class="st">"agile_gis_2025_rs"</span>,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">table=</span><span class="st">"core_metropolitan_area"</span>)))</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Create leaflet product</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaflet.extras)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaflet)</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">leaflet</span>() <span class="sc">|&gt;</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addTiles</span>()  <span class="sc">|&gt;</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addProviderTiles</span>(<span class="st">"OpenStreetMap"</span>, <span class="at">group =</span> <span class="st">"OpenStreetMap"</span>)  <span class="sc">|&gt;</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addProviderTiles</span>(<span class="st">"Esri.WorldImagery"</span>, <span class="at">group =</span> <span class="st">"Esri.WorldImagery"</span>)  <span class="sc">|&gt;</span>                    <span class="fu">addPolygons</span>(<span class="at">data=</span>flooding_subdivided_porto,</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                    <span class="at">fillColor =</span> <span class="st">"#dec8b7ff"</span>,</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>                    <span class="at">fillOpacity =</span> <span class="fl">0.6</span>,</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>                    <span class="at">weight =</span> <span class="dv">1</span>,</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>                    <span class="at">color =</span> <span class="st">"#4b2609"</span>,</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>                    <span class="at">dashArray =</span> <span class="st">"1"</span>,</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>                    <span class="at">group=</span> <span class="st">"Flood extent"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addPolygons</span>(<span class="at">data=</span>core_metropolitan_area,</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>                    <span class="at">fillColor =</span> <span class="st">"yellow"</span>,</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>                    <span class="at">fillOpacity =</span> <span class="fl">0.05</span>,</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>                    <span class="at">weight =</span> <span class="dv">2</span>,</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>                    <span class="at">color =</span> <span class="st">"red"</span>,</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>                    <span class="at">dashArray =</span> <span class="st">"1"</span>,</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>                    <span class="at">group=</span> <span class="st">"Core Metropolitan Area"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a> <span class="fu">addLayersControl</span>(</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">baseGroups =</span> <span class="fu">c</span>(<span class="st">"OpenStreetMap"</span>, <span class="st">"Esri.WorldImagery"</span>),</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">overlayGroups =</span> <span class="fu">c</span>(<span class="st">"Flood extent"</span>,<span class="st">"Core Metropolitan Area"</span>),</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">options =</span> <span class="fu">layersControlOptions</span>(<span class="at">collapsed =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">library</span>(DBI)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="co"># Load the flood extent and remove Z dimension</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a>flooding_subdivided_porto <span class="ot">&lt;-</span> <span class="fu">st_zm</span>(sf<span class="sc">::</span><span class="fu">st_read</span>(connection,</span>
+<span id="cb1-5"><a href="#cb1-5"></a>                                        DBI<span class="sc">::</span><span class="fu">Id</span>(<span class="at">schema=</span><span class="st">"agile_gis_2025_rs"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6"></a>                                            <span class="at">table=</span><span class="st">"flooding_subdivided_porto"</span>)))</span>
+<span id="cb1-7"><a href="#cb1-7"></a>core_metropolitan_area <span class="ot">&lt;-</span> <span class="fu">st_zm</span>(sf<span class="sc">::</span><span class="fu">st_read</span>(connection,</span>
+<span id="cb1-8"><a href="#cb1-8"></a>                                        DBI<span class="sc">::</span><span class="fu">Id</span>(<span class="at">schema=</span><span class="st">"agile_gis_2025_rs"</span>,</span>
+<span id="cb1-9"><a href="#cb1-9"></a>                                            <span class="at">table=</span><span class="st">"core_metropolitan_area"</span>)))</span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="co"># Create leaflet product</span></span>
+<span id="cb1-11"><a href="#cb1-11"></a><span class="fu">library</span>(leaflet.extras)</span>
+<span id="cb1-12"><a href="#cb1-12"></a><span class="fu">library</span>(leaflet)</span>
+<span id="cb1-13"><a href="#cb1-13"></a><span class="fu">leaflet</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-14"><a href="#cb1-14"></a>  <span class="fu">addTiles</span>()  <span class="sc">|&gt;</span></span>
+<span id="cb1-15"><a href="#cb1-15"></a>  <span class="fu">addProviderTiles</span>(<span class="st">"OpenStreetMap"</span>, <span class="at">group =</span> <span class="st">"OpenStreetMap"</span>)  <span class="sc">|&gt;</span></span>
+<span id="cb1-16"><a href="#cb1-16"></a>  <span class="fu">addProviderTiles</span>(<span class="st">"Esri.WorldImagery"</span>, <span class="at">group =</span> <span class="st">"Esri.WorldImagery"</span>)  <span class="sc">|&gt;</span>                    <span class="fu">addPolygons</span>(<span class="at">data=</span>flooding_subdivided_porto,</span>
+<span id="cb1-17"><a href="#cb1-17"></a>                    <span class="at">fillColor =</span> <span class="st">"#dec8b7ff"</span>,</span>
+<span id="cb1-18"><a href="#cb1-18"></a>                    <span class="at">fillOpacity =</span> <span class="fl">0.6</span>,</span>
+<span id="cb1-19"><a href="#cb1-19"></a>                    <span class="at">weight =</span> <span class="dv">1</span>,</span>
+<span id="cb1-20"><a href="#cb1-20"></a>                    <span class="at">color =</span> <span class="st">"#4b2609"</span>,</span>
+<span id="cb1-21"><a href="#cb1-21"></a>                    <span class="at">dashArray =</span> <span class="st">"1"</span>,</span>
+<span id="cb1-22"><a href="#cb1-22"></a>                    <span class="at">group=</span> <span class="st">"Flood extent"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb1-23"><a href="#cb1-23"></a>  <span class="fu">addPolygons</span>(<span class="at">data=</span>core_metropolitan_area,</span>
+<span id="cb1-24"><a href="#cb1-24"></a>                    <span class="at">fillColor =</span> <span class="st">"yellow"</span>,</span>
+<span id="cb1-25"><a href="#cb1-25"></a>                    <span class="at">fillOpacity =</span> <span class="fl">0.05</span>,</span>
+<span id="cb1-26"><a href="#cb1-26"></a>                    <span class="at">weight =</span> <span class="dv">2</span>,</span>
+<span id="cb1-27"><a href="#cb1-27"></a>                    <span class="at">color =</span> <span class="st">"red"</span>,</span>
+<span id="cb1-28"><a href="#cb1-28"></a>                    <span class="at">dashArray =</span> <span class="st">"1"</span>,</span>
+<span id="cb1-29"><a href="#cb1-29"></a>                    <span class="at">group=</span> <span class="st">"Core Metropolitan Area"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb1-30"><a href="#cb1-30"></a> <span class="fu">addLayersControl</span>(</span>
+<span id="cb1-31"><a href="#cb1-31"></a>    <span class="at">baseGroups =</span> <span class="fu">c</span>(<span class="st">"OpenStreetMap"</span>, <span class="st">"Esri.WorldImagery"</span>),</span>
+<span id="cb1-32"><a href="#cb1-32"></a>    <span class="at">overlayGroups =</span> <span class="fu">c</span>(<span class="st">"Flood extent"</span>,<span class="st">"Core Metropolitan Area"</span>),</span>
+<span id="cb1-33"><a href="#cb1-33"></a>    <span class="at">options =</span> <span class="fu">layersControlOptions</span>(<span class="at">collapsed =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-34"><a href="#cb1-34"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>These set of operations are grouped into the section subdivide the flood extent and simplify geometry.</p>
@@ -362,46 +362,46 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>[AoI-6] Detect flood extent</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> flooding_subdivided_porto <span class="kw">AS</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a> <span class="kw">WITH</span> porto_alegre_ghs <span class="kw">AS</span>(</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>      ghs.<span class="op">*</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>      urban_center_4326 <span class="kw">AS</span> ghs</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">JOIN</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>      nuts</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>      st_intersects(nuts.wkb_geometry, ghs.geom)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">WHERE</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    nuts.shapename <span class="op">=</span> <span class="st">'Porto Alegre'</span>),</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">--- Select core metropolitan areas in the municipalities that intersects with ghs</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>core_metropolitan_area_ghs <span class="kw">AS</span> (</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> </span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        st_union(wkb_geometry) <span class="kw">AS</span> core_geom</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> </span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>        nuts</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">JOIN</span> </span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        porto_alegre_ghs</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> </span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        st_intersects(nuts.wkb_geometry,</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>                      porto_alegre_ghs.geom)),</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co">---Subdivide the flood extent to increase spatial indexes performance</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>flooding_sul_subdivided <span class="kw">AS</span> (</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>      st_subdivide(geom) <span class="kw">as</span> the_geom</span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>      flooding_raw)</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="co">/* Select the flooding subunits that intersects with</span></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="co">the previous bounding box */</span></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>      flooding_sul_subdivided.<span class="op">*</span></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span></span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>      flooding_sul_subdivided,</span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>      core_metropolitan_area_ghs</span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span></span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>      st_intersects(flooding_sul_subdivided.the_geom,</span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>                    core_metropolitan_area_ghs.core_geom);</span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="co">--- time: 39099.137 ms</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> flooding_subdivided_porto <span class="kw">AS</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a> <span class="kw">WITH</span> porto_alegre_ghs <span class="kw">AS</span>(</span>
+<span id="cb2-3"><a href="#cb2-3"></a>    <span class="kw">SELECT</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a>      ghs.<span class="op">*</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a>    <span class="kw">FROM</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a>      urban_center_4326 <span class="kw">AS</span> ghs</span>
+<span id="cb2-7"><a href="#cb2-7"></a>    <span class="kw">JOIN</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a>      nuts</span>
+<span id="cb2-9"><a href="#cb2-9"></a>    <span class="kw">ON</span></span>
+<span id="cb2-10"><a href="#cb2-10"></a>      st_intersects(nuts.wkb_geometry, ghs.geom)</span>
+<span id="cb2-11"><a href="#cb2-11"></a>  <span class="kw">WHERE</span></span>
+<span id="cb2-12"><a href="#cb2-12"></a>    nuts.shapename <span class="op">=</span> <span class="st">'Porto Alegre'</span>),</span>
+<span id="cb2-13"><a href="#cb2-13"></a><span class="co">--- Select core metropolitan areas in the municipalities that intersects with ghs</span></span>
+<span id="cb2-14"><a href="#cb2-14"></a>core_metropolitan_area_ghs <span class="kw">AS</span> (</span>
+<span id="cb2-15"><a href="#cb2-15"></a>    <span class="kw">SELECT</span> </span>
+<span id="cb2-16"><a href="#cb2-16"></a>        st_union(wkb_geometry) <span class="kw">AS</span> core_geom</span>
+<span id="cb2-17"><a href="#cb2-17"></a>    <span class="kw">FROM</span> </span>
+<span id="cb2-18"><a href="#cb2-18"></a>        nuts</span>
+<span id="cb2-19"><a href="#cb2-19"></a>    <span class="kw">JOIN</span> </span>
+<span id="cb2-20"><a href="#cb2-20"></a>        porto_alegre_ghs</span>
+<span id="cb2-21"><a href="#cb2-21"></a>    <span class="kw">ON</span> </span>
+<span id="cb2-22"><a href="#cb2-22"></a>        st_intersects(nuts.wkb_geometry,</span>
+<span id="cb2-23"><a href="#cb2-23"></a>                      porto_alegre_ghs.geom)),</span>
+<span id="cb2-24"><a href="#cb2-24"></a><span class="co">---Subdivide the flood extent to increase spatial indexes performance</span></span>
+<span id="cb2-25"><a href="#cb2-25"></a>flooding_sul_subdivided <span class="kw">AS</span> (</span>
+<span id="cb2-26"><a href="#cb2-26"></a>    <span class="kw">SELECT</span></span>
+<span id="cb2-27"><a href="#cb2-27"></a>      st_subdivide(geom) <span class="kw">as</span> the_geom</span>
+<span id="cb2-28"><a href="#cb2-28"></a>    <span class="kw">FROM</span></span>
+<span id="cb2-29"><a href="#cb2-29"></a>      flooding_raw)</span>
+<span id="cb2-30"><a href="#cb2-30"></a><span class="co">/* Select the flooding subunits that intersects with</span></span>
+<span id="cb2-31"><a href="#cb2-31"></a><span class="co">the previous bounding box */</span></span>
+<span id="cb2-32"><a href="#cb2-32"></a>    <span class="kw">SELECT</span></span>
+<span id="cb2-33"><a href="#cb2-33"></a>      flooding_sul_subdivided.<span class="op">*</span></span>
+<span id="cb2-34"><a href="#cb2-34"></a>    <span class="kw">FROM</span></span>
+<span id="cb2-35"><a href="#cb2-35"></a>      flooding_sul_subdivided,</span>
+<span id="cb2-36"><a href="#cb2-36"></a>      core_metropolitan_area_ghs</span>
+<span id="cb2-37"><a href="#cb2-37"></a>    <span class="kw">WHERE</span></span>
+<span id="cb2-38"><a href="#cb2-38"></a>      st_intersects(flooding_sul_subdivided.the_geom,</span>
+<span id="cb2-39"><a href="#cb2-39"></a>                    core_metropolitan_area_ghs.core_geom);</span>
+<span id="cb2-40"><a href="#cb2-40"></a><span class="co">--- time: 39099.137 ms</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -411,43 +411,43 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>[AoI-7] Simplifying geometry</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a># Reduce geometry</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> idx_flooding_subdivided_porto <span class="kw">ON</span> flooding_subdivided_porto <span class="kw">USING</span> gist(the_geom);</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> flooding_cleaned_porto <span class="kw">AS</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">SELECT</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    ST_Force2D((ST_Dump(the_geom)).geom):<span class="ch">:geometry</span>(Polygon, <span class="dv">4326</span>) <span class="kw">AS</span> geom</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> flooding_subdivided_porto;</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">--- time: 25.746 ms</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a># Unite</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> idx_flooding_cleaned_porto <span class="kw">ON</span> flooding_cleaned_porto <span class="kw">USING</span> gist(geom);</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> flooding_cleaned_porto_union <span class="kw">AS</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="kw">SELECT</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    ST_Union(geom):<span class="ch">:geometry</span>(multipolygon, <span class="dv">4326</span>) geom</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FROM</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    flooding_cleaned_porto;</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">--- time: 348.667 ms</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a># Reduce geometries again</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>CCREATE <span class="kw">INDEX</span> idx_flooding_cleaned_porto_union <span class="kw">ON</span> flooding_cleaned_porto_union <span class="kw">USING</span> gist(geom);</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> flooding_cleaned_porto_union_simple <span class="kw">AS</span></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="kw">SELECT</span></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    (ST_Dump(geom)).geom:<span class="ch">:geometry</span>(polygon, <span class="dv">4326</span>) geom</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FROM</span></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    flooding_cleaned_porto_union;</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="co">---time:  16.893 ms</span></span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="co">/*This allowed to calculate the area of each polygon finding</span></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co">slivers that were removed using the following code.*/</span></span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="op">*</span>)</span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> flooding_cleaned_porto_union_simple ; <span class="co">--- count= 99</span></span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="kw">DELETE</span> <span class="kw">FROM</span></span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>flooding_cleaned_porto_union_simple</span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span></span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>ST_Area(geom) <span class="op">&lt;</span> <span class="fl">0.0001</span>; <span class="co">---count= 4.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1"></a># Reduce geometry</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> idx_flooding_subdivided_porto <span class="kw">ON</span> flooding_subdivided_porto <span class="kw">USING</span> gist(the_geom);</span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> flooding_cleaned_porto <span class="kw">AS</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a>  <span class="kw">SELECT</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a>    ST_Force2D((ST_Dump(the_geom)).geom):<span class="ch">:geometry</span>(Polygon, <span class="dv">4326</span>) <span class="kw">AS</span> geom</span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="kw">FROM</span> flooding_subdivided_porto;</span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="co">--- time: 25.746 ms</span></span>
+<span id="cb3-9"><a href="#cb3-9"></a>    </span>
+<span id="cb3-10"><a href="#cb3-10"></a># Unite</span>
+<span id="cb3-11"><a href="#cb3-11"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> idx_flooding_cleaned_porto <span class="kw">ON</span> flooding_cleaned_porto <span class="kw">USING</span> gist(geom);</span>
+<span id="cb3-12"><a href="#cb3-12"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span></span>
+<span id="cb3-13"><a href="#cb3-13"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> flooding_cleaned_porto_union <span class="kw">AS</span></span>
+<span id="cb3-14"><a href="#cb3-14"></a>  <span class="kw">SELECT</span></span>
+<span id="cb3-15"><a href="#cb3-15"></a>    ST_Union(geom):<span class="ch">:geometry</span>(multipolygon, <span class="dv">4326</span>) geom</span>
+<span id="cb3-16"><a href="#cb3-16"></a>  <span class="kw">FROM</span></span>
+<span id="cb3-17"><a href="#cb3-17"></a>    flooding_cleaned_porto;</span>
+<span id="cb3-18"><a href="#cb3-18"></a><span class="co">--- time: 348.667 ms</span></span>
+<span id="cb3-19"><a href="#cb3-19"></a></span>
+<span id="cb3-20"><a href="#cb3-20"></a># Reduce geometries again</span>
+<span id="cb3-21"><a href="#cb3-21"></a>CCREATE <span class="kw">INDEX</span> idx_flooding_cleaned_porto_union <span class="kw">ON</span> flooding_cleaned_porto_union <span class="kw">USING</span> gist(geom);</span>
+<span id="cb3-22"><a href="#cb3-22"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span></span>
+<span id="cb3-23"><a href="#cb3-23"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> flooding_cleaned_porto_union_simple <span class="kw">AS</span></span>
+<span id="cb3-24"><a href="#cb3-24"></a>  <span class="kw">SELECT</span></span>
+<span id="cb3-25"><a href="#cb3-25"></a>    (ST_Dump(geom)).geom:<span class="ch">:geometry</span>(polygon, <span class="dv">4326</span>) geom</span>
+<span id="cb3-26"><a href="#cb3-26"></a>  <span class="kw">FROM</span></span>
+<span id="cb3-27"><a href="#cb3-27"></a>    flooding_cleaned_porto_union;</span>
+<span id="cb3-28"><a href="#cb3-28"></a><span class="co">---time:  16.893 ms</span></span>
+<span id="cb3-29"><a href="#cb3-29"></a><span class="co">/*This allowed to calculate the area of each polygon finding</span></span>
+<span id="cb3-30"><a href="#cb3-30"></a><span class="co">slivers that were removed using the following code.*/</span></span>
+<span id="cb3-31"><a href="#cb3-31"></a><span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="op">*</span>)</span>
+<span id="cb3-32"><a href="#cb3-32"></a><span class="kw">FROM</span> flooding_cleaned_porto_union_simple ; <span class="co">--- count= 99</span></span>
+<span id="cb3-33"><a href="#cb3-33"></a></span>
+<span id="cb3-34"><a href="#cb3-34"></a><span class="kw">DELETE</span> <span class="kw">FROM</span></span>
+<span id="cb3-35"><a href="#cb3-35"></a>flooding_cleaned_porto_union_simple</span>
+<span id="cb3-36"><a href="#cb3-36"></a><span class="kw">WHERE</span></span>
+<span id="cb3-37"><a href="#cb3-37"></a>ST_Area(geom) <span class="op">&lt;</span> <span class="fl">0.0001</span>; <span class="co">---count= 4.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -459,25 +459,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Create map to visualize the flood extent in the AoI and its simplified version</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the flood extent and remove Z dimension</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>flooding_cleaned_porto_union_simple <span class="ot">&lt;-</span> <span class="fu">st_zm</span>(sf<span class="sc">::</span><span class="fu">st_read</span>(connection,</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                                        DBI<span class="sc">::</span><span class="fu">Id</span>(<span class="at">schema=</span><span class="st">"agile_gis_2025_rs"</span>,</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">table=</span><span class="st">"flooding_cleaned_porto_union_simple"</span>)))</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>flooding_all <span class="ot">&lt;-</span> <span class="fu">st_zm</span>(sf<span class="sc">::</span><span class="fu">st_read</span>(connection,</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                                        DBI<span class="sc">::</span><span class="fu">Id</span>(<span class="at">schema=</span><span class="st">"agile_gis_2025_rs"</span>,</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">table=</span><span class="st">"flooding_raw"</span>)))</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize the raw flood extent and its simplified version</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mapview)</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leafsync)</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>m1_flood <span class="ot">&lt;-</span> <span class="fu">mapview</span>(flooding_subdivided_porto, </span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>              <span class="at">color=</span><span class="st">"#f1a340"</span>,</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>              <span class="at">col.region=</span><span class="st">"#f1a340"</span>,</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>              <span class="at">layer.name =</span><span class="st">"Raw flooding extent"</span>)</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>m2_flood <span class="ot">&lt;-</span> <span class="fu">mapview</span>(flooding_cleaned_porto_union_simple,</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>              <span class="at">color =</span><span class="st">"#998ec3"</span>,</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>              <span class="at">col.region=</span><span class="st">"#998ec3"</span>,</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>              <span class="at">layer.name=</span><span class="st">"Simplified flooding extent"</span>)</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>m1_flood <span class="sc">|</span> m2_flood </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># Load the flood extent and remove Z dimension</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>flooding_cleaned_porto_union_simple <span class="ot">&lt;-</span> <span class="fu">st_zm</span>(sf<span class="sc">::</span><span class="fu">st_read</span>(connection,</span>
+<span id="cb4-3"><a href="#cb4-3"></a>                                        DBI<span class="sc">::</span><span class="fu">Id</span>(<span class="at">schema=</span><span class="st">"agile_gis_2025_rs"</span>,</span>
+<span id="cb4-4"><a href="#cb4-4"></a>                                            <span class="at">table=</span><span class="st">"flooding_cleaned_porto_union_simple"</span>)))</span>
+<span id="cb4-5"><a href="#cb4-5"></a>flooding_all <span class="ot">&lt;-</span> <span class="fu">st_zm</span>(sf<span class="sc">::</span><span class="fu">st_read</span>(connection,</span>
+<span id="cb4-6"><a href="#cb4-6"></a>                                        DBI<span class="sc">::</span><span class="fu">Id</span>(<span class="at">schema=</span><span class="st">"agile_gis_2025_rs"</span>,</span>
+<span id="cb4-7"><a href="#cb4-7"></a>                                            <span class="at">table=</span><span class="st">"flooding_raw"</span>)))</span>
+<span id="cb4-8"><a href="#cb4-8"></a><span class="co"># Visualize the raw flood extent and its simplified version</span></span>
+<span id="cb4-9"><a href="#cb4-9"></a><span class="fu">library</span>(mapview)</span>
+<span id="cb4-10"><a href="#cb4-10"></a><span class="fu">library</span>(leafsync)</span>
+<span id="cb4-11"><a href="#cb4-11"></a>m1_flood <span class="ot">&lt;-</span> <span class="fu">mapview</span>(flooding_subdivided_porto, </span>
+<span id="cb4-12"><a href="#cb4-12"></a>              <span class="at">color=</span><span class="st">"#f1a340"</span>,</span>
+<span id="cb4-13"><a href="#cb4-13"></a>              <span class="at">col.region=</span><span class="st">"#f1a340"</span>,</span>
+<span id="cb4-14"><a href="#cb4-14"></a>              <span class="at">layer.name =</span><span class="st">"Raw flooding extent"</span>)</span>
+<span id="cb4-15"><a href="#cb4-15"></a>m2_flood <span class="ot">&lt;-</span> <span class="fu">mapview</span>(flooding_cleaned_porto_union_simple,</span>
+<span id="cb4-16"><a href="#cb4-16"></a>              <span class="at">color =</span><span class="st">"#998ec3"</span>,</span>
+<span id="cb4-17"><a href="#cb4-17"></a>              <span class="at">col.region=</span><span class="st">"#998ec3"</span>,</span>
+<span id="cb4-18"><a href="#cb4-18"></a>              <span class="at">layer.name=</span><span class="st">"Simplified flooding extent"</span>)</span>
+<span id="cb4-19"><a href="#cb4-19"></a>m1_flood <span class="sc">|</span> m2_flood </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Meanwhile, the following bar chart shows the difference on the size of the flood extent. Originally the size of the flood extent was nearly 20 MB covering an area larger than the AoI. After being reduced to the AoI, the flood extent reduced its size to nearly 664 kB Lastly, simplifying the geometry of the flood extent in the AoI reduced its size to 464 kB.</p>
@@ -490,41 +490,43 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Create barplot to compare flood extent’s versions</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare size of both versions</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Create dataframe</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>df_flood <span class="ot">&lt;-</span> <span class="fu">data_frame</span>(</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">version =</span> <span class="fu">c</span>(<span class="st">"1.Original"</span>,</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                <span class="st">"2.AoI"</span>,</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                <span class="st">"3.AoI simplified"</span>),</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">size_bytes =</span> <span class="fu">c</span>( <span class="fu">object.size</span>(flooding_all)<span class="sc">/</span><span class="dv">1000</span>,</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">object.size</span>(flooding_subdivided_porto)<span class="sc">/</span><span class="dv">1000</span>,</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">object.size</span>(flooding_cleaned_porto_union_simple)<span class="sc">/</span><span class="dv">1000</span>)</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>) </span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="do">## Custom Y-axis labels </span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>labels <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(x, <span class="st">"kB"</span>)</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="do">## Create column plot</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggbreak)</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>flood_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data=</span>df_flood) <span class="sc">+</span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">x=</span>version, <span class="at">y=</span>size_bytes, <span class="at">fill=</span>version)) <span class="sc">+</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Flood extent"</span>,</span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Size in kBytes"</span>) <span class="sc">+</span></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values=</span> <span class="fu">c</span>(<span class="st">"#e66101"</span>,</span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"#f1a340"</span>,</span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"#998ec3"</span>)) <span class="sc">+</span></span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_break</span>(<span class="fu">c</span>(<span class="dv">664</span>,<span class="dv">20000</span>), <span class="at">ticklabels =</span> <span class="fu">c</span>(df_flood<span class="sc">$</span>size_bytes[<span class="dv">3</span>],</span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>                                             df_flood<span class="sc">$</span>size_bytes[<span class="dv">2</span>],</span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>                                             <span class="fu">round</span>(df_flood<span class="sc">$</span>size_bytes[<span class="dv">1</span>])))</span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>flood_plot <span class="sc">+</span> <span class="fu">scale_y_continuous</span>(<span class="at">label =</span> labels)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># Compare size of both versions</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="do">## Create dataframe</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb5-4"><a href="#cb5-4"></a>df_flood <span class="ot">&lt;-</span> <span class="fu">data_frame</span>(</span>
+<span id="cb5-5"><a href="#cb5-5"></a>    <span class="at">version =</span> <span class="fu">c</span>(<span class="st">"1.Original"</span>,</span>
+<span id="cb5-6"><a href="#cb5-6"></a>                <span class="st">"2.AoI"</span>,</span>
+<span id="cb5-7"><a href="#cb5-7"></a>                <span class="st">"3.AoI simplified"</span>),</span>
+<span id="cb5-8"><a href="#cb5-8"></a>    <span class="at">size_bytes =</span> <span class="fu">c</span>( <span class="fu">object.size</span>(flooding_all)<span class="sc">/</span><span class="dv">1000</span>,</span>
+<span id="cb5-9"><a href="#cb5-9"></a>                    <span class="fu">object.size</span>(flooding_subdivided_porto)<span class="sc">/</span><span class="dv">1000</span>,</span>
+<span id="cb5-10"><a href="#cb5-10"></a>                    <span class="fu">object.size</span>(flooding_cleaned_porto_union_simple)<span class="sc">/</span><span class="dv">1000</span>)</span>
+<span id="cb5-11"><a href="#cb5-11"></a>) </span>
+<span id="cb5-12"><a href="#cb5-12"></a></span>
+<span id="cb5-13"><a href="#cb5-13"></a><span class="do">## Custom Y-axis labels </span></span>
+<span id="cb5-14"><a href="#cb5-14"></a>labels <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb5-15"><a href="#cb5-15"></a>  <span class="fu">paste</span>(x, <span class="st">"kB"</span>)</span>
+<span id="cb5-16"><a href="#cb5-16"></a>}</span>
+<span id="cb5-17"><a href="#cb5-17"></a><span class="do">## Create column plot</span></span>
+<span id="cb5-18"><a href="#cb5-18"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb5-19"><a href="#cb5-19"></a><span class="fu">library</span>(ggbreak)</span>
+<span id="cb5-20"><a href="#cb5-20"></a>flood_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data=</span>df_flood) <span class="sc">+</span></span>
+<span id="cb5-21"><a href="#cb5-21"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">x=</span>version, <span class="at">y=</span>size_bytes, <span class="at">fill=</span>version)) <span class="sc">+</span></span>
+<span id="cb5-22"><a href="#cb5-22"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Flood extent"</span>,</span>
+<span id="cb5-23"><a href="#cb5-23"></a>       <span class="at">y=</span><span class="st">"Size in kBytes"</span>) <span class="sc">+</span></span>
+<span id="cb5-24"><a href="#cb5-24"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb5-25"><a href="#cb5-25"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
+<span id="cb5-26"><a href="#cb5-26"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values=</span> <span class="fu">c</span>(<span class="st">"#e66101"</span>,</span>
+<span id="cb5-27"><a href="#cb5-27"></a>                              <span class="st">"#f1a340"</span>,</span>
+<span id="cb5-28"><a href="#cb5-28"></a>                              <span class="st">"#998ec3"</span>)) <span class="sc">+</span></span>
+<span id="cb5-29"><a href="#cb5-29"></a>  <span class="fu">scale_y_break</span>(<span class="fu">c</span>(<span class="dv">664</span>,<span class="dv">20000</span>), <span class="at">ticklabels =</span> <span class="fu">c</span>(df_flood<span class="sc">$</span>size_bytes[<span class="dv">3</span>],</span>
+<span id="cb5-30"><a href="#cb5-30"></a>                                             df_flood<span class="sc">$</span>size_bytes[<span class="dv">2</span>],</span>
+<span id="cb5-31"><a href="#cb5-31"></a>                                             <span class="fu">round</span>(df_flood<span class="sc">$</span>size_bytes[<span class="dv">1</span>])))</span>
+<span id="cb5-32"><a href="#cb5-32"></a>flood_plot <span class="sc">+</span> <span class="fu">scale_y_continuous</span>(<span class="at">label =</span> labels)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 
+
+<!-- -->
 
 </section>
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
@@ -628,6 +630,57 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       container: window.document.getElementById('quarto-embedded-source-code-modal')
     });
     clipboardModal.on('success', onCopySuccess);
+  }
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
@@ -970,7 +1023,256 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Obtain road network using OSM data</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
-</nav>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb6" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu"># Detect flood</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a></span>
+<span id="cb6-3"><a href="#cb6-3"></a>The downloaded flood extent covered a larger area in Rio Grande do Sul.</span>
+<span id="cb6-4"><a href="#cb6-4"></a>However, the area of interest containing the urban dense cities such as Porto Alegre was smaller.</span>
+<span id="cb6-5"><a href="#cb6-5"></a>Therefore, a series of operations reduced the large area focusing on Porto Alegre, while improving the query performance. </span>
+<span id="cb6-6"><a href="#cb6-6"></a></span>
+<span id="cb6-7"><a href="#cb6-7"></a>A positive aspect of these set of operations in the methodology is to allow demanding analysis without expensive hardware (See computational environment), which indirectly means a lower consume of energy and environment impact. If a still larger area of interest is required, we carried out tests with duckdb and its extension spatial ^[<span class="co">[</span><span class="ot">DuckDB spatial: https://duckdb.org/docs/stable/extensions/spatial/overview.html</span><span class="co">](https://duckdb.org/docs/stable/extensions/spatial/overview.html)</span>] with sucess.</span>
+<span id="cb6-8"><a href="#cb6-8"></a></span>
+<span id="cb6-11"><a href="#cb6-11"></a><span class="in">```{r}</span></span>
+<span id="cb6-12"><a href="#cb6-12"></a><span class="co">#| eval: true</span></span>
+<span id="cb6-13"><a href="#cb6-13"></a><span class="co">#| echo: false</span></span>
+<span id="cb6-14"><a href="#cb6-14"></a><span class="co">#| include: false</span></span>
+<span id="cb6-15"><a href="#cb6-15"></a></span>
+<span id="cb6-16"><a href="#cb6-16"></a><span class="do">## This is added to fix errors that arise when the first code chunk is not in R.</span></span>
+<span id="cb6-17"><a href="#cb6-17"></a><span class="dv">1</span><span class="sc">+</span><span class="dv">1</span></span>
+<span id="cb6-18"><a href="#cb6-18"></a><span class="in">```</span></span>
+<span id="cb6-19"><a href="#cb6-19"></a></span>
+<span id="cb6-20"><a href="#cb6-20"></a></span>
+<span id="cb6-21"><a href="#cb6-21"></a><span class="in">```{=html}</span></span>
+<span id="cb6-22"><a href="#cb6-22"></a><span class="in">&lt;iframe width="780" height="500" src="data/media/detect_flood.html" title="Flood extent of the AoI"&gt;&lt;/iframe&gt;</span></span>
+<span id="cb6-23"><a href="#cb6-23"></a><span class="in">```</span></span>
+<span id="cb6-24"><a href="#cb6-24"></a></span>
+<span id="cb6-25"><a href="#cb6-25"></a></span>
+<span id="cb6-28"><a href="#cb6-28"></a><span class="in">```{r}</span></span>
+<span id="cb6-29"><a href="#cb6-29"></a><span class="co">#| eval: false</span></span>
+<span id="cb6-30"><a href="#cb6-30"></a><span class="co">#| echo: true</span></span>
+<span id="cb6-31"><a href="#cb6-31"></a><span class="co">#| code-summary: Visualization of flood extent</span></span>
+<span id="cb6-32"><a href="#cb6-32"></a></span>
+<span id="cb6-33"><a href="#cb6-33"></a><span class="fu">library</span>(sf)</span>
+<span id="cb6-34"><a href="#cb6-34"></a><span class="fu">library</span>(DBI)</span>
+<span id="cb6-35"><a href="#cb6-35"></a><span class="co"># Load the flood extent and remove Z dimension</span></span>
+<span id="cb6-36"><a href="#cb6-36"></a>flooding_subdivided_porto <span class="ot">&lt;-</span> <span class="fu">st_zm</span>(sf<span class="sc">::</span><span class="fu">st_read</span>(connection,</span>
+<span id="cb6-37"><a href="#cb6-37"></a>                                        DBI<span class="sc">::</span><span class="fu">Id</span>(<span class="at">schema=</span><span class="st">"agile_gis_2025_rs"</span>,</span>
+<span id="cb6-38"><a href="#cb6-38"></a>                                            <span class="at">table=</span><span class="st">"flooding_subdivided_porto"</span>)))</span>
+<span id="cb6-39"><a href="#cb6-39"></a>core_metropolitan_area <span class="ot">&lt;-</span> <span class="fu">st_zm</span>(sf<span class="sc">::</span><span class="fu">st_read</span>(connection,</span>
+<span id="cb6-40"><a href="#cb6-40"></a>                                        DBI<span class="sc">::</span><span class="fu">Id</span>(<span class="at">schema=</span><span class="st">"agile_gis_2025_rs"</span>,</span>
+<span id="cb6-41"><a href="#cb6-41"></a>                                            <span class="at">table=</span><span class="st">"core_metropolitan_area"</span>)))</span>
+<span id="cb6-42"><a href="#cb6-42"></a><span class="co"># Create leaflet product</span></span>
+<span id="cb6-43"><a href="#cb6-43"></a><span class="fu">library</span>(leaflet.extras)</span>
+<span id="cb6-44"><a href="#cb6-44"></a><span class="fu">library</span>(leaflet)</span>
+<span id="cb6-45"><a href="#cb6-45"></a><span class="fu">leaflet</span>() <span class="sc">|&gt;</span></span>
+<span id="cb6-46"><a href="#cb6-46"></a>  <span class="fu">addTiles</span>()  <span class="sc">|&gt;</span></span>
+<span id="cb6-47"><a href="#cb6-47"></a>  <span class="fu">addProviderTiles</span>(<span class="st">"OpenStreetMap"</span>, <span class="at">group =</span> <span class="st">"OpenStreetMap"</span>)  <span class="sc">|&gt;</span></span>
+<span id="cb6-48"><a href="#cb6-48"></a>  <span class="fu">addProviderTiles</span>(<span class="st">"Esri.WorldImagery"</span>, <span class="at">group =</span> <span class="st">"Esri.WorldImagery"</span>)  <span class="sc">|&gt;</span>                    <span class="fu">addPolygons</span>(<span class="at">data=</span>flooding_subdivided_porto,</span>
+<span id="cb6-49"><a href="#cb6-49"></a>                    <span class="at">fillColor =</span> <span class="st">"#dec8b7ff"</span>,</span>
+<span id="cb6-50"><a href="#cb6-50"></a>                    <span class="at">fillOpacity =</span> <span class="fl">0.6</span>,</span>
+<span id="cb6-51"><a href="#cb6-51"></a>                    <span class="at">weight =</span> <span class="dv">1</span>,</span>
+<span id="cb6-52"><a href="#cb6-52"></a>                    <span class="at">color =</span> <span class="st">"#4b2609"</span>,</span>
+<span id="cb6-53"><a href="#cb6-53"></a>                    <span class="at">dashArray =</span> <span class="st">"1"</span>,</span>
+<span id="cb6-54"><a href="#cb6-54"></a>                    <span class="at">group=</span> <span class="st">"Flood extent"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb6-55"><a href="#cb6-55"></a>  <span class="fu">addPolygons</span>(<span class="at">data=</span>core_metropolitan_area,</span>
+<span id="cb6-56"><a href="#cb6-56"></a>                    <span class="at">fillColor =</span> <span class="st">"yellow"</span>,</span>
+<span id="cb6-57"><a href="#cb6-57"></a>                    <span class="at">fillOpacity =</span> <span class="fl">0.05</span>,</span>
+<span id="cb6-58"><a href="#cb6-58"></a>                    <span class="at">weight =</span> <span class="dv">2</span>,</span>
+<span id="cb6-59"><a href="#cb6-59"></a>                    <span class="at">color =</span> <span class="st">"red"</span>,</span>
+<span id="cb6-60"><a href="#cb6-60"></a>                    <span class="at">dashArray =</span> <span class="st">"1"</span>,</span>
+<span id="cb6-61"><a href="#cb6-61"></a>                    <span class="at">group=</span> <span class="st">"Core Metropolitan Area"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb6-62"><a href="#cb6-62"></a> <span class="fu">addLayersControl</span>(</span>
+<span id="cb6-63"><a href="#cb6-63"></a>    <span class="at">baseGroups =</span> <span class="fu">c</span>(<span class="st">"OpenStreetMap"</span>, <span class="st">"Esri.WorldImagery"</span>),</span>
+<span id="cb6-64"><a href="#cb6-64"></a>    <span class="at">overlayGroups =</span> <span class="fu">c</span>(<span class="st">"Flood extent"</span>,<span class="st">"Core Metropolitan Area"</span>),</span>
+<span id="cb6-65"><a href="#cb6-65"></a>    <span class="at">options =</span> <span class="fu">layersControlOptions</span>(<span class="at">collapsed =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb6-66"><a href="#cb6-66"></a>  )</span>
+<span id="cb6-67"><a href="#cb6-67"></a><span class="in">```</span></span>
+<span id="cb6-68"><a href="#cb6-68"></a></span>
+<span id="cb6-69"><a href="#cb6-69"></a>These set of operations are grouped into the section subdivide the flood extent and simplify geometry.</span>
+<span id="cb6-70"><a href="#cb6-70"></a></span>
+<span id="cb6-71"><a href="#cb6-71"></a><span class="fu">## Subdivide the flood extent</span></span>
+<span id="cb6-72"><a href="#cb6-72"></a></span>
+<span id="cb6-73"><a href="#cb6-73"></a>The code chunk "<span class="co">[</span><span class="ot">AoI-6</span><span class="co">]</span> Dect flood extent" includes one query with several CTE to create the table _flooding_subdivided_porto_.</span>
+<span id="cb6-74"><a href="#cb6-74"></a>Firstly, we subdivided the extent of the flooding following the post published by the co-founder of PostGIS ^[<span class="co">[</span><span class="ot">https://blog.cleverelephant.ca/2019/11/subdivide.html</span><span class="co">](https://blog.cleverelephant.ca/2019/11/subdivide.html)</span>], Paul Ramsay.</span>
+<span id="cb6-75"><a href="#cb6-75"></a></span>
+<span id="cb6-78"><a href="#cb6-78"></a><span class="in">```{sql}</span></span>
+<span id="cb6-79"><a href="#cb6-79"></a><span class="co">#| eval: false</span></span>
+<span id="cb6-80"><a href="#cb6-80"></a><span class="co">#| echo: true</span></span>
+<span id="cb6-81"><a href="#cb6-81"></a><span class="co">#| code-summary: "[AoI-6] Detect flood extent"</span></span>
+<span id="cb6-82"><a href="#cb6-82"></a></span>
+<span id="cb6-83"><a href="#cb6-83"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> flooding_subdivided_porto <span class="kw">AS</span></span>
+<span id="cb6-84"><a href="#cb6-84"></a> <span class="kw">WITH</span> porto_alegre_ghs <span class="kw">AS</span>(</span>
+<span id="cb6-85"><a href="#cb6-85"></a>    <span class="kw">SELECT</span></span>
+<span id="cb6-86"><a href="#cb6-86"></a>      ghs<span class="ch">.</span><span class="op">*</span></span>
+<span id="cb6-87"><a href="#cb6-87"></a>    <span class="kw">FROM</span></span>
+<span id="cb6-88"><a href="#cb6-88"></a>      urban_center_4326 <span class="kw">AS</span> ghs</span>
+<span id="cb6-89"><a href="#cb6-89"></a>    <span class="kw">JOIN</span></span>
+<span id="cb6-90"><a href="#cb6-90"></a>      nuts</span>
+<span id="cb6-91"><a href="#cb6-91"></a>    <span class="kw">ON</span></span>
+<span id="cb6-92"><a href="#cb6-92"></a>      st_intersects(nuts<span class="ch">.</span>wkb_geometry, ghs<span class="ch">.</span>geom)</span>
+<span id="cb6-93"><a href="#cb6-93"></a>  <span class="kw">WHERE</span></span>
+<span id="cb6-94"><a href="#cb6-94"></a>    nuts<span class="ch">.</span>shapename <span class="op">=</span> <span class="st">'Porto Alegre'</span>),</span>
+<span id="cb6-95"><a href="#cb6-95"></a><span class="co">--- Select core metropolitan areas in the municipalities that intersects with ghs</span></span>
+<span id="cb6-96"><a href="#cb6-96"></a>core_metropolitan_area_ghs <span class="kw">AS</span> (</span>
+<span id="cb6-97"><a href="#cb6-97"></a>    <span class="kw">SELECT</span> </span>
+<span id="cb6-98"><a href="#cb6-98"></a>        st_union(wkb_geometry) <span class="kw">AS</span> core_geom</span>
+<span id="cb6-99"><a href="#cb6-99"></a>    <span class="kw">FROM</span> </span>
+<span id="cb6-100"><a href="#cb6-100"></a>        nuts</span>
+<span id="cb6-101"><a href="#cb6-101"></a>    <span class="kw">JOIN</span> </span>
+<span id="cb6-102"><a href="#cb6-102"></a>        porto_alegre_ghs</span>
+<span id="cb6-103"><a href="#cb6-103"></a>    <span class="kw">ON</span> </span>
+<span id="cb6-104"><a href="#cb6-104"></a>        st_intersects(nuts<span class="ch">.</span>wkb_geometry,</span>
+<span id="cb6-105"><a href="#cb6-105"></a>                      porto_alegre_ghs<span class="ch">.</span>geom)),</span>
+<span id="cb6-106"><a href="#cb6-106"></a><span class="co">---Subdivide the flood extent to increase spatial indexes performance</span></span>
+<span id="cb6-107"><a href="#cb6-107"></a>flooding_sul_subdivided <span class="kw">AS</span> (</span>
+<span id="cb6-108"><a href="#cb6-108"></a>    <span class="kw">SELECT</span></span>
+<span id="cb6-109"><a href="#cb6-109"></a>      st_subdivide(geom) <span class="kw">as</span> the_geom</span>
+<span id="cb6-110"><a href="#cb6-110"></a>    <span class="kw">FROM</span></span>
+<span id="cb6-111"><a href="#cb6-111"></a>      flooding_raw)</span>
+<span id="cb6-112"><a href="#cb6-112"></a><span class="co">/* Select the flooding subunits that intersects with</span></span>
+<span id="cb6-113"><a href="#cb6-113"></a><span class="co">the previous bounding box */</span></span>
+<span id="cb6-114"><a href="#cb6-114"></a>    <span class="kw">SELECT</span></span>
+<span id="cb6-115"><a href="#cb6-115"></a>      flooding_sul_subdivided<span class="ch">.</span><span class="op">*</span></span>
+<span id="cb6-116"><a href="#cb6-116"></a>    <span class="kw">FROM</span></span>
+<span id="cb6-117"><a href="#cb6-117"></a>      flooding_sul_subdivided,</span>
+<span id="cb6-118"><a href="#cb6-118"></a>      core_metropolitan_area_ghs</span>
+<span id="cb6-119"><a href="#cb6-119"></a>    <span class="kw">WHERE</span></span>
+<span id="cb6-120"><a href="#cb6-120"></a>      st_intersects(flooding_sul_subdivided<span class="ch">.</span>the_geom,</span>
+<span id="cb6-121"><a href="#cb6-121"></a>                    core_metropolitan_area_ghs<span class="ch">.</span>core_geom);</span>
+<span id="cb6-122"><a href="#cb6-122"></a><span class="co">--- time: 39099.137 ms</span></span>
+<span id="cb6-123"><a href="#cb6-123"></a><span class="in">```</span></span>
+<span id="cb6-124"><a href="#cb6-124"></a></span>
+<span id="cb6-125"><a href="#cb6-125"></a></span>
+<span id="cb6-126"><a href="#cb6-126"></a><span class="fu">## Simplify geometry</span></span>
+<span id="cb6-127"><a href="#cb6-127"></a></span>
+<span id="cb6-128"><a href="#cb6-128"></a>The reason for simplifying the geometry by removing the slivers polygons was that spatial operations such as st_difference, which are required to obtain the post-disaster network, are computationally expensive. Based on the Carto’s post, we removed the slivers polygons using the calculated area ^[<span class="co">[</span><span class="ot">https://icarto.es/en/improve-performance-making-the-difference-between-two-layers-with-postgis/</span><span class="co">](https://icarto.es/en/improve-performance-making-the-difference-between-two-layers-with-postgis/)</span>].</span>
+<span id="cb6-129"><a href="#cb6-129"></a>Another technique in PostGIS to remove</span>
+<span id="cb6-130"><a href="#cb6-130"></a>these slivers polygons is via dilation and erosion ^[<span class="co">[</span><span class="ot">https://trac.osgeo.org/postgis/wiki/UsersWikiBufferCoast</span><span class="co">](https://trac.osgeo.org/postgis/wiki/UsersWikiBufferCoast)</span>] ^[<span class="co">[</span><span class="ot">https://cdn2.hubspot.net/hubfs/2283855/PostGIS%20Day%202019%20-%20Overview.pdf</span><span class="co">](https://cdn2.hubspot.net/hubfs/2283855/PostGIS%20Day%202019%20-%20Overview.pdf)</span>], which could be used in future studies. The table _flooding_cleaned_porto_union_simple_ is a lighter version of the flood extent</span>
+<span id="cb6-131"><a href="#cb6-131"></a></span>
+<span id="cb6-134"><a href="#cb6-134"></a><span class="in">```{sql}</span></span>
+<span id="cb6-135"><a href="#cb6-135"></a><span class="co">#| eval: false</span></span>
+<span id="cb6-136"><a href="#cb6-136"></a><span class="co">#| echo: true</span></span>
+<span id="cb6-137"><a href="#cb6-137"></a><span class="co">#| code-summary: "[AoI-7] Simplifying geometry"</span></span>
+<span id="cb6-138"><a href="#cb6-138"></a></span>
+<span id="cb6-139"><a href="#cb6-139"></a><span class="co"># Reduce geometry</span></span>
+<span id="cb6-140"><a href="#cb6-140"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> idx_flooding_subdivided_porto <span class="kw">ON</span> flooding_subdivided_porto <span class="kw">USING</span> gist(the_geom);</span>
+<span id="cb6-141"><a href="#cb6-141"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span></span>
+<span id="cb6-142"><a href="#cb6-142"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> flooding_cleaned_porto <span class="kw">AS</span></span>
+<span id="cb6-143"><a href="#cb6-143"></a>  <span class="kw">SELECT</span></span>
+<span id="cb6-144"><a href="#cb6-144"></a>    ST_Force2D((ST_Dump(the_geom))<span class="ch">.</span>geom)<span class="ch">::</span>geometry(Polygon, <span class="dv">4326</span>) <span class="kw">AS</span> geom</span>
+<span id="cb6-145"><a href="#cb6-145"></a><span class="kw">FROM</span> flooding_subdivided_porto;</span>
+<span id="cb6-146"><a href="#cb6-146"></a><span class="co">--- time: 25.746 ms</span></span>
+<span id="cb6-147"><a href="#cb6-147"></a>    </span>
+<span id="cb6-148"><a href="#cb6-148"></a><span class="co"># Unite</span></span>
+<span id="cb6-149"><a href="#cb6-149"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> idx_flooding_cleaned_porto <span class="kw">ON</span> flooding_cleaned_porto <span class="kw">USING</span> gist(geom);</span>
+<span id="cb6-150"><a href="#cb6-150"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span></span>
+<span id="cb6-151"><a href="#cb6-151"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> flooding_cleaned_porto_union <span class="kw">AS</span></span>
+<span id="cb6-152"><a href="#cb6-152"></a>  <span class="kw">SELECT</span></span>
+<span id="cb6-153"><a href="#cb6-153"></a>    ST_Union(geom)<span class="ch">::</span>geometry(multipolygon, <span class="dv">4326</span>) geom</span>
+<span id="cb6-154"><a href="#cb6-154"></a>  <span class="kw">FROM</span></span>
+<span id="cb6-155"><a href="#cb6-155"></a>    flooding_cleaned_porto;</span>
+<span id="cb6-156"><a href="#cb6-156"></a><span class="co">--- time: 348.667 ms</span></span>
+<span id="cb6-157"><a href="#cb6-157"></a></span>
+<span id="cb6-158"><a href="#cb6-158"></a><span class="co"># Reduce geometries again</span></span>
+<span id="cb6-159"><a href="#cb6-159"></a>CCREATE <span class="kw">INDEX</span> idx_flooding_cleaned_porto_union <span class="kw">ON</span> flooding_cleaned_porto_union <span class="kw">USING</span> gist(geom);</span>
+<span id="cb6-160"><a href="#cb6-160"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span></span>
+<span id="cb6-161"><a href="#cb6-161"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> flooding_cleaned_porto_union_simple <span class="kw">AS</span></span>
+<span id="cb6-162"><a href="#cb6-162"></a>  <span class="kw">SELECT</span></span>
+<span id="cb6-163"><a href="#cb6-163"></a>    (ST_Dump(geom))<span class="ch">.</span>geom<span class="ch">::</span>geometry(polygon, <span class="dv">4326</span>) geom</span>
+<span id="cb6-164"><a href="#cb6-164"></a>  <span class="kw">FROM</span></span>
+<span id="cb6-165"><a href="#cb6-165"></a>    flooding_cleaned_porto_union;</span>
+<span id="cb6-166"><a href="#cb6-166"></a><span class="co">---time:  16.893 ms</span></span>
+<span id="cb6-167"><a href="#cb6-167"></a><span class="co">/*This allowed to calculate the area of each polygon finding</span></span>
+<span id="cb6-168"><a href="#cb6-168"></a><span class="co">slivers that were removed using the following code.*/</span></span>
+<span id="cb6-169"><a href="#cb6-169"></a><span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="op">*</span>)</span>
+<span id="cb6-170"><a href="#cb6-170"></a><span class="kw">FROM</span> flooding_cleaned_porto_union_simple ; <span class="co">--- count= 99</span></span>
+<span id="cb6-171"><a href="#cb6-171"></a></span>
+<span id="cb6-172"><a href="#cb6-172"></a><span class="kw">DELETE</span> <span class="kw">FROM</span></span>
+<span id="cb6-173"><a href="#cb6-173"></a>flooding_cleaned_porto_union_simple</span>
+<span id="cb6-174"><a href="#cb6-174"></a><span class="kw">WHERE</span></span>
+<span id="cb6-175"><a href="#cb6-175"></a>ST_Area(geom) <span class="op">&lt;</span> <span class="fl">0.0001</span>; <span class="co">---count= 4.</span></span>
+<span id="cb6-176"><a href="#cb6-176"></a><span class="in">```</span></span>
+<span id="cb6-177"><a href="#cb6-177"></a></span>
+<span id="cb6-178"><a href="#cb6-178"></a><span class="fu">## Visualize flood extent</span></span>
+<span id="cb6-179"><a href="#cb6-179"></a>The following map shows the difference between the original flood extent subdivided and delimited by the AoI and the flood extent cleaned after removing the slivers polygons. The purpose is to check the results from a qualitative point of view.</span>
+<span id="cb6-180"><a href="#cb6-180"></a></span>
+<span id="cb6-181"><a href="#cb6-181"></a><span class="in">```{=html}</span></span>
+<span id="cb6-182"><a href="#cb6-182"></a><span class="in">&lt;iframe width="780" height="500" src="/data/media/detect_flood_compare_raw_aoi_raw.html" title"Raw flood extent and its simplication"&gt;&lt;/iframe&gt;</span></span>
+<span id="cb6-183"><a href="#cb6-183"></a></span>
+<span id="cb6-184"><a href="#cb6-184"></a><span class="in">```</span></span>
+<span id="cb6-185"><a href="#cb6-185"></a></span>
+<span id="cb6-186"><a href="#cb6-186"></a></span>
+<span id="cb6-189"><a href="#cb6-189"></a><span class="in">```{r}</span></span>
+<span id="cb6-190"><a href="#cb6-190"></a><span class="co">#| eval: false</span></span>
+<span id="cb6-191"><a href="#cb6-191"></a><span class="co">#| echo: true</span></span>
+<span id="cb6-192"><a href="#cb6-192"></a><span class="co">#| code-summary: "Create map to visualize the flood extent in the AoI and its simplified version"</span></span>
+<span id="cb6-193"><a href="#cb6-193"></a></span>
+<span id="cb6-194"><a href="#cb6-194"></a><span class="co"># Load the flood extent and remove Z dimension</span></span>
+<span id="cb6-195"><a href="#cb6-195"></a>flooding_cleaned_porto_union_simple <span class="ot">&lt;-</span> <span class="fu">st_zm</span>(sf<span class="sc">::</span><span class="fu">st_read</span>(connection,</span>
+<span id="cb6-196"><a href="#cb6-196"></a>                                        DBI<span class="sc">::</span><span class="fu">Id</span>(<span class="at">schema=</span><span class="st">"agile_gis_2025_rs"</span>,</span>
+<span id="cb6-197"><a href="#cb6-197"></a>                                            <span class="at">table=</span><span class="st">"flooding_cleaned_porto_union_simple"</span>)))</span>
+<span id="cb6-198"><a href="#cb6-198"></a>flooding_all <span class="ot">&lt;-</span> <span class="fu">st_zm</span>(sf<span class="sc">::</span><span class="fu">st_read</span>(connection,</span>
+<span id="cb6-199"><a href="#cb6-199"></a>                                        DBI<span class="sc">::</span><span class="fu">Id</span>(<span class="at">schema=</span><span class="st">"agile_gis_2025_rs"</span>,</span>
+<span id="cb6-200"><a href="#cb6-200"></a>                                            <span class="at">table=</span><span class="st">"flooding_raw"</span>)))</span>
+<span id="cb6-201"><a href="#cb6-201"></a><span class="co"># Visualize the raw flood extent and its simplified version</span></span>
+<span id="cb6-202"><a href="#cb6-202"></a><span class="fu">library</span>(mapview)</span>
+<span id="cb6-203"><a href="#cb6-203"></a><span class="fu">library</span>(leafsync)</span>
+<span id="cb6-204"><a href="#cb6-204"></a>m1_flood <span class="ot">&lt;-</span> <span class="fu">mapview</span>(flooding_subdivided_porto, </span>
+<span id="cb6-205"><a href="#cb6-205"></a>              <span class="at">color=</span><span class="st">"#f1a340"</span>,</span>
+<span id="cb6-206"><a href="#cb6-206"></a>              <span class="at">col.region=</span><span class="st">"#f1a340"</span>,</span>
+<span id="cb6-207"><a href="#cb6-207"></a>              <span class="at">layer.name =</span><span class="st">"Raw flooding extent"</span>)</span>
+<span id="cb6-208"><a href="#cb6-208"></a>m2_flood <span class="ot">&lt;-</span> <span class="fu">mapview</span>(flooding_cleaned_porto_union_simple,</span>
+<span id="cb6-209"><a href="#cb6-209"></a>              <span class="at">color =</span><span class="st">"#998ec3"</span>,</span>
+<span id="cb6-210"><a href="#cb6-210"></a>              <span class="at">col.region=</span><span class="st">"#998ec3"</span>,</span>
+<span id="cb6-211"><a href="#cb6-211"></a>              <span class="at">layer.name=</span><span class="st">"Simplified flooding extent"</span>)</span>
+<span id="cb6-212"><a href="#cb6-212"></a>m1_flood <span class="sc">|</span> m2_flood </span>
+<span id="cb6-213"><a href="#cb6-213"></a> </span>
+<span id="cb6-214"><a href="#cb6-214"></a><span class="in">```</span></span>
+<span id="cb6-215"><a href="#cb6-215"></a></span>
+<span id="cb6-216"><a href="#cb6-216"></a>Meanwhile, the following bar chart shows the difference on the size of the flood extent. Originally the size of the flood extent was nearly 20 MB covering an area larger than the AoI. After being reduced to the AoI, the flood extent reduced its size to nearly 664 kB Lastly, simplifying the geometry of the flood extent in the AoI reduced its size to 464 kB.</span>
+<span id="cb6-217"><a href="#cb6-217"></a></span>
+<span id="cb6-218"><a href="#cb6-218"></a><span class="al">![Fig.1 Flowchart](data/figures/detect_flood_col_plot.svg)</span></span>
+<span id="cb6-219"><a href="#cb6-219"></a></span>
+<span id="cb6-222"><a href="#cb6-222"></a><span class="in">```{r}</span></span>
+<span id="cb6-223"><a href="#cb6-223"></a><span class="co">#| eval: false</span></span>
+<span id="cb6-224"><a href="#cb6-224"></a><span class="co">#| echo: true</span></span>
+<span id="cb6-225"><a href="#cb6-225"></a><span class="co">#| code-summary: "Create barplot to compare flood extent's versions"</span></span>
+<span id="cb6-226"><a href="#cb6-226"></a></span>
+<span id="cb6-227"><a href="#cb6-227"></a><span class="co"># Compare size of both versions</span></span>
+<span id="cb6-228"><a href="#cb6-228"></a><span class="do">## Create dataframe</span></span>
+<span id="cb6-229"><a href="#cb6-229"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb6-230"><a href="#cb6-230"></a>df_flood <span class="ot">&lt;-</span> <span class="fu">data_frame</span>(</span>
+<span id="cb6-231"><a href="#cb6-231"></a>    <span class="at">version =</span> <span class="fu">c</span>(<span class="st">"1.Original"</span>,</span>
+<span id="cb6-232"><a href="#cb6-232"></a>                <span class="st">"2.AoI"</span>,</span>
+<span id="cb6-233"><a href="#cb6-233"></a>                <span class="st">"3.AoI simplified"</span>),</span>
+<span id="cb6-234"><a href="#cb6-234"></a>    <span class="at">size_bytes =</span> <span class="fu">c</span>( <span class="fu">object.size</span>(flooding_all)<span class="sc">/</span><span class="dv">1000</span>,</span>
+<span id="cb6-235"><a href="#cb6-235"></a>                    <span class="fu">object.size</span>(flooding_subdivided_porto)<span class="sc">/</span><span class="dv">1000</span>,</span>
+<span id="cb6-236"><a href="#cb6-236"></a>                    <span class="fu">object.size</span>(flooding_cleaned_porto_union_simple)<span class="sc">/</span><span class="dv">1000</span>)</span>
+<span id="cb6-237"><a href="#cb6-237"></a>) </span>
+<span id="cb6-238"><a href="#cb6-238"></a></span>
+<span id="cb6-239"><a href="#cb6-239"></a><span class="do">## Custom Y-axis labels </span></span>
+<span id="cb6-240"><a href="#cb6-240"></a>labels <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb6-241"><a href="#cb6-241"></a>  <span class="fu">paste</span>(x, <span class="st">"kB"</span>)</span>
+<span id="cb6-242"><a href="#cb6-242"></a>}</span>
+<span id="cb6-243"><a href="#cb6-243"></a><span class="do">## Create column plot</span></span>
+<span id="cb6-244"><a href="#cb6-244"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb6-245"><a href="#cb6-245"></a><span class="fu">library</span>(ggbreak)</span>
+<span id="cb6-246"><a href="#cb6-246"></a>flood_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data=</span>df_flood) <span class="sc">+</span></span>
+<span id="cb6-247"><a href="#cb6-247"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">x=</span>version, <span class="at">y=</span>size_bytes, <span class="at">fill=</span>version)) <span class="sc">+</span></span>
+<span id="cb6-248"><a href="#cb6-248"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Flood extent"</span>,</span>
+<span id="cb6-249"><a href="#cb6-249"></a>       <span class="at">y=</span><span class="st">"Size in kBytes"</span>) <span class="sc">+</span></span>
+<span id="cb6-250"><a href="#cb6-250"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb6-251"><a href="#cb6-251"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
+<span id="cb6-252"><a href="#cb6-252"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values=</span> <span class="fu">c</span>(<span class="st">"#e66101"</span>,</span>
+<span id="cb6-253"><a href="#cb6-253"></a>                              <span class="st">"#f1a340"</span>,</span>
+<span id="cb6-254"><a href="#cb6-254"></a>                              <span class="st">"#998ec3"</span>)) <span class="sc">+</span></span>
+<span id="cb6-255"><a href="#cb6-255"></a>  <span class="fu">scale_y_break</span>(<span class="fu">c</span>(<span class="dv">664</span>,<span class="dv">20000</span>), <span class="at">ticklabels =</span> <span class="fu">c</span>(df_flood<span class="sc">$</span>size_bytes[<span class="dv">3</span>],</span>
+<span id="cb6-256"><a href="#cb6-256"></a>                                             df_flood<span class="sc">$</span>size_bytes[<span class="dv">2</span>],</span>
+<span id="cb6-257"><a href="#cb6-257"></a>                                             <span class="fu">round</span>(df_flood<span class="sc">$</span>size_bytes[<span class="dv">1</span>])))</span>
+<span id="cb6-258"><a href="#cb6-258"></a>flood_plot <span class="sc">+</span> <span class="fu">scale_y_continuous</span>(<span class="at">label =</span> labels)</span>
+<span id="cb6-259"><a href="#cb6-259"></a><span class="in">```</span></span>
+</code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
