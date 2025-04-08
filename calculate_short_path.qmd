@@ -1,6 +1,6 @@
 # Extras
 
-Wundertüte, it will be finished by the deadline 2025.04.09
+it will be finished by the deadline 2025.04.09
 
 Population 2010, possibility to sample proportionally to municipalities' population.
 
@@ -257,7 +257,6 @@ SELECT * FROM table_end_v2;
 ```
 
 
-Move this leaflet thingy to wundertute
 
 ```{sql}
 #| eval: false
@@ -377,64 +376,3 @@ ic_post_rua_florianopolis <-  st_intersection(st_transform(local_connectivity_po
 
 ```
 
-
-```{r}
-#| eval: false
-#| echo: true
-
-library(tidyverse)
-computation_agile <- read.csv("/home/ricardors/heigit_data/computation_times_agile_2025 _fresults.csv")
-library(ggplot2)
-
-library(ggiraph)
-library(tidyverse)
-library(patchwork)
-# First plot: Scatter plot
-bar1 <- ggplot(
-  data = mutate(summarise(group_by(subset(computation_agile, select=c(lane, time)), lane), time=sum(time)), time_total = time/sum(time)*100),
-  mapping = aes(
-    x = reorder(lane, time_total), y = time_total,
-    tooltip = paste("Car:", lane, "<br>Time (ms):", time_total),
-    data_id = lane
-  )
-) +
-  geom_col_interactive(fill = "skyblue") +
-  coord_flip() +
-  labs(
-    title = "Miles per GalSlon by Car",
-    x = "Car", y = "Miles per Gallon"
-  ) +
-  theme_bw()
-
-# Second plot: Bar plot
-bar <- ggplot(
-  data = computation_agile,
-  mapping = aes(
-    x = reorder(activity, time), y = time,
-    tooltip = paste("Car:", activity, "<br>Time (ms):", time),
-    data_id = activity
-  )
-) +
-  geom_col_interactive(fill = "skyblue") +
-  coord_flip() +
-  labs(
-    title = "Miles per Gallon by Car",
-    x = "Car", y = "Miles per Gallon"
-  ) +
-  theme_bw()
-
-# Combine the plots using patchwork
-combined_plot <- bar1 + bar +
-  plot_layout(ncol = 2)
-
-# Create a single interactive plot with both subplots
-interactive_plot <- girafe(ggobj = combined_plot)
-
-# Set options for the interactive plot
-interactive_plot <- girafe_options(
-  interactive_plot,
-  opts_hover(css = "fill:cyan;stroke:black;cursor:pointer;"),
-  opts_selection(type = "single", css = "fill:red;stroke:black;")
-)
-
-```
