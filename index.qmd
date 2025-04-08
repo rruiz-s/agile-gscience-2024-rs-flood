@@ -74,7 +74,7 @@ This document is written following the [Reproducibiltiy paper guidelines](https:
 * The study required a CPU Intel(R) Core(TM) i5-4300U CPU @ 1.90 GHz with 15 Gi model HP EliteBook 820 G1. 
 * QGIS Version 3.38 ‘Grenoble’ 
 * RStudio 2023.06.1+524 "Mountain Hydrangea"
-* openrouteservice:v8.0.0 used following the described [docker file container](https://giscience.github.io/openrouteservice/run-instance/running-with-docker) instructions
+* openrouteservice:v8.0.0 used following the described [docker file container](https://giscience.github.io/openrouteservice/run-instance/running-with-docker) instructions. Especifically, we used the docker settings found in the directory "~/agile-gscience-2024-rs-flood/data/docker_settings/docker-compose.yml" on the project's github.
 
 
 ## Expected execution times

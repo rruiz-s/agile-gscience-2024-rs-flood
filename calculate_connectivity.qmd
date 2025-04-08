@@ -101,7 +101,7 @@ centrality_pre_map | centrality_post_map + mapview::mapview(flood_extent,
                                                    layer.name="Flooding layer") 
 ```
 
-We used pgrouting to calculate the centrality by counting the least-cost paths using pgr_dijkstra between origin and destinations (OD). The code [ECR 10] is based on Daniel i. Patterson post ^[[https://urbandatacyclist.com/2020/04/18/how-to-measure-centrality-among-bike-share-trips-using-pgrouting/](https://urbandatacyclist.com/2020/04/18/how-to-measure-centrality-among-bike-share-trips-using-pgrouting/)] and Matt OJO. The line 7 executed the function pgr_dijkstra from pgrouting creating a table of the shortest paths from the 300 OD contained in the table _od_300_snapped_v2_. Later, the line 18 added the spatial geometry from the road network saved in the table _ghs_aoi_net_largest_. A higher number of OD returned the error in handling memory allocation ^[[https://discourse.osgeo.org/t/handling-memory-allocation-with-pgrouting-in-centrality-analysis/110407/4](https://discourse.osgeo.org/t/handling-memory-allocation-with-pgrouting-in-centrality-analysis/110407/4)], so we limited to 300 origins and destinations. However, the visual inspection of the spatial connectivity patterns were very similar between 100 and 300 OD revealing the BR-290 freeway as the main urban arteria in both cases. 
+We used pgrouting to calculate the centrality by counting the least-cost paths using pgr_dijkstra between origin and destinations (OD). The code [ECR 10] is based on Daniel i. Patterson post ^[[https://urbandatacyclist.com/2020/04/18/how-to-measure-centrality-among-bike-share-trips-using-pgrouting/](https://urbandatacyclist.com/2020/04/18/how-to-measure-centrality-among-bike-share-trips-using-pgrouting/)] and Matt [@Forrest2023-yy] The line 7 executed the function pgr_dijkstra from pgrouting creating a table of the shortest paths from the 300 OD contained in the table _od_300_snapped_v2_. Later, the line 18 added the spatial geometry from the road network saved in the table _ghs_aoi_net_largest_. A higher number of OD returned the error in handling memory allocation ^[[https://discourse.osgeo.org/t/handling-memory-allocation-with-pgrouting-in-centrality-analysis/110407/4](https://discourse.osgeo.org/t/handling-memory-allocation-with-pgrouting-in-centrality-analysis/110407/4)], so we limited to 300 origins and destinations. However, the visual inspection of the spatial connectivity patterns were very similar between 100 and 300 OD revealing the BR-290 freeway as the main urban arteria in both cases. 
 
 ```{sql}
 #| eval: false
@@ -436,7 +436,7 @@ DT::datatable(colnames=c("Municipality","Pop.Aff","CMC","IC","GDP(R$"),
               escape = FALSE) 
 ```
 
-The @fig-mun 
+The @fig-mun contains two layers to visualize the IC and CM connectivity. While Nova Santa Rita was the municipality most affected by the flood with a 99% loss in the CM connectivity, Canoas is the most affected when using the IC connectivity with a 60% loss. 
 
 ```{r}
 #| echo: true
