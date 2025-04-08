@@ -58,14 +58,27 @@ group_by(cd_cnes) |>
 
 > Which healthcare facility was the least resilient in terms of redundancy?
 
+
+@fig-redundancy includes the healthcare facilities of the Core Metropolitan Area their bed capacity, their accessibility and lack of resilience in terms of redundancy. The size of each point is related to the number of beds, while the shape represent if it is a public or private entity. We measured the accesibility on the y-axis by the surface covered in 10 minutes by car from each healthcare facilities The x-axis represents the lack of redundancy based on the difference on alternatives routes to the healthcare facilities coloured in red intersected with the flood extent.
+
+High lack of redundancy highlights cases like Hospital Restinga e Extremo Sul, where the alternative paths vary greatly in distance. This suggests poor resilience,  where disruptions from the flood result in inefficient and costly. On the contrary, low lack of redundancy values indicates similar distances in the alternative routes to the hospital showing a higher resilience. The most resilient hospitals in terms of lack of redundancy are those located in the quadrant "L/H" with a low lack of redundancy and high accesibility in terms of coverage.
+
+
+
+
 ```{r}
 #| echo: false
 #| eval: true
 #| message: false
 #| warning: false
+#| label: fig-redundancy
+#| fig-cap: "Hospitals classified by their lack of redundancy of their alternative paths and their accesibility measured as coverage in a 10 minute ischrone"
+#| width:  780
 
 knitr::include_graphics("~/agile-gscience-2024-rs-flood/data/figures/rq3_v7.png")
 ```
+
+The data is contained in the @tbl-hospitals
 
 ```{r}
 #| echo: false
@@ -73,6 +86,8 @@ knitr::include_graphics("~/agile-gscience-2024-rs-flood/data/figures/rq3_v7.png"
 #| message: false
 #| warning: false
 #| output: false
+#| label: tbl-hospitals
+#| tbl-cap: "Pop.Aff: Population affected. CMC: Core Metropolitan Connectivity. IC: IntraCity connectivity. GDP: Gross domestic product per capita (2021)"
 
 resilience_visintini_table_a <- mutate(arrange(resilience_visintini_table,ds_cnes),
                                                   letter = stringr::str_to_upper(
@@ -98,6 +113,7 @@ dt_redundancy <- table_redundancy |>
     ds_cnes=stringr::str_to_title(table_redundancy$ds_cnes)) |> 
   sf::st_drop_geometry() |> 
   DT::datatable(extensions = 'Buttons',
+                colnames=c("letter","Healthcare Facility","Code entity","Capacity (ICU beds)","Municipality","Lack of Redundancy","Coverage (ha)"),
               filter = "top",
               options=list(
                           dom = 'Bfrtip',
@@ -400,4 +416,3 @@ for (idx_hospital in 1:length(unique(isochrones_sampling_points$cd_cnes))){
 ```
 
 
-Work in progress, waiting for acceptance.

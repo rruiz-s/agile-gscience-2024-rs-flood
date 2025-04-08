@@ -98,10 +98,22 @@ library(tictoc)
 library(tidyverse)
 library(sf)
 tic()
+# temp_data
 temp_data <- list.files(path= "/home/ricardors/agile-gscience-2024-rs-flood/data/temp_data", pattern="\\.gpkg")
 for (i in seq_along(temp_data)) {
     file_name <- tools::file_path_sans_ext(temp_data[i])
     assign(file_name, sf::read_sf(paste0("~/agile-gscience-2024-rs-flood/data/temp_data/", temp_data[i])))
+}
+# result data
+results_data <- list.files(
+  path = "/home/ricardors/agile-gscience-2024-rs-flood/data/results_data", 
+  pattern = "\\.gpkg$", 
+  recursive = TRUE, 
+  full.names = TRUE
+)
+for (i in seq_along(results_data)) {
+  file_name <- tools::file_path_sans_ext(basename(results_data[i]))
+  assign(file_name, sf::read_sf(results_data[i]))
 }
 # Load non-gpkg files
 centrality_both_sankey_v3 <- read.csv("~/agile-gscience-2024-rs-flood/data/temp_data/centrality_both_sankey_v3.csv")
