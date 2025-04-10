@@ -301,7 +301,7 @@ The code chunk [ECR14] shows how to calculate the IntraCity (IC) connectivity co
 ```{r}
 #| eval: false
 #| echo: true
-#| code-summary: "[ECR 14] How to calculate edge betweenness centrality in the Core Metropolitan Area"
+#| code-summary: "[ECR 14] How to calculate edge betweenness centrality in the IntraCity Area"
 
 ## Table with networks
 library(sf)

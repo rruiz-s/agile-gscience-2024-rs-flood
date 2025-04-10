@@ -331,6 +331,7 @@ WHERE municipalities_ghs_leaflet.shapename = data.shapename; --- Execution Time:
 planet_osm_roads <- sf::st_read(connection,
                                 Id(schema="public", table = "planet_osm_roads"))
 library(stringr)
+library(sf)
 freeway <- planet_osm_roads[stringr::str_which(planet_osm_roads$name, "Freeway"), ]
 avenida_salgado <- planet_osm_roads[stringr::str_which(planet_osm_roads$name, "Avenida Senador Salgado Filho"), ]
 castelo_branco <- planet_osm_roads[stringr::str_which(planet_osm_roads$name, "Castello Branco"), ]
@@ -343,11 +344,13 @@ sf::st_write(dsn=connection,obj=pereira_de_vargas)
 sf::st_write(dsn=connection,obj=rua_florianopolis)
 sf::st_write(dsn=connection,obj=avenida_salgado)
 
+
 avenida_salgado_buffer <- st_buffer(avenida_salgado, dist = 30)
 freeway_buffer <- st_buffer(freeway, dist = 30)
 castelo_branco_buffer <- st_buffer(castelo_branco, dist = 30)
 pereira_de_vargas_buffer <- st_buffer(pereira_de_vargas, dist = 30)
 rua_florianopolis_buffer <- st_buffer(rua_florianopolis, dist = 30)
+rua_sanga_funda_buffer <- st_buffer(rua_sanga_funda, dist = 30)
 
 ## Freeway
 ic_pre_freeway <-  st_intersection(st_transform(local_connectivity_pre,3857), freeway_buffer)
@@ -371,8 +374,5 @@ ic_post_castelo_branco <-  st_intersection(st_transform(local_connectivity_post,
 ic_pre_rua_florianopolis <-  st_intersection(st_transform(local_connectivity_pre,3857), rua_florianopolis)
 ic_post_rua_florianopolis <-  st_intersection(st_transform(local_connectivity_post,3857), rua_florianopolis)
 (sum(ic_post_rua_florianopolis$centrality) - sum(ic_pre_rua_florianopolis$centrality))/sum(ic_pre_rua_florianopolis$centrality)*100
-## F
-
-
 ```
 

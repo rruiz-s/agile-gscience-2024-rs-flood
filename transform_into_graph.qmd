@@ -587,3 +587,238 @@ library(dplyr)
 kbl(slice(table_rq_1_2_net, 1:5))
 ```
 
+# Obtain post-disaster network
+
+```{r}
+#| echo: true
+#| eval: false
+#| warning: false
+#| message: false
+
+library(glue)
+library(tictoc)
+table_rq_1_2_net_post <- glue_sql("CREATE TABLE table_rq_1_2_net_post 
+                (id integer,
+                fromId integer,
+                toid integer,
+                weight float,
+                undrcti integer,
+                bdrctid integer,
+                wkb_geometry geometry,
+                shapename varchar(250))", .con =connection)
+table_end_db_post <- dbGetQuery(conn=connection,table_rq_1_2_net_post )
+
+for (idx in 1:length(municipalities_ghs$ogc_fid)) {
+  tic(glue("run {idx}/{length(municipalities_ghs$ogc_fid)}")) 
+  muncipality_id <- municipalities_ghs$ogc_fid[idx]
+  table_name_1 <- glue("net_post_{idx}")
+  table_name_2 <- glue("net_largest_post_{idx}")
+  
+  dbExecute(glue_sql("DROP TABLE IF EXISTS {`table_name_1`}", .con=connection),
+            conn=connection)
+  
+  # Assuming you have an open PostgreSQL connection in con
+  dbExecute(glue_sql("DROP TABLE IF EXISTS {`table_name_1`}", .con=connection),
+            conn=connection)  
+  query_1 <- glue_sql("CREATE TABLE {`table_name_1`} AS
+SELECT
+    net.*,
+    nuts.shapename 
+FROM 
+    (SELECT
+        * 
+    FROM 
+        municipalities_ghs 
+    WHERE 
+        ogc_fid =  {muncipality_id} ) AS nuts,
+    ghs_aoi_net_largest_post AS net
+WHERE
+    st_intersects(nuts.wkb_geometry, net.geom)", .con = connection)
+  # Send the query
+  result_q1 <- dbGetQuery(conn= connection, query_1)
+  # Alter the table
+  query_2 <- glue_sql("ALTER TABLE {`table_name_1`}
+    ALTER COLUMN toid type bigint,
+    ALTER COLUMN fromid type bigint,
+    ALTER COLUMN id type bigint", .con = connection)
+  result_q2 <- dbGetQuery(conn= connection, query_2)
+  dbExecute(glue_sql("DROP TABLE IF EXISTS {`table_name_2`}", .con=connection),
+            conn=connection)      
+  query_3 <- glue_sql("CREATE TABLE {`table_name_2`} AS  ---here table
+WITH ghs_aoi_net_component_post AS (
+SELECT 
+  * 
+FROM 
+  pgr_strongComponents('SELECT
+                               id AS id,
+                               fromid AS source,
+                               toid AS target,
+                               weight AS cost 
+                        FROM 
+                              {`table_name_1`}')),
+--- Calculate the largest component from the network
+ghs_aoi_net_component_geom_post AS (
+SELECT 
+    net.*,
+    net_geom.geom
+FROM 
+    ghs_aoi_net_component_post AS net
+JOIN 
+    {`table_name_1`}  AS net_geom -----
+ON 
+    net.node = net_geom.fromid),
+largest_component_net_post as (SELECT 
+    component,
+    st_union(geom) AS the_geom,
+    st_length(st_union(geom)::geography)::int AS length
+FROM  
+    ghs_aoi_net_component_geom_post
+GROUP BY component
+ORDER BY length DESC
+LIMIT 1),
+--- Using the largest component from the network to filter
+largest_component_network_ghs_aoi_post AS (
+SELECT
+    *,
+    largest_component_net_post.component,
+    largest_component_net_post.length
+FROM
+    ghs_aoi_net_component_post,
+    largest_component_net_post
+WHERE 
+    ghs_aoi_net_component_post.component = largest_component_net_post.component)
+SELECT 
+    net_multi_component.*
+FROM 
+    {`table_name_1`} AS net_multi_component,
+    largest_component_network_ghs_aoi_post AS net_largest_component
+WHERE  
+    net_multi_component.fromid IN (net_largest_component.node)", .con = connection)
+  result_q3 <- dbGetQuery(conn= connection, query_3)  
+  query_4 <- glue(" 
+SELECT pgr_createverticestable('{`table_name_2`}',
+                                the_geom:='geom',
+                                source:='fromid',
+                                target:='toid');", .con = connection )
+  result_q4 <- dbGetQuery(conn= connection, query_4)
+  
+  insert_query <- glue_sql("INSERT INTO table_rq_1_2_net_post (id, fromid, toid, weight, undrcti, bdrctid, wkb_geometry, shapename)
+                            SELECT id, fromid, toid, weight, undrcti, bdrctid, geom, shapename 
+                            FROM {`table_name_2`}", .con = connection)
+  dbExecute(conn = connection, insert_query)
+  
+  toc()
+}
+
+```
+
+
+```{r}
+#| message: false
+#| warning: false
+#| eval: false
+#| echo: true
+
+
+
+## Table with networks
+library(sf)
+table_rq_1_2_net_post <- st_read(connection, "table_rq_1_2_net_post")
+table_snapped <- st_read(connection, "table_snapped")
+municipalities_ghs <- st_read(connection, "municipalities_ghs")
+
+tic()  
+for(idx in 1:9){
+  tic(glue("run {idx}/9")) 
+  table_name_1_centrality_post <- glue("net_largest_post_{as.character(idx)}")
+  temp_table_name_post <- glue("temp_centrality_post_{idx}")
+  table_bidirect_id_post <- glue("t_bidirect_id_post_{idx}")
+  dbExecute(glue_sql("DROP TABLE IF EXISTS {`temp_table_name_post`}", .con=connection),
+            conn=connection)  
+  query_1_central <- glue_sql("CREATE TABLE {`temp_table_name_post`} AS
+ SELECT   
+ b.id,
+ b.geom,
+ count(b.geom) AS centrality 
+ FROM  pgr_dijkstra('SELECT id,
+                            fromid AS source,
+                            toid AS target,
+                            weight AS cost
+                      FROM {`table_name_1_centrality_post`}',
+                      ARRAY(SELECT 
+                        snapped_id AS start_id 
+                        FROM table_snapped 
+                        WHERE shapename_id = {idx}::text),
+                      ARRAY(SELECT
+                        snapped_id AS end_id 
+                        FROM table_snapped
+                        WHERE shapename_id = {idx}::text),
+                      directed := TRUE) j
+                      LEFT JOIN {`table_name_1_centrality_post`} AS b
+                      ON j.edge = b.id
+                      GROUP BY  b.id, geom;", .con=connection)
+  
+  dbExecute(con=connection, query_1_central)
+  toc()
+}
+toc()
+```
+
+
+```{sql}
+#| eval: false
+#| echo: true
+
+
+CREATE TABLE centrality_bidirect_temp_centrality_post_5 AS
+SELECT t1.*,
+    t2."bdrctid"
+FROM
+    temp_centrality_post_5 t1
+JOIN
+    net_largest_post_5 t2
+ON
+    t1.id = t2.id;
+--- The final product requries  99127   
+select max("bdrctid") from centrality_bidirect_temp_centrality_post_5 ;
+create sequence bididirect_id_temp_centrality_post_5_seq start 99127;
+update centrality_bidirect_temp_centrality_post_5 
+set "bdrctid" = nextval('bididirect_id_temp_centrality_post_5_seq')
+where "bdrctid" is null ;
+---- verify
+select count(*) 
+from centrality_bidirect_temp_centrality_post_5
+where "bdrctid" is null; --- 0
+----
+create table centrality_bidirect_temp_centrality_post_5_bidirect_group as 
+select 
+       "bdrctid",
+       sum(centrality) as  centrality
+from centrality_bidirect_temp_centrality_post_5 
+group by "bdrctid"; --- this sum the centrality for duplicated bidirect id
+---
+---- now recover the id
+create table centrality_bidirect_temp_centrality_post_5_bidirect_group_id as 
+select t1.*, t2.id
+from centrality_bidirect_temp_centrality_post_5_bidirect_group t1
+join centrality_bidirect_temp_centrality_post_5 t2 
+on t1."bdrctid" = t2."bdrctid"; 
+---- add geometries
+create table centrality_bidirect_temp_centrality_post_5_cleaned as
+select t1.*,
+    t2.geom,
+    t2.toid,
+    t2.fromid,
+    t2.weight,
+    t2."undrcti"
+from 
+    centrality_bidirect_temp_centrality_post_5_bidirect_group_id t1
+join
+    net_largest_post_5 t2
+on
+  t1.id = t2.id;
+
+SELECT * FROM net_largest_post_5;
+
+```
+
