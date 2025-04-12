@@ -1,6 +1,76 @@
 # Extras
 
-Population 2010, possibility to sample proportionally to municipalities' population.
+## Municipality population
+
+```{r}
+#| echo: true
+#| eval: false
+
+
+municipality_pop_geom <- left_join(municipalities_ghs,  population_2010, by = "row") |>
+  select(c(shapename,"Population_2010.y", geom)) |>
+  rename("population" = "Population_2010.y") |>
+  mutate(n_od_sampling = ceiling(municipality_pop_geom$population/sum(municipality_pop_geom$population) *n_samples_ghs))
+
+municipalities_ghs_leaflet <-  sf::st_read(connection,
+                                  Id(schema="agile_gis_2025_rs",
+                                     table="municipalities_ghs_leaflet"))
+
+tabela1378_bairros <- read_csv("/home/ricardors/heigit_data/tabela1378_bairros.csv")
+library(stringr)
+
+filtered_bairros <- data.frame()
+
+for (x in 1:length(municipalities_ghs$shapename)) {
+  # Select places that are in the municipality of the AoI
+  a= tabela1378_bairros[str_which(tabela1378_bairros$place, municipalities_ghs$shapename[x]),]
+  # Filter places that have code of 7 characters
+  a_filtered <- a[nchar(a$code) == 7, ] |>
+  # Remove space and the (RS) that indicates Rio Grande do Sul
+      mutate(place=str_remove(place, " \\(RS\\)"))
+  # Create dataset
+  filtered_bairros <- bind_rows(filtered_bairros, a_filtered)
+}
+
+# Add the population to municipalities_ghs
+municipalities_ghs$Population_2010 <- filtered_bairros$Population_2010
+
+# 
+municipalities_ghs <- municipalities_ghs |> 
+                            mutate(n_od_sampling = ceiling(
+                              municipalities_ghs$Population_2010/sum(municipalities_ghs$Population_2010) *n_samples))
+```
+
+## Figures
+### Using overture building data for the weighted OD figure.
+
+Buildings from overture
+
+```{r}
+#| eval: false
+#| echo: true
+
+## Import data
+library(overturemapsr)
+core_metropolitan_area <- st_read(connection, Id(schema="agile_gis_2025_rs",
+                              table="core_metropolitan_area"))
+overture_buildings <- record_batch_reader(schema_type = 'building',
+                                          bbox = sf::st_bbox(core_metropolitan_area))
+## Subset data
+overture_roads_subset <- overture_roads |> dplyr::select(c(id, geometry,class,update_time, subtype))
+## Export data
+### Local file
+library(arrow)
+library(sfarrow)
+sfarrow::st_write_parquet(overture_roads, "overture_roads.parquet")
+### Database
+library(DBI)
+library(nanoarrow)
+DBI::dbWriteTable(eisenberg_connection, "overture_roads_subset", overture_roads_subset)
+```
+
+### Redundancy base
+
 
 ```{r}
 #| eval: false
@@ -56,71 +126,7 @@ ggplot(plot_resilience_v2, aes(x = lack_pre, y = area_hm_2, shape=code, colour=m
 ```
 
 
-```{r}
-#| echo: true
-#| eval: false
-
-
-municipality_pop_geom <- left_join(municipalities_ghs,  population_2010, by = "row") |>
-  select(c(shapename,"Population_2010.y", geom)) |>
-  rename("population" = "Population_2010.y") |>
-  mutate(n_od_sampling = ceiling(municipality_pop_geom$population/sum(municipality_pop_geom$population) *n_samples_ghs))
-
-municipalities_ghs_leaflet <-  sf::st_read(connection,
-                                  Id(schema="agile_gis_2025_rs",
-                                     table="municipalities_ghs_leaflet"))
-
-tabela1378_bairros <- read_csv("/home/ricardors/heigit_data/tabela1378_bairros.csv")
-library(stringr)
-
-filtered_bairros <- data.frame()
-
-for (x in 1:length(municipalities_ghs$shapename)) {
-  # Select places that are in the municipality of the AoI
-  a= tabela1378_bairros[str_which(tabela1378_bairros$place, municipalities_ghs$shapename[x]),]
-  # Filter places that have code of 7 characters
-  a_filtered <- a[nchar(a$code) == 7, ] |>
-  # Remove space and the (RS) that indicates Rio Grande do Sul
-      mutate(place=str_remove(place, " \\(RS\\)"))
-  # Create dataset
-  filtered_bairros <- bind_rows(filtered_bairros, a_filtered)
-}
-
-# Add the population to municipalities_ghs
-municipalities_ghs$Population_2010 <- filtered_bairros$Population_2010
-
-# 
-municipalities_ghs <- municipalities_ghs |> 
-                            mutate(n_od_sampling = ceiling(
-                              municipalities_ghs$Population_2010/sum(municipalities_ghs$Population_2010) *n_samples))
-```
-
-
-Buildings from overture
-
-```{r}
-#| eval: false
-#| echo: true
-
-## Import data
-library(overturemapsr)
-core_metropolitan_area <- st_read(connection, Id(schema="agile_gis_2025_rs",
-                              table="core_metropolitan_area"))
-overture_buildings <- record_batch_reader(schema_type = 'building',
-                                          bbox = sf::st_bbox(core_metropolitan_area))
-## Subset data
-overture_roads_subset <- overture_roads |> dplyr::select(c(id, geometry,class,update_time, subtype))
-## Export data
-### Local file
-library(arrow)
-library(sfarrow)
-sfarrow::st_write_parquet(overture_roads, "overture_roads.parquet")
-### Database
-library(DBI)
-library(nanoarrow)
-DBI::dbWriteTable(eisenberg_connection, "overture_roads_subset", overture_roads_subset)
-```
-
+## Snapping healthcare facilities
 
 ```{sql}
 #| eval: false
@@ -163,7 +169,7 @@ LIMIT 1) AS f ON true
 
 ```{sql}
 #| eval: false
-#| echo: true
+#| echo: false
 
 SELECT * FROM ghs_aoi_net_largest;
 
@@ -254,11 +260,13 @@ SELECT * FROM table_end_v2;
 
 ```
 
+## Leaflet input:
 
+### Hospitals with bed capacity
 
 ```{sql}
 #| eval: false
-#| echo: false
+#| echo: true
 
 ---- Hospitals with ICU and their bed capacity -> ***Input for leaflet map****
 EXPLAIN ANALYZE
@@ -322,6 +330,8 @@ WHERE municipalities_ghs_leaflet.shapename = data.shapename; --- Execution Time:
 
 ```
 
+## Finding urban arterias in ORS using OSM address
+
 ```{r}
 #| eval: false
 #| echo: true
@@ -372,5 +382,30 @@ ic_post_castelo_branco <-  st_intersection(st_transform(local_connectivity_post,
 ic_pre_rua_florianopolis <-  st_intersection(st_transform(local_connectivity_pre,3857), rua_florianopolis)
 ic_post_rua_florianopolis <-  st_intersection(st_transform(local_connectivity_post,3857), rua_florianopolis)
 (sum(ic_post_rua_florianopolis$centrality) - sum(ic_pre_rua_florianopolis$centrality))/sum(ic_pre_rua_florianopolis$centrality)*100
+```
+
+
+
+```{sql}
+#| eval: false
+#| echo: true
+#| code-summary: "[ACR-7] How to create regular samples to calculate the Core Metropolitan Connectivity"
+
+EXPLAIN ANALYZE
+CREATE TABLE regular_point_od AS (
+WITH multipoint_regular AS(
+SELECT 
+    I_Grid_Point_Series(geom, 0.037,0.037, false) AS geom
+    FROM core_metropolitan_bbox AS geom),
+point_regular AS(
+SELECT 
+    st_setsrid((st_dump(geom)).geom, 4326)::geometry(Point, 4326) AS geom
+FROM  multipoint_regular)
+SELECT 
+    row_number() over() AS id,
+    geom
+FROM 
+    point_regular);
+--- Time: 505.147 ms
 ```
 

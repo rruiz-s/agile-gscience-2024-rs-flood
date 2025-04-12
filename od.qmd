@@ -652,34 +652,7 @@ FROM
 
 ```
 
-Based on the core metropolitan bounding box, we regularly sampled the OD separated by 0.037º. We used this OD to calculate the core metropolitan connectivity regularly. <span style="color:red;">Revise, maybe this is unnecesary in the delivered final version </span>
-
-```{sql}
-#| eval: false
-#| echo: true
-#| code-summary: "[ACR-7] How to create regular samples to calculate the Core Metropolitan Connectivity"
-
-# Move this to centrality hospitals
-
-EXPLAIN ANALYZE
-CREATE TABLE regular_point_od AS (
-WITH multipoint_regular AS(
-SELECT 
-    I_Grid_Point_Series(geom, 0.037,0.037, false) AS geom
-    FROM core_metropolitan_bbox AS geom),
-point_regular AS(
-SELECT 
-    st_setsrid((st_dump(geom)).geom, 4326)::geometry(Point, 4326) AS geom
-FROM  multipoint_regular)
-SELECT 
-    row_number() over() AS id,
-    geom
-FROM 
-    point_regular);
---- Time: 505.147 ms
-```
-
-We repeated this process for each of the isochrones of the hospitals regularly sampling every 0.00912º. 
+Based on the isochrones of the healthcare facilities created from ORS, we regularly sampled the OD separated by 0.00912º.
 
 ```{sql}
 #| eval: false

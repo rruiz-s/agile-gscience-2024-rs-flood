@@ -134,6 +134,7 @@ dt_redundancy
 
 ### Alternative route function
 
+
 ```{sql}
 #| eval: false
 #| echo: false
@@ -151,9 +152,12 @@ FROM ghs_aoi_net_largest ;
 
 ```
 
+The code ACR-1 created three least-cost paths with a penalty methods in each iteration asssssing the lack of redundancy of the healthcare facilities' access. The variable _hospital_name_ at the line 4 used the name of the healthcare facilities as the destination of the least-cost paths, while the variable _origin_id_ was the origin regularly sampled within the healthcare facilities. The lines located from 15 to 203 iterated for each point related to each healthcare facilities. The penalty method is applied in the line 57 and 114 increasing the costs of the previous least-cost paths finding alternative routes. 
+
 ```{r}
 #| eval: false
 #| echo: true
+#| code-summary: "[ACR-1] How to create a function to calculate alternative paths with a penalty method"
 
 
 alternative_routes <- function(df_isochrone_points){
@@ -364,9 +368,12 @@ toc()
 
 ### Applying spatial indexes
 
+Before executing the function _alternative_paths_, we created spatial and non-spatial indexes to optimize the query.
+
 ```{sql}
 #| eval: false
 #| echo: true
+#| code-summary: "How to prepare the data before running the query"
 
 
 ---- creating indexes public
@@ -385,9 +392,12 @@ CREATE INDEX idx_municipalities_ghs_hospitals_id ON public.municipalities_ghs_ho
 
 ### Create table using the function
 
+The code chunk [ACR-2] executed the created function _alternative_routes_ for each healthcare facility. The libray titoc is used to register the computing times [@tictoc].  The variable _code_hosptial_ found in the line 418 is iterated through the alterantive routes function.  
+
 ```{r}
 #| echo: true
 #| eval: false
+#| code-summary: "[ACR-2] How to run the alternative routes function"
 
 library(glue)
 library(tictoc)

@@ -80,6 +80,7 @@ This document is written following the [Reproducibiltiy paper guidelines](https:
 
 ## Expected execution times
 
+While calculating the connectivity took 81 and 54 seconds in total, the computation of the lack of redundancy was the most expensive process requiring 52 minutes (3097 seconds). Another demanding process was exporting the ORS file from the docker to the R environment using the get_graph.R script. We included the computation times of the main processes to obtain the connectivity and lack of redundancy results. Providing data to support the research question 3 related to the lack of redundancy took 76% of the time required, while calculating the connectivity in a intracity (IC) and core metropolitan (CM) scale only took 1.32% and 2% respectively.
 
 ```{r}
 #| eval: true

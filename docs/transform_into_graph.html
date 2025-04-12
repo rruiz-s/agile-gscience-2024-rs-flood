@@ -150,8 +150,14 @@ div.csl-indent {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./data/AGILE_porto_alegre_study_anonymised.pdf"> 
-<span class="menu-text">Full paper</span></a>
+    <a class="nav-link" href="./data/AGILE_porto_alegre_study_latex_official_v2.pdf"> <i class="bi bi-filetype-pdf" role="img">
+</i> 
+<span class="menu-text">Paper official</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./data/quarto_script_rs_paper_v2.Rmd"> <i class="bi bi-file-earmark-code-fill" role="img">
+</i> 
+<span class="menu-text">Paper rmarkdown</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="https://github.com/rruiz-s/agile-gscience-2024-rs-flood" target="_blank"> <i class="bi bi-github" role="img">
@@ -352,7 +358,7 @@ div.csl-indent {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="data/figures/ors_config_data.png" class="img-fluid figure-img"></p>
-<figcaption>Fig 1</figcaption>
+<figcaption>Fig 1. On the left hand, the directory where the OSM data is stored within the ORS docker. On the right hand, the ORS configuration file where the parameter source file is set to the OSM data</figcaption>
 </figure>
 </div>
 <p>The last step is to run the ORS docker using th following command [ORN-1] <code>docker compose up</code> in the terminal where the file <em>docker-compose.yml</em> is located. Do not close this window or run the docker with the parameter -d.</p>
@@ -366,7 +372,7 @@ div.csl-indent {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="data/figures/openrouteservice.png" class="img-fluid figure-img"></p>
-<figcaption>Fig 2:</figcaption>
+<figcaption>Fig 2: Transforming the OSM geometry road network data into the ORS graph data took 38 seconds for the AoI</figcaption>
 </figure>
 </div>
 </section>
@@ -619,7 +625,7 @@ div.csl-indent {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="data/figures/components_length_network.svg" class="img-fluid figure-img"></p>
-<figcaption>Fig.1 Length from the networks’ components</figcaption>
+<figcaption>Fig.1 The largest component of the road network in orange represented 96% of the total length of the AoI</figcaption>
 </figure>
 </div>
 <div class="cell">
@@ -1043,6 +1049,7 @@ div.csl-indent {
 </section>
 <section id="obtain-post-disaster-network" class="level1" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> Obtain post-disaster network</h1>
+<p>We repeated the code ORN-6 obtaining the IC connectivity limited to each municipality after the flooding. From the lines 3 to 12, we created a table in the database. Then, the loop located between the lines 14 and 114 created the road network and filtered the largest component. Creating the road network is located between the lines 26 and 41, while filtering the largest road network component is situated from 43 to 100. Lastly, we used the function pgr_createverticestables() to each of these largest road network generating a routable network based on the ORS graph.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>How to repeat ORN-6 for the post-disaster network for each municipality</summary>
@@ -1698,7 +1705,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb12-29"><a href="#cb12-29"></a></span>
 <span id="cb12-30"><a href="#cb12-30"></a>Firstly, in the _ors-config.yml_ from OpenRotueService (ORS), the “source file” parameter located in the line 102 is set to find the directory containing the OSM road network (See Fig 1B). In this case, we set the directory to _/home/ors/files/porto_alegre_urban_center.osm.pbf_ (See Fig 1A). Secondly, before running the docker, we added the file "porto_alegre_urban_center.osm.pbf" obtained in the lane obtain routable network to the directory files inside the docker. </span>
 <span id="cb12-31"><a href="#cb12-31"></a></span>
-<span id="cb12-32"><a href="#cb12-32"></a><span class="al">![Fig 1](data/figures/ors_config_data.png)</span></span>
+<span id="cb12-32"><a href="#cb12-32"></a><span class="al">![Fig 1. On the left hand, the directory where the OSM data is stored within the ORS docker. On the right hand, the ORS configuration file where the parameter source file is set to the OSM data](data/figures/ors_config_data.png)</span></span>
 <span id="cb12-33"><a href="#cb12-33"></a></span>
 <span id="cb12-34"><a href="#cb12-34"></a></span>
 <span id="cb12-35"><a href="#cb12-35"></a>The last step is to run the ORS docker using th following command <span class="co">[</span><span class="ot">ORN-1</span><span class="co">]</span> <span class="in">`docker compose up`</span> in the terminal where the file _docker-compose.yml_ is located. Do not close this window or run the docker with the parameter -d.</span>
@@ -1714,7 +1721,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb12-47"><a href="#cb12-47"></a></span>
 <span id="cb12-48"><a href="#cb12-48"></a>OpenRouteService (ORS) created a routable network with costs and adding information for each node such as the origin, “fromId”, and the destination, “toId”. We named _ors_raw_network_ to the table containing this network made up of 109653 edges and 83202 nodes.</span>
 <span id="cb12-49"><a href="#cb12-49"></a></span>
-<span id="cb12-50"><a href="#cb12-50"></a><span class="al">![Fig 2: ](data/figures/openrouteservice.png)</span></span>
+<span id="cb12-50"><a href="#cb12-50"></a><span class="al">![Fig 2: Transforming the OSM geometry road network data into the ORS graph data took 38 seconds for the AoI](data/figures/openrouteservice.png)</span></span>
 <span id="cb12-51"><a href="#cb12-51"></a></span>
 <span id="cb12-52"><a href="#cb12-52"></a></span>
 <span id="cb12-55"><a href="#cb12-55"></a><span class="in">```{r}</span></span>
@@ -1884,7 +1891,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb12-231"><a href="#cb12-231"></a><span class="co">---time:  4238.637 ms</span></span>
 <span id="cb12-232"><a href="#cb12-232"></a><span class="in">```</span></span>
 <span id="cb12-233"><a href="#cb12-233"></a></span>
-<span id="cb12-234"><a href="#cb12-234"></a><span class="al">![Fig.1 Length from the networks' components](data/figures/components_length_network.svg)</span></span>
+<span id="cb12-234"><a href="#cb12-234"></a><span class="al">![Fig.1 The largest component of the road network in orange represented 96% of the total length of the AoI](data/figures/components_length_network.svg)</span></span>
 <span id="cb12-235"><a href="#cb12-235"></a></span>
 <span id="cb12-238"><a href="#cb12-238"></a><span class="in">```{r}</span></span>
 <span id="cb12-239"><a href="#cb12-239"></a><span class="co">#| echo: true</span></span>
@@ -2260,129 +2267,131 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb12-619"><a href="#cb12-619"></a></span>
 <span id="cb12-620"><a href="#cb12-620"></a><span class="fu"># Obtain post-disaster network</span></span>
 <span id="cb12-621"><a href="#cb12-621"></a></span>
-<span id="cb12-624"><a href="#cb12-624"></a><span class="in">```{r}</span></span>
-<span id="cb12-625"><a href="#cb12-625"></a><span class="co">#| echo: true</span></span>
-<span id="cb12-626"><a href="#cb12-626"></a><span class="co">#| eval: false</span></span>
-<span id="cb12-627"><a href="#cb12-627"></a><span class="co">#| warning: false</span></span>
-<span id="cb12-628"><a href="#cb12-628"></a><span class="co">#| message: false</span></span>
-<span id="cb12-629"><a href="#cb12-629"></a><span class="co">#| code-summary: "How to repeat ORN-6 for the post-disaster network for each municipality"</span></span>
-<span id="cb12-630"><a href="#cb12-630"></a></span>
-<span id="cb12-631"><a href="#cb12-631"></a><span class="fu">library</span>(glue)</span>
-<span id="cb12-632"><a href="#cb12-632"></a><span class="fu">library</span>(tictoc)</span>
-<span id="cb12-633"><a href="#cb12-633"></a>table_rq_1_2_net_post <span class="ot">&lt;-</span> <span class="fu">glue_sql</span>(<span class="st">"CREATE TABLE table_rq_1_2_net_post </span></span>
-<span id="cb12-634"><a href="#cb12-634"></a><span class="st">                (id integer,</span></span>
-<span id="cb12-635"><a href="#cb12-635"></a><span class="st">                fromId integer,</span></span>
-<span id="cb12-636"><a href="#cb12-636"></a><span class="st">                toid integer,</span></span>
-<span id="cb12-637"><a href="#cb12-637"></a><span class="st">                weight float,</span></span>
-<span id="cb12-638"><a href="#cb12-638"></a><span class="st">                undrcti integer,</span></span>
-<span id="cb12-639"><a href="#cb12-639"></a><span class="st">                bdrctid integer,</span></span>
-<span id="cb12-640"><a href="#cb12-640"></a><span class="st">                wkb_geometry geometry,</span></span>
-<span id="cb12-641"><a href="#cb12-641"></a><span class="st">                shapename varchar(250))"</span>, <span class="at">.con =</span>connection)</span>
-<span id="cb12-642"><a href="#cb12-642"></a>table_end_db_post <span class="ot">&lt;-</span> <span class="fu">dbGetQuery</span>(<span class="at">conn=</span>connection,table_rq_1_2_net_post )</span>
-<span id="cb12-643"><a href="#cb12-643"></a></span>
-<span id="cb12-644"><a href="#cb12-644"></a><span class="cf">for</span> (idx <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(municipalities_ghs<span class="sc">$</span>ogc_fid)) {</span>
-<span id="cb12-645"><a href="#cb12-645"></a>  <span class="fu">tic</span>(<span class="fu">glue</span>(<span class="st">"run {idx}/{length(municipalities_ghs$ogc_fid)}"</span>)) </span>
-<span id="cb12-646"><a href="#cb12-646"></a>  muncipality_id <span class="ot">&lt;-</span> municipalities_ghs<span class="sc">$</span>ogc_fid[idx]</span>
-<span id="cb12-647"><a href="#cb12-647"></a>  table_name_1 <span class="ot">&lt;-</span> <span class="fu">glue</span>(<span class="st">"net_post_{idx}"</span>)</span>
-<span id="cb12-648"><a href="#cb12-648"></a>  table_name_2 <span class="ot">&lt;-</span> <span class="fu">glue</span>(<span class="st">"net_largest_post_{idx}"</span>)</span>
-<span id="cb12-649"><a href="#cb12-649"></a>  </span>
-<span id="cb12-650"><a href="#cb12-650"></a>  <span class="fu">dbExecute</span>(<span class="fu">glue_sql</span>(<span class="st">"DROP TABLE IF EXISTS {`table_name_1`}"</span>, <span class="at">.con=</span>connection),</span>
-<span id="cb12-651"><a href="#cb12-651"></a>            <span class="at">conn=</span>connection)</span>
-<span id="cb12-652"><a href="#cb12-652"></a>  </span>
-<span id="cb12-653"><a href="#cb12-653"></a>  <span class="co"># Assuming you have an open PostgreSQL connection in con</span></span>
-<span id="cb12-654"><a href="#cb12-654"></a>  <span class="fu">dbExecute</span>(<span class="fu">glue_sql</span>(<span class="st">"DROP TABLE IF EXISTS {`table_name_1`}"</span>, <span class="at">.con=</span>connection),</span>
-<span id="cb12-655"><a href="#cb12-655"></a>            <span class="at">conn=</span>connection)  </span>
-<span id="cb12-656"><a href="#cb12-656"></a>  query_1 <span class="ot">&lt;-</span> <span class="fu">glue_sql</span>(<span class="st">"CREATE TABLE {`table_name_1`} AS</span></span>
-<span id="cb12-657"><a href="#cb12-657"></a><span class="st">SELECT</span></span>
-<span id="cb12-658"><a href="#cb12-658"></a><span class="st">    net.*,</span></span>
-<span id="cb12-659"><a href="#cb12-659"></a><span class="st">    nuts.shapename </span></span>
-<span id="cb12-660"><a href="#cb12-660"></a><span class="st">FROM </span></span>
-<span id="cb12-661"><a href="#cb12-661"></a><span class="st">    (SELECT</span></span>
-<span id="cb12-662"><a href="#cb12-662"></a><span class="st">        * </span></span>
-<span id="cb12-663"><a href="#cb12-663"></a><span class="st">    FROM </span></span>
-<span id="cb12-664"><a href="#cb12-664"></a><span class="st">        municipalities_ghs </span></span>
-<span id="cb12-665"><a href="#cb12-665"></a><span class="st">    WHERE </span></span>
-<span id="cb12-666"><a href="#cb12-666"></a><span class="st">        ogc_fid =  {muncipality_id} ) AS nuts,</span></span>
-<span id="cb12-667"><a href="#cb12-667"></a><span class="st">    ghs_aoi_net_largest_post AS net</span></span>
-<span id="cb12-668"><a href="#cb12-668"></a><span class="st">WHERE</span></span>
-<span id="cb12-669"><a href="#cb12-669"></a><span class="st">    st_intersects(nuts.wkb_geometry, net.geom)"</span>, <span class="at">.con =</span> connection)</span>
-<span id="cb12-670"><a href="#cb12-670"></a>  <span class="co"># Send the query</span></span>
-<span id="cb12-671"><a href="#cb12-671"></a>  result_q1 <span class="ot">&lt;-</span> <span class="fu">dbGetQuery</span>(<span class="at">conn=</span> connection, query_1)</span>
-<span id="cb12-672"><a href="#cb12-672"></a>  <span class="co"># Alter the table</span></span>
-<span id="cb12-673"><a href="#cb12-673"></a>  query_2 <span class="ot">&lt;-</span> <span class="fu">glue_sql</span>(<span class="st">"ALTER TABLE {`table_name_1`}</span></span>
-<span id="cb12-674"><a href="#cb12-674"></a><span class="st">    ALTER COLUMN toid type bigint,</span></span>
-<span id="cb12-675"><a href="#cb12-675"></a><span class="st">    ALTER COLUMN fromid type bigint,</span></span>
-<span id="cb12-676"><a href="#cb12-676"></a><span class="st">    ALTER COLUMN id type bigint"</span>, <span class="at">.con =</span> connection)</span>
-<span id="cb12-677"><a href="#cb12-677"></a>  result_q2 <span class="ot">&lt;-</span> <span class="fu">dbGetQuery</span>(<span class="at">conn=</span> connection, query_2)</span>
-<span id="cb12-678"><a href="#cb12-678"></a>  <span class="fu">dbExecute</span>(<span class="fu">glue_sql</span>(<span class="st">"DROP TABLE IF EXISTS {`table_name_2`}"</span>, <span class="at">.con=</span>connection),</span>
-<span id="cb12-679"><a href="#cb12-679"></a>            <span class="at">conn=</span>connection)      </span>
-<span id="cb12-680"><a href="#cb12-680"></a>  query_3 <span class="ot">&lt;-</span> <span class="fu">glue_sql</span>(<span class="st">"CREATE TABLE {`table_name_2`} AS  ---here table</span></span>
-<span id="cb12-681"><a href="#cb12-681"></a><span class="st">WITH ghs_aoi_net_component_post AS (</span></span>
-<span id="cb12-682"><a href="#cb12-682"></a><span class="st">SELECT </span></span>
-<span id="cb12-683"><a href="#cb12-683"></a><span class="st">  * </span></span>
-<span id="cb12-684"><a href="#cb12-684"></a><span class="st">FROM </span></span>
-<span id="cb12-685"><a href="#cb12-685"></a><span class="st">  pgr_strongComponents('SELECT</span></span>
-<span id="cb12-686"><a href="#cb12-686"></a><span class="st">                               id AS id,</span></span>
-<span id="cb12-687"><a href="#cb12-687"></a><span class="st">                               fromid AS source,</span></span>
-<span id="cb12-688"><a href="#cb12-688"></a><span class="st">                               toid AS target,</span></span>
-<span id="cb12-689"><a href="#cb12-689"></a><span class="st">                               weight AS cost </span></span>
-<span id="cb12-690"><a href="#cb12-690"></a><span class="st">                        FROM </span></span>
-<span id="cb12-691"><a href="#cb12-691"></a><span class="st">                              {`table_name_1`}')),</span></span>
-<span id="cb12-692"><a href="#cb12-692"></a><span class="st">--- Calculate the largest component from the network</span></span>
-<span id="cb12-693"><a href="#cb12-693"></a><span class="st">ghs_aoi_net_component_geom_post AS (</span></span>
-<span id="cb12-694"><a href="#cb12-694"></a><span class="st">SELECT </span></span>
-<span id="cb12-695"><a href="#cb12-695"></a><span class="st">    net.*,</span></span>
-<span id="cb12-696"><a href="#cb12-696"></a><span class="st">    net_geom.geom</span></span>
-<span id="cb12-697"><a href="#cb12-697"></a><span class="st">FROM </span></span>
-<span id="cb12-698"><a href="#cb12-698"></a><span class="st">    ghs_aoi_net_component_post AS net</span></span>
-<span id="cb12-699"><a href="#cb12-699"></a><span class="st">JOIN </span></span>
-<span id="cb12-700"><a href="#cb12-700"></a><span class="st">    {`table_name_1`}  AS net_geom -----</span></span>
-<span id="cb12-701"><a href="#cb12-701"></a><span class="st">ON </span></span>
-<span id="cb12-702"><a href="#cb12-702"></a><span class="st">    net.node = net_geom.fromid),</span></span>
-<span id="cb12-703"><a href="#cb12-703"></a><span class="st">largest_component_net_post as (SELECT </span></span>
-<span id="cb12-704"><a href="#cb12-704"></a><span class="st">    component,</span></span>
-<span id="cb12-705"><a href="#cb12-705"></a><span class="st">    st_union(geom) AS the_geom,</span></span>
-<span id="cb12-706"><a href="#cb12-706"></a><span class="st">    st_length(st_union(geom)::geography)::int AS length</span></span>
-<span id="cb12-707"><a href="#cb12-707"></a><span class="st">FROM  </span></span>
-<span id="cb12-708"><a href="#cb12-708"></a><span class="st">    ghs_aoi_net_component_geom_post</span></span>
-<span id="cb12-709"><a href="#cb12-709"></a><span class="st">GROUP BY component</span></span>
-<span id="cb12-710"><a href="#cb12-710"></a><span class="st">ORDER BY length DESC</span></span>
-<span id="cb12-711"><a href="#cb12-711"></a><span class="st">LIMIT 1),</span></span>
-<span id="cb12-712"><a href="#cb12-712"></a><span class="st">--- Using the largest component from the network to filter</span></span>
-<span id="cb12-713"><a href="#cb12-713"></a><span class="st">largest_component_network_ghs_aoi_post AS (</span></span>
-<span id="cb12-714"><a href="#cb12-714"></a><span class="st">SELECT</span></span>
-<span id="cb12-715"><a href="#cb12-715"></a><span class="st">    *,</span></span>
-<span id="cb12-716"><a href="#cb12-716"></a><span class="st">    largest_component_net_post.component,</span></span>
-<span id="cb12-717"><a href="#cb12-717"></a><span class="st">    largest_component_net_post.length</span></span>
-<span id="cb12-718"><a href="#cb12-718"></a><span class="st">FROM</span></span>
-<span id="cb12-719"><a href="#cb12-719"></a><span class="st">    ghs_aoi_net_component_post,</span></span>
-<span id="cb12-720"><a href="#cb12-720"></a><span class="st">    largest_component_net_post</span></span>
-<span id="cb12-721"><a href="#cb12-721"></a><span class="st">WHERE </span></span>
-<span id="cb12-722"><a href="#cb12-722"></a><span class="st">    ghs_aoi_net_component_post.component = largest_component_net_post.component)</span></span>
-<span id="cb12-723"><a href="#cb12-723"></a><span class="st">SELECT </span></span>
-<span id="cb12-724"><a href="#cb12-724"></a><span class="st">    net_multi_component.*</span></span>
-<span id="cb12-725"><a href="#cb12-725"></a><span class="st">FROM </span></span>
-<span id="cb12-726"><a href="#cb12-726"></a><span class="st">    {`table_name_1`} AS net_multi_component,</span></span>
-<span id="cb12-727"><a href="#cb12-727"></a><span class="st">    largest_component_network_ghs_aoi_post AS net_largest_component</span></span>
-<span id="cb12-728"><a href="#cb12-728"></a><span class="st">WHERE  </span></span>
-<span id="cb12-729"><a href="#cb12-729"></a><span class="st">    net_multi_component.fromid IN (net_largest_component.node)"</span>, <span class="at">.con =</span> connection)</span>
-<span id="cb12-730"><a href="#cb12-730"></a>  result_q3 <span class="ot">&lt;-</span> <span class="fu">dbGetQuery</span>(<span class="at">conn=</span> connection, query_3)  </span>
-<span id="cb12-731"><a href="#cb12-731"></a>  query_4 <span class="ot">&lt;-</span> <span class="fu">glue</span>(<span class="st">" </span></span>
-<span id="cb12-732"><a href="#cb12-732"></a><span class="st">SELECT pgr_createverticestable('{`table_name_2`}',</span></span>
-<span id="cb12-733"><a href="#cb12-733"></a><span class="st">                                the_geom:='geom',</span></span>
-<span id="cb12-734"><a href="#cb12-734"></a><span class="st">                                source:='fromid',</span></span>
-<span id="cb12-735"><a href="#cb12-735"></a><span class="st">                                target:='toid');"</span>, <span class="at">.con =</span> connection )</span>
-<span id="cb12-736"><a href="#cb12-736"></a>  result_q4 <span class="ot">&lt;-</span> <span class="fu">dbGetQuery</span>(<span class="at">conn=</span> connection, query_4)</span>
-<span id="cb12-737"><a href="#cb12-737"></a>  </span>
-<span id="cb12-738"><a href="#cb12-738"></a>  insert_query <span class="ot">&lt;-</span> <span class="fu">glue_sql</span>(<span class="st">"INSERT INTO table_rq_1_2_net_post (id, fromid, toid, weight, undrcti, bdrctid, wkb_geometry, shapename)</span></span>
-<span id="cb12-739"><a href="#cb12-739"></a><span class="st">                            SELECT id, fromid, toid, weight, undrcti, bdrctid, geom, shapename </span></span>
-<span id="cb12-740"><a href="#cb12-740"></a><span class="st">                            FROM {`table_name_2`}"</span>, <span class="at">.con =</span> connection)</span>
-<span id="cb12-741"><a href="#cb12-741"></a>  <span class="fu">dbExecute</span>(<span class="at">conn =</span> connection, insert_query)</span>
-<span id="cb12-742"><a href="#cb12-742"></a>  </span>
-<span id="cb12-743"><a href="#cb12-743"></a>  <span class="fu">toc</span>()</span>
-<span id="cb12-744"><a href="#cb12-744"></a>}</span>
-<span id="cb12-745"><a href="#cb12-745"></a></span>
-<span id="cb12-746"><a href="#cb12-746"></a><span class="in">```</span></span>
+<span id="cb12-622"><a href="#cb12-622"></a>We repeated the code ORN-6 obtaining the IC connectivity limited to each municipality after the flooding. From the lines 3 to 12, we created a table in the database. Then, the loop located between the lines 14 and 114 created the road network and filtered the largest component. Creating the road network is located between the lines 26 and 41, while filtering the largest road network component is situated from 43 to 100. Lastly, we used the function pgr_createverticestables() to each of these largest road network generating a routable network based on the ORS graph. </span>
+<span id="cb12-623"><a href="#cb12-623"></a></span>
+<span id="cb12-626"><a href="#cb12-626"></a><span class="in">```{r}</span></span>
+<span id="cb12-627"><a href="#cb12-627"></a><span class="co">#| echo: true</span></span>
+<span id="cb12-628"><a href="#cb12-628"></a><span class="co">#| eval: false</span></span>
+<span id="cb12-629"><a href="#cb12-629"></a><span class="co">#| warning: false</span></span>
+<span id="cb12-630"><a href="#cb12-630"></a><span class="co">#| message: false</span></span>
+<span id="cb12-631"><a href="#cb12-631"></a><span class="co">#| code-summary: "How to repeat ORN-6 for the post-disaster network for each municipality"</span></span>
+<span id="cb12-632"><a href="#cb12-632"></a></span>
+<span id="cb12-633"><a href="#cb12-633"></a><span class="fu">library</span>(glue)</span>
+<span id="cb12-634"><a href="#cb12-634"></a><span class="fu">library</span>(tictoc)</span>
+<span id="cb12-635"><a href="#cb12-635"></a>table_rq_1_2_net_post <span class="ot">&lt;-</span> <span class="fu">glue_sql</span>(<span class="st">"CREATE TABLE table_rq_1_2_net_post </span></span>
+<span id="cb12-636"><a href="#cb12-636"></a><span class="st">                (id integer,</span></span>
+<span id="cb12-637"><a href="#cb12-637"></a><span class="st">                fromId integer,</span></span>
+<span id="cb12-638"><a href="#cb12-638"></a><span class="st">                toid integer,</span></span>
+<span id="cb12-639"><a href="#cb12-639"></a><span class="st">                weight float,</span></span>
+<span id="cb12-640"><a href="#cb12-640"></a><span class="st">                undrcti integer,</span></span>
+<span id="cb12-641"><a href="#cb12-641"></a><span class="st">                bdrctid integer,</span></span>
+<span id="cb12-642"><a href="#cb12-642"></a><span class="st">                wkb_geometry geometry,</span></span>
+<span id="cb12-643"><a href="#cb12-643"></a><span class="st">                shapename varchar(250))"</span>, <span class="at">.con =</span>connection)</span>
+<span id="cb12-644"><a href="#cb12-644"></a>table_end_db_post <span class="ot">&lt;-</span> <span class="fu">dbGetQuery</span>(<span class="at">conn=</span>connection,table_rq_1_2_net_post )</span>
+<span id="cb12-645"><a href="#cb12-645"></a></span>
+<span id="cb12-646"><a href="#cb12-646"></a><span class="cf">for</span> (idx <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(municipalities_ghs<span class="sc">$</span>ogc_fid)) {</span>
+<span id="cb12-647"><a href="#cb12-647"></a>  <span class="fu">tic</span>(<span class="fu">glue</span>(<span class="st">"run {idx}/{length(municipalities_ghs$ogc_fid)}"</span>)) </span>
+<span id="cb12-648"><a href="#cb12-648"></a>  muncipality_id <span class="ot">&lt;-</span> municipalities_ghs<span class="sc">$</span>ogc_fid[idx]</span>
+<span id="cb12-649"><a href="#cb12-649"></a>  table_name_1 <span class="ot">&lt;-</span> <span class="fu">glue</span>(<span class="st">"net_post_{idx}"</span>)</span>
+<span id="cb12-650"><a href="#cb12-650"></a>  table_name_2 <span class="ot">&lt;-</span> <span class="fu">glue</span>(<span class="st">"net_largest_post_{idx}"</span>)</span>
+<span id="cb12-651"><a href="#cb12-651"></a>  </span>
+<span id="cb12-652"><a href="#cb12-652"></a>  <span class="fu">dbExecute</span>(<span class="fu">glue_sql</span>(<span class="st">"DROP TABLE IF EXISTS {`table_name_1`}"</span>, <span class="at">.con=</span>connection),</span>
+<span id="cb12-653"><a href="#cb12-653"></a>            <span class="at">conn=</span>connection)</span>
+<span id="cb12-654"><a href="#cb12-654"></a>  </span>
+<span id="cb12-655"><a href="#cb12-655"></a>  <span class="co"># Assuming you have an open PostgreSQL connection in con</span></span>
+<span id="cb12-656"><a href="#cb12-656"></a>  <span class="fu">dbExecute</span>(<span class="fu">glue_sql</span>(<span class="st">"DROP TABLE IF EXISTS {`table_name_1`}"</span>, <span class="at">.con=</span>connection),</span>
+<span id="cb12-657"><a href="#cb12-657"></a>            <span class="at">conn=</span>connection)  </span>
+<span id="cb12-658"><a href="#cb12-658"></a>  query_1 <span class="ot">&lt;-</span> <span class="fu">glue_sql</span>(<span class="st">"CREATE TABLE {`table_name_1`} AS</span></span>
+<span id="cb12-659"><a href="#cb12-659"></a><span class="st">SELECT</span></span>
+<span id="cb12-660"><a href="#cb12-660"></a><span class="st">    net.*,</span></span>
+<span id="cb12-661"><a href="#cb12-661"></a><span class="st">    nuts.shapename </span></span>
+<span id="cb12-662"><a href="#cb12-662"></a><span class="st">FROM </span></span>
+<span id="cb12-663"><a href="#cb12-663"></a><span class="st">    (SELECT</span></span>
+<span id="cb12-664"><a href="#cb12-664"></a><span class="st">        * </span></span>
+<span id="cb12-665"><a href="#cb12-665"></a><span class="st">    FROM </span></span>
+<span id="cb12-666"><a href="#cb12-666"></a><span class="st">        municipalities_ghs </span></span>
+<span id="cb12-667"><a href="#cb12-667"></a><span class="st">    WHERE </span></span>
+<span id="cb12-668"><a href="#cb12-668"></a><span class="st">        ogc_fid =  {muncipality_id} ) AS nuts,</span></span>
+<span id="cb12-669"><a href="#cb12-669"></a><span class="st">    ghs_aoi_net_largest_post AS net</span></span>
+<span id="cb12-670"><a href="#cb12-670"></a><span class="st">WHERE</span></span>
+<span id="cb12-671"><a href="#cb12-671"></a><span class="st">    st_intersects(nuts.wkb_geometry, net.geom)"</span>, <span class="at">.con =</span> connection)</span>
+<span id="cb12-672"><a href="#cb12-672"></a>  <span class="co"># Send the query</span></span>
+<span id="cb12-673"><a href="#cb12-673"></a>  result_q1 <span class="ot">&lt;-</span> <span class="fu">dbGetQuery</span>(<span class="at">conn=</span> connection, query_1)</span>
+<span id="cb12-674"><a href="#cb12-674"></a>  <span class="co"># Alter the table</span></span>
+<span id="cb12-675"><a href="#cb12-675"></a>  query_2 <span class="ot">&lt;-</span> <span class="fu">glue_sql</span>(<span class="st">"ALTER TABLE {`table_name_1`}</span></span>
+<span id="cb12-676"><a href="#cb12-676"></a><span class="st">    ALTER COLUMN toid type bigint,</span></span>
+<span id="cb12-677"><a href="#cb12-677"></a><span class="st">    ALTER COLUMN fromid type bigint,</span></span>
+<span id="cb12-678"><a href="#cb12-678"></a><span class="st">    ALTER COLUMN id type bigint"</span>, <span class="at">.con =</span> connection)</span>
+<span id="cb12-679"><a href="#cb12-679"></a>  result_q2 <span class="ot">&lt;-</span> <span class="fu">dbGetQuery</span>(<span class="at">conn=</span> connection, query_2)</span>
+<span id="cb12-680"><a href="#cb12-680"></a>  <span class="fu">dbExecute</span>(<span class="fu">glue_sql</span>(<span class="st">"DROP TABLE IF EXISTS {`table_name_2`}"</span>, <span class="at">.con=</span>connection),</span>
+<span id="cb12-681"><a href="#cb12-681"></a>            <span class="at">conn=</span>connection)      </span>
+<span id="cb12-682"><a href="#cb12-682"></a>  query_3 <span class="ot">&lt;-</span> <span class="fu">glue_sql</span>(<span class="st">"CREATE TABLE {`table_name_2`} AS  ---here table</span></span>
+<span id="cb12-683"><a href="#cb12-683"></a><span class="st">WITH ghs_aoi_net_component_post AS (</span></span>
+<span id="cb12-684"><a href="#cb12-684"></a><span class="st">SELECT </span></span>
+<span id="cb12-685"><a href="#cb12-685"></a><span class="st">  * </span></span>
+<span id="cb12-686"><a href="#cb12-686"></a><span class="st">FROM </span></span>
+<span id="cb12-687"><a href="#cb12-687"></a><span class="st">  pgr_strongComponents('SELECT</span></span>
+<span id="cb12-688"><a href="#cb12-688"></a><span class="st">                               id AS id,</span></span>
+<span id="cb12-689"><a href="#cb12-689"></a><span class="st">                               fromid AS source,</span></span>
+<span id="cb12-690"><a href="#cb12-690"></a><span class="st">                               toid AS target,</span></span>
+<span id="cb12-691"><a href="#cb12-691"></a><span class="st">                               weight AS cost </span></span>
+<span id="cb12-692"><a href="#cb12-692"></a><span class="st">                        FROM </span></span>
+<span id="cb12-693"><a href="#cb12-693"></a><span class="st">                              {`table_name_1`}')),</span></span>
+<span id="cb12-694"><a href="#cb12-694"></a><span class="st">--- Calculate the largest component from the network</span></span>
+<span id="cb12-695"><a href="#cb12-695"></a><span class="st">ghs_aoi_net_component_geom_post AS (</span></span>
+<span id="cb12-696"><a href="#cb12-696"></a><span class="st">SELECT </span></span>
+<span id="cb12-697"><a href="#cb12-697"></a><span class="st">    net.*,</span></span>
+<span id="cb12-698"><a href="#cb12-698"></a><span class="st">    net_geom.geom</span></span>
+<span id="cb12-699"><a href="#cb12-699"></a><span class="st">FROM </span></span>
+<span id="cb12-700"><a href="#cb12-700"></a><span class="st">    ghs_aoi_net_component_post AS net</span></span>
+<span id="cb12-701"><a href="#cb12-701"></a><span class="st">JOIN </span></span>
+<span id="cb12-702"><a href="#cb12-702"></a><span class="st">    {`table_name_1`}  AS net_geom -----</span></span>
+<span id="cb12-703"><a href="#cb12-703"></a><span class="st">ON </span></span>
+<span id="cb12-704"><a href="#cb12-704"></a><span class="st">    net.node = net_geom.fromid),</span></span>
+<span id="cb12-705"><a href="#cb12-705"></a><span class="st">largest_component_net_post as (SELECT </span></span>
+<span id="cb12-706"><a href="#cb12-706"></a><span class="st">    component,</span></span>
+<span id="cb12-707"><a href="#cb12-707"></a><span class="st">    st_union(geom) AS the_geom,</span></span>
+<span id="cb12-708"><a href="#cb12-708"></a><span class="st">    st_length(st_union(geom)::geography)::int AS length</span></span>
+<span id="cb12-709"><a href="#cb12-709"></a><span class="st">FROM  </span></span>
+<span id="cb12-710"><a href="#cb12-710"></a><span class="st">    ghs_aoi_net_component_geom_post</span></span>
+<span id="cb12-711"><a href="#cb12-711"></a><span class="st">GROUP BY component</span></span>
+<span id="cb12-712"><a href="#cb12-712"></a><span class="st">ORDER BY length DESC</span></span>
+<span id="cb12-713"><a href="#cb12-713"></a><span class="st">LIMIT 1),</span></span>
+<span id="cb12-714"><a href="#cb12-714"></a><span class="st">--- Using the largest component from the network to filter</span></span>
+<span id="cb12-715"><a href="#cb12-715"></a><span class="st">largest_component_network_ghs_aoi_post AS (</span></span>
+<span id="cb12-716"><a href="#cb12-716"></a><span class="st">SELECT</span></span>
+<span id="cb12-717"><a href="#cb12-717"></a><span class="st">    *,</span></span>
+<span id="cb12-718"><a href="#cb12-718"></a><span class="st">    largest_component_net_post.component,</span></span>
+<span id="cb12-719"><a href="#cb12-719"></a><span class="st">    largest_component_net_post.length</span></span>
+<span id="cb12-720"><a href="#cb12-720"></a><span class="st">FROM</span></span>
+<span id="cb12-721"><a href="#cb12-721"></a><span class="st">    ghs_aoi_net_component_post,</span></span>
+<span id="cb12-722"><a href="#cb12-722"></a><span class="st">    largest_component_net_post</span></span>
+<span id="cb12-723"><a href="#cb12-723"></a><span class="st">WHERE </span></span>
+<span id="cb12-724"><a href="#cb12-724"></a><span class="st">    ghs_aoi_net_component_post.component = largest_component_net_post.component)</span></span>
+<span id="cb12-725"><a href="#cb12-725"></a><span class="st">SELECT </span></span>
+<span id="cb12-726"><a href="#cb12-726"></a><span class="st">    net_multi_component.*</span></span>
+<span id="cb12-727"><a href="#cb12-727"></a><span class="st">FROM </span></span>
+<span id="cb12-728"><a href="#cb12-728"></a><span class="st">    {`table_name_1`} AS net_multi_component,</span></span>
+<span id="cb12-729"><a href="#cb12-729"></a><span class="st">    largest_component_network_ghs_aoi_post AS net_largest_component</span></span>
+<span id="cb12-730"><a href="#cb12-730"></a><span class="st">WHERE  </span></span>
+<span id="cb12-731"><a href="#cb12-731"></a><span class="st">    net_multi_component.fromid IN (net_largest_component.node)"</span>, <span class="at">.con =</span> connection)</span>
+<span id="cb12-732"><a href="#cb12-732"></a>  result_q3 <span class="ot">&lt;-</span> <span class="fu">dbGetQuery</span>(<span class="at">conn=</span> connection, query_3)  </span>
+<span id="cb12-733"><a href="#cb12-733"></a>  query_4 <span class="ot">&lt;-</span> <span class="fu">glue</span>(<span class="st">" </span></span>
+<span id="cb12-734"><a href="#cb12-734"></a><span class="st">SELECT pgr_createverticestable('{`table_name_2`}',</span></span>
+<span id="cb12-735"><a href="#cb12-735"></a><span class="st">                                the_geom:='geom',</span></span>
+<span id="cb12-736"><a href="#cb12-736"></a><span class="st">                                source:='fromid',</span></span>
+<span id="cb12-737"><a href="#cb12-737"></a><span class="st">                                target:='toid');"</span>, <span class="at">.con =</span> connection )</span>
+<span id="cb12-738"><a href="#cb12-738"></a>  result_q4 <span class="ot">&lt;-</span> <span class="fu">dbGetQuery</span>(<span class="at">conn=</span> connection, query_4)</span>
+<span id="cb12-739"><a href="#cb12-739"></a>  </span>
+<span id="cb12-740"><a href="#cb12-740"></a>  insert_query <span class="ot">&lt;-</span> <span class="fu">glue_sql</span>(<span class="st">"INSERT INTO table_rq_1_2_net_post (id, fromid, toid, weight, undrcti, bdrctid, wkb_geometry, shapename)</span></span>
+<span id="cb12-741"><a href="#cb12-741"></a><span class="st">                            SELECT id, fromid, toid, weight, undrcti, bdrctid, geom, shapename </span></span>
+<span id="cb12-742"><a href="#cb12-742"></a><span class="st">                            FROM {`table_name_2`}"</span>, <span class="at">.con =</span> connection)</span>
+<span id="cb12-743"><a href="#cb12-743"></a>  <span class="fu">dbExecute</span>(<span class="at">conn =</span> connection, insert_query)</span>
+<span id="cb12-744"><a href="#cb12-744"></a>  </span>
+<span id="cb12-745"><a href="#cb12-745"></a>  <span class="fu">toc</span>()</span>
+<span id="cb12-746"><a href="#cb12-746"></a>}</span>
+<span id="cb12-747"><a href="#cb12-747"></a></span>
+<span id="cb12-748"><a href="#cb12-748"></a><span class="in">```</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
