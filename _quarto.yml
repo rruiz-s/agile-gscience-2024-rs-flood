@@ -90,8 +90,12 @@ book:
     - calculate_short_path.qmd
   navbar:
     right:
-      - href: /data/AGILE_porto_alegre_study_anonymised.pdf
-        text: Full paper
+      - icon: filetype-pdf
+        href: /data/AGILE_porto_alegre_study_latex_official_v2.pdf
+        text: Paper official
+      - icon: file-earmark-code-fill
+        href: /data/quarto_script_rs_paper_v2.Rmd
+        text: Paper rmarkdown
       - icon: github
         href: https://github.com/rruiz-s/agile-gscience-2024-rs-flood
         text: GitHub

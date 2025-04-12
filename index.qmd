@@ -87,7 +87,7 @@ This document is written following the [Reproducibiltiy paper guidelines](https:
 
 library(DT)
 library(tidyverse)
-computation_agile <- read.csv("/home/ricardors/heigit_data/computation_times_agile_2025 _fresults.csv")
+computation_agile <- read.csv("~/agile-gscience-2024-rs-flood/data/computation_times_agile_2025 _fresults.csv")
 computation_agile_dt <- computation_agile |>
                     mutate( 
                             time_sec = round(time/1000),

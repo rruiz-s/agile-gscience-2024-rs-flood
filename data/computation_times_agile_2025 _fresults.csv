@@ -1,0 +1,12 @@
+lane,activity,time
+Select Area of Interest (AoI),Flood extent,39491.558
+Select Area of Interest (AoI),Obtain road network,14035.569
+Obtain routable network (ORN),Transform into graph: Convert into graph,38373
+Obtain routable network (ORN),Transform into graph: Export geometry,626039
+Obtain routable network (ORN),Transform into graph: Pre-disaster network,17380.608
+Obtain routable network (ORN),Transform into graph: Post-disaster network,40838.672
+Analyse Centrality and Resilience (ACR),Weigted OD,56043.332
+Analyse Centrality and Resilience (ACR),Regular OD,6754.75
+Analyse Centrality and Resilience (ACR),Calculate connnectivity RQ1-C.Metropolitan scale,81344.84
+Analyse Centrality and Resilience (ACR),Calculate connnectivity RQ2-Intracity scale,53805
+Analyse Centrality and Resilience (ACR),Calculate resilience RQ3 - Lack of redundancy,3097471
