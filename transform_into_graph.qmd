@@ -27,7 +27,9 @@ ors_raw_network_vertices_pgr <-  st_read(connection, Id(schema="agile_gis_2025_r
 
 Having obtained the OpenStreetMap (OSM) road network of the AOI, we run the docker for <span class="font-color">**OpenRouteService (OSM)**</span>  ^[[https://giscience.github.io/openrouteservice/run-instance/running-with-docker](https://giscience.github.io/openrouteservice/run-instance/running-with-docker)],which transforms the OSM geometry into a routable graph. 
 
-Firstly, in the _ors-config.yml_ from OpenRotueService (ORS), the “source file” parameter located in the line 102 is set to find the directory containing the OSM road network. In this case, we set the directory to _/home/ors/files/porto_alegre_urban_center.osm.pbf_. Secondly, before running the docker, we added the file "porto_alegre_urban_center.osm.pbf" obtained in the lane obtain routable network to the directory files inside the docker. 
+Firstly, in the _ors-config.yml_ from OpenRotueService (ORS), the “source file” parameter located in the line 102 is set to find the directory containing the OSM road network (See Fig 1B). In this case, we set the directory to _/home/ors/files/porto_alegre_urban_center.osm.pbf_ (See Fig 1A). Secondly, before running the docker, we added the file "porto_alegre_urban_center.osm.pbf" obtained in the lane obtain routable network to the directory files inside the docker. 
+
+![Fig 1](data/figures/ors_config_data.png)
 
 
 The last step is to run the ORS docker using th following command [ORN-1] `docker compose up` in the terminal where the file _docker-compose.yml_ is located. Do not close this window or run the docker with the parameter -d.
@@ -43,7 +45,7 @@ The last step is to run the ORS docker using th following command [ORN-1] `docke
 
 OpenRouteService (ORS) created a routable network with costs and adding information for each node such as the origin, “fromId”, and the destination, “toId”. We named _ors_raw_network_ to the table containing this network made up of 109653 edges and 83202 nodes.
 
-![Fig](data/figures/openrouteservice.png)
+![Fig 2: ](data/figures/openrouteservice.png)
 
 
 ```{r}
@@ -594,6 +596,7 @@ kbl(slice(table_rq_1_2_net, 1:5))
 #| eval: false
 #| warning: false
 #| message: false
+#| code-summary: "How to repeat ORN-6 for the post-disaster network for each municipality"
 
 library(glue)
 library(tictoc)
@@ -711,114 +714,3 @@ SELECT pgr_createverticestable('{`table_name_2`}',
 }
 
 ```
-
-
-```{r}
-#| message: false
-#| warning: false
-#| eval: false
-#| echo: true
-
-
-
-## Table with networks
-library(sf)
-table_rq_1_2_net_post <- st_read(connection, "table_rq_1_2_net_post")
-table_snapped <- st_read(connection, "table_snapped")
-municipalities_ghs <- st_read(connection, "municipalities_ghs")
-
-tic()  
-for(idx in 1:9){
-  tic(glue("run {idx}/9")) 
-  table_name_1_centrality_post <- glue("net_largest_post_{as.character(idx)}")
-  temp_table_name_post <- glue("temp_centrality_post_{idx}")
-  table_bidirect_id_post <- glue("t_bidirect_id_post_{idx}")
-  dbExecute(glue_sql("DROP TABLE IF EXISTS {`temp_table_name_post`}", .con=connection),
-            conn=connection)  
-  query_1_central <- glue_sql("CREATE TABLE {`temp_table_name_post`} AS
- SELECT   
- b.id,
- b.geom,
- count(b.geom) AS centrality 
- FROM  pgr_dijkstra('SELECT id,
-                            fromid AS source,
-                            toid AS target,
-                            weight AS cost
-                      FROM {`table_name_1_centrality_post`}',
-                      ARRAY(SELECT 
-                        snapped_id AS start_id 
-                        FROM table_snapped 
-                        WHERE shapename_id = {idx}::text),
-                      ARRAY(SELECT
-                        snapped_id AS end_id 
-                        FROM table_snapped
-                        WHERE shapename_id = {idx}::text),
-                      directed := TRUE) j
-                      LEFT JOIN {`table_name_1_centrality_post`} AS b
-                      ON j.edge = b.id
-                      GROUP BY  b.id, geom;", .con=connection)
-  
-  dbExecute(con=connection, query_1_central)
-  toc()
-}
-toc()
-```
-
-
-```{sql}
-#| eval: false
-#| echo: true
-
-
-CREATE TABLE centrality_bidirect_temp_centrality_post_5 AS
-SELECT t1.*,
-    t2."bdrctid"
-FROM
-    temp_centrality_post_5 t1
-JOIN
-    net_largest_post_5 t2
-ON
-    t1.id = t2.id;
---- The final product requries  99127   
-select max("bdrctid") from centrality_bidirect_temp_centrality_post_5 ;
-create sequence bididirect_id_temp_centrality_post_5_seq start 99127;
-update centrality_bidirect_temp_centrality_post_5 
-set "bdrctid" = nextval('bididirect_id_temp_centrality_post_5_seq')
-where "bdrctid" is null ;
----- verify
-select count(*) 
-from centrality_bidirect_temp_centrality_post_5
-where "bdrctid" is null; --- 0
-----
-create table centrality_bidirect_temp_centrality_post_5_bidirect_group as 
-select 
-       "bdrctid",
-       sum(centrality) as  centrality
-from centrality_bidirect_temp_centrality_post_5 
-group by "bdrctid"; --- this sum the centrality for duplicated bidirect id
----
----- now recover the id
-create table centrality_bidirect_temp_centrality_post_5_bidirect_group_id as 
-select t1.*, t2.id
-from centrality_bidirect_temp_centrality_post_5_bidirect_group t1
-join centrality_bidirect_temp_centrality_post_5 t2 
-on t1."bdrctid" = t2."bdrctid"; 
----- add geometries
-create table centrality_bidirect_temp_centrality_post_5_cleaned as
-select t1.*,
-    t2.geom,
-    t2.toid,
-    t2.fromid,
-    t2.weight,
-    t2."undrcti"
-from 
-    centrality_bidirect_temp_centrality_post_5_bidirect_group_id t1
-join
-    net_largest_post_5 t2
-on
-  t1.id = t2.id;
-
-SELECT * FROM net_largest_post_5;
-
-```
-

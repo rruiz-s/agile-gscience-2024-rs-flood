@@ -1,7 +1,5 @@
 # Extras
 
-it will be finished by the deadline 2025.04.09
-
 Population 2010, possibility to sample proportionally to municipalities' population.
 
 ```{r}

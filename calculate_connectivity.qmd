@@ -402,6 +402,118 @@ on
   t1.fid = t2.fid;
 ```
 
+The following code repeated the ECR-14 code for the scenario after the flooding.
+
+```{r}
+#| message: false
+#| warning: false
+#| eval: false
+#| echo: true
+#| code-summary: "How to calculate edge betweenness centrality in the IntraCity Area after the flooding "
+
+## Table with networks
+library(sf)
+table_rq_1_2_net_post <- st_read(connection, "table_rq_1_2_net_post")
+table_snapped <- st_read(connection, "table_snapped")
+municipalities_ghs <- st_read(connection, "municipalities_ghs")
+
+tic()  
+for(idx in 1:9){
+  tic(glue("run {idx}/9")) 
+  table_name_1_centrality_post <- glue("net_largest_post_{as.character(idx)}")
+  temp_table_name_post <- glue("temp_centrality_post_{idx}")
+  table_bidirect_id_post <- glue("t_bidirect_id_post_{idx}")
+  dbExecute(glue_sql("DROP TABLE IF EXISTS {`temp_table_name_post`}", .con=connection),
+            conn=connection)  
+  query_1_central <- glue_sql("CREATE TABLE {`temp_table_name_post`} AS
+ SELECT   
+ b.id,
+ b.geom,
+ count(b.geom) AS centrality 
+ FROM  pgr_dijkstra('SELECT id,
+                            fromid AS source,
+                            toid AS target,
+                            weight AS cost
+                      FROM {`table_name_1_centrality_post`}',
+                      ARRAY(SELECT 
+                        snapped_id AS start_id 
+                        FROM table_snapped 
+                        WHERE shapename_id = {idx}::text),
+                      ARRAY(SELECT
+                        snapped_id AS end_id 
+                        FROM table_snapped
+                        WHERE shapename_id = {idx}::text),
+                      directed := TRUE) j
+                      LEFT JOIN {`table_name_1_centrality_post`} AS b
+                      ON j.edge = b.id
+                      GROUP BY  b.id, geom;", .con=connection)
+  
+  dbExecute(con=connection, query_1_central)
+  toc()
+}
+toc()
+```
+
+For each of the municipalities, we repeated the codes ACR11 to ACR13. The following code created the IC connectivity after the flooding in Canoas (id = 3).
+
+```{sql}
+#| eval: false
+#| echo: true
+#| code-summary: "How to determine the final IC connectivity for the municipality of Canoas"
+
+
+CREATE TABLE centrality_bidirect_temp_centrality_post_3 AS
+SELECT t1.*,
+    t2."bdrctid"
+FROM
+    temp_centrality_post_3 t1
+JOIN
+    net_largest_post_3 t2
+ON
+    t1.id = t2.id;
+--- The final product requries  99127   
+select max("bdrctid") from centrality_bidirect_temp_centrality_post_3 ;
+create sequence bididirect_id_temp_centrality_post_3_seq start 99127;
+update centrality_bidirect_temp_centrality_post_3 
+set "bdrctid" = nextval('bididirect_id_temp_centrality_post_3_seq')
+where "bdrctid" is null ;
+---- verify
+select count(*) 
+from centrality_bidirect_temp_centrality_post_3
+where "bdrctid" is null; --- 0
+----
+create table centrality_bidirect_temp_centrality_post_3_bidirect_group as 
+select 
+       "bdrctid",
+       sum(centrality) as  centrality
+from centrality_bidirect_temp_centrality_post_3 
+group by "bdrctid"; --- this sum the centrality for duplicated bidirect id
+---
+---- now recover the id
+create table centrality_bidirect_temp_centrality_post_3_bidirect_group_id as 
+select t1.*, t2.id
+from centrality_bidirect_temp_centrality_post_3_bidirect_group t1
+join centrality_bidirect_temp_centrality_post_3 t2 
+on t1."bdrctid" = t2."bdrctid"; 
+---- add geometries
+create table centrality_bidirect_temp_centrality_post_3_cleaned as
+select t1.*,
+    t2.geom,
+    t2.toid,
+    t2.fromid,
+    t2.weight,
+    t2."undrcti"
+from 
+    centrality_bidirect_temp_centrality_post_3_bidirect_group_id t1
+join
+    net_largest_post_3 t2
+on
+  t1.id = t2.id;
+
+SELECT * FROM net_largest_post_3;
+
+```
+
 ## Research question 2
 
 > Which municipalities were most affected by the flood based on the edge betweenness centrality metrics?
