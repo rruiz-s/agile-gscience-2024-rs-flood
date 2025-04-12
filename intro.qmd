@@ -5,17 +5,25 @@ The main objects of the research were the flood extent, road network , the admin
 The study area is located in the Federal Unit of Rio Grande do Sul, within the "central core" of the Porto Alegre Metropolitan
 Region. It includes 9 municipalities classified as dense urban settlement according to the Global Human Settlement SMOD dataset.
 
-![Fig 2. The study area is located in the Federal Unit of Rio Grande do Sul, within the "central core" of the Porto Alegre Metropolitan Region. It includes 9 municipalities classified as dense urban settlement according to the Global Human Settlement SMOD dataset](/data/figures/select_aoi_workflow.png)
+![Fig 2. The lane of select area of interest used the flood extent to filter the road network](/data/figures/select_aoi_workflow.png)
 
 * <p> geoBoundaries provided the <span class="font-color">**administrative units (ADM2)**</span> of Brazil [@Runfola2020]. We subset the data using 9 municipalities defined as the core metropolitan area of Rio Grande do Sul. The reason why we selected these municipalities is that they intersected with the dense urban center 1210 from the Global Human Settlement Layer [@https://doi.org/10.2905/a0df7a6f-49de-46ea-9bde-563437a6e2ba].</p>
 * <p> The Federal University of Rio Grande do Sul published the <span class="font-color">**flood extent**</span> observed from the Skystat, Planet and WorldView-2 satellites and also validated through field surveys [@https://doi.org/10.5281/zenodo.13999016].</p>
 * <p> The <span class="font-color">**road network**</span> is downloaded from GeoFabrik^[[https://download.geofabrik.de/south-america/brazil/sul.html#](https://download.geofabrik.de/south-america/brazil/sul.html#)]. </p>
 * The State Health Department shared the capacity of Intense Care Units (ICU) beds [@https://doi.org/10.7303/syn32211006.1], while the "Secretaria Estadual da Saúde/DGTI" published the <span class="font-color">**healthcare facilities**</span> in Rio Grande do Sul with ICU beds using a [WFS](https://iede.rs.gov.br/server/rest/services/SES/Hospitais_Leitos_UTI_RS/FeatureServer).
 
+:::{#fig-aoi}
+
+
+
 ```{=html}
+<figure>
 <iframe width="780" height="500" src="data/media/import_data_v0.html" title="Quarto Documentation"></iframe>
+<figcaption> The study area is located in the Federal Unit of Rio Grande do Sul, within the central core of the Porto Alegre Metropolitan Region. It includes 9 municipalities classified as dense urban settlement according to the Global Human Settlement SMOD dataset </figcaption> 
+</figure>
 ```
 
+:::
 
 ```{r}
 #| echo: true

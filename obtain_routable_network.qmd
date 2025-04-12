@@ -5,13 +5,17 @@ In this section that describes the lane of the workflow "Obtain routable network
 * We <span class= "font-color">**transform into graph**</span> the road network from OSM using openrouteservice, which finally led to create the pre-disaster network. 
 * The flood extent is used to <span class="font-color"> **extract the difference**</span> with the pre-disaster network obtaining the post-disaster network graph. 
 
-![Fig.1 Flowchart](data/figures/obtain_routable_network.png)
+![Fig.1 The lane obtain routable networks used ORS transforming the OSM network into a graph modeling the road network before and after the flooding](data/figures/obtain_routable_network.png)
 
 
 The following map compares the road network from OSM and the routable network from ORS. Unlike the OSM road network, the ORS graph includes the variable "toid" and "fromid" among others. These variables are used as source and target to calculate shortest paths using the Dijkstra algorithm. A limitation of this methodology is that the id from OSM and ORS are different and information such as the address is lost during the transformation of the road network into a graph. One alternative to face this limitation is to use geocoding from the centroid of a segment obtaining its address.
 
 ```{=html}
+<figure>
 <iframe width="780" height="500" src="data/media/ors_osm_network.html" title="Quarto Documentation"></iframe>
+<figcaption> A comparison between the original OSM network and its transformation into a routable graph by ORS
+</figcaption>
+</figure>
 ```
 
 ```{r}

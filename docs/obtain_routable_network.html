@@ -128,8 +128,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./data/AGILE_porto_alegre_study_anonymised.pdf"> 
-<span class="menu-text">Full paper</span></a>
+    <a class="nav-link" href="./data/AGILE_porto_alegre_study_latex_official_v2.pdf"> <i class="bi bi-filetype-pdf" role="img">
+</i> 
+<span class="menu-text">Paper official</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./data/quarto_script_rs_paper_v2.Rmd"> <i class="bi bi-file-earmark-code-fill" role="img">
+</i> 
+<span class="menu-text">Paper rmarkdown</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="https://github.com/rruiz-s/agile-gscience-2024-rs-flood" target="_blank"> <i class="bi bi-github" role="img">
@@ -313,11 +319,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="data/figures/obtain_routable_network.png" class="img-fluid figure-img"></p>
-<figcaption>Fig.1 Flowchart</figcaption>
+<figcaption>Fig.1 The lane obtain routable networks used ORS transforming the OSM network into a graph modeling the road network before and after the flooding</figcaption>
 </figure>
 </div>
 <p>The following map compares the road network from OSM and the routable network from ORS. Unlike the OSM road network, the ORS graph includes the variable “toid” and “fromid” among others. These variables are used as source and target to calculate shortest paths using the Dijkstra algorithm. A limitation of this methodology is that the id from OSM and ORS are different and information such as the address is lost during the transformation of the road network into a graph. One alternative to face this limitation is to use geocoding from the centroid of a segment obtaining its address.</p>
+<figure class="figure">
 <iframe width="780" height="500" src="data/media/ors_osm_network.html" title="Quarto Documentation"></iframe>
+<figcaption> A comparison between the original OSM network and its transformation into a routable graph by ORS
+</figcaption>
+</figure>
 <div class="cell">
 <details class="code-fold">
 <summary>How to create comparison visualization map</summary>
@@ -859,62 +869,66 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb2-5"><a href="#cb2-5"></a><span class="ss">* </span>We &lt;span class= "font-color"&gt;**transform into graph**&lt;/span&gt; the road network from OSM using openrouteservice, which finally led to create the pre-disaster network. </span>
 <span id="cb2-6"><a href="#cb2-6"></a><span class="ss">* </span>The flood extent is used to &lt;span class="font-color"&gt; **extract the difference**&lt;/span&gt; with the pre-disaster network obtaining the post-disaster network graph. </span>
 <span id="cb2-7"><a href="#cb2-7"></a></span>
-<span id="cb2-8"><a href="#cb2-8"></a><span class="al">![Fig.1 Flowchart](data/figures/obtain_routable_network.png)</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a><span class="al">![Fig.1 The lane obtain routable networks used ORS transforming the OSM network into a graph modeling the road network before and after the flooding](data/figures/obtain_routable_network.png)</span></span>
 <span id="cb2-9"><a href="#cb2-9"></a></span>
 <span id="cb2-10"><a href="#cb2-10"></a></span>
 <span id="cb2-11"><a href="#cb2-11"></a>The following map compares the road network from OSM and the routable network from ORS. Unlike the OSM road network, the ORS graph includes the variable "toid" and "fromid" among others. These variables are used as source and target to calculate shortest paths using the Dijkstra algorithm. A limitation of this methodology is that the id from OSM and ORS are different and information such as the address is lost during the transformation of the road network into a graph. One alternative to face this limitation is to use geocoding from the centroid of a segment obtaining its address.</span>
 <span id="cb2-12"><a href="#cb2-12"></a></span>
 <span id="cb2-13"><a href="#cb2-13"></a><span class="in">```{=html}</span></span>
-<span id="cb2-14"><a href="#cb2-14"></a><span class="in">&lt;iframe width="780" height="500" src="data/media/ors_osm_network.html" title="Quarto Documentation"&gt;&lt;/iframe&gt;</span></span>
-<span id="cb2-15"><a href="#cb2-15"></a><span class="in">```</span></span>
-<span id="cb2-16"><a href="#cb2-16"></a></span>
-<span id="cb2-19"><a href="#cb2-19"></a><span class="in">```{r}</span></span>
-<span id="cb2-20"><a href="#cb2-20"></a><span class="co">#| eval: false</span></span>
-<span id="cb2-21"><a href="#cb2-21"></a><span class="co">#| echo: true</span></span>
-<span id="cb2-22"><a href="#cb2-22"></a><span class="co">#| code-summary: "How to create comparison visualization map"</span></span>
-<span id="cb2-23"><a href="#cb2-23"></a></span>
-<span id="cb2-24"><a href="#cb2-24"></a><span class="do">## Load data</span></span>
-<span id="cb2-25"><a href="#cb2-25"></a>ors_network <span class="ot">&lt;-</span> <span class="fu">st_read</span>(postgresql_connection, DBI<span class="sc">::</span><span class="fu">Id</span>(<span class="at">schema=</span><span class="st">"agile_gis_2025_rs"</span>, <span class="st">"ors_raw_network"</span>))</span>
-<span id="cb2-26"><a href="#cb2-26"></a>osm_network <span class="ot">&lt;-</span> <span class="fu">st_read</span>(postgresql_connection, <span class="at">layer=</span><span class="st">"planet_osm_line"</span>)</span>
-<span id="cb2-27"><a href="#cb2-27"></a><span class="do">## Create subset using a bounding box</span></span>
-<span id="cb2-28"><a href="#cb2-28"></a>ors_subset <span class="ot">&lt;-</span> ors_network <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(undrctI <span class="sc">==</span><span class="dv">62320</span>) <span class="sc">|&gt;</span> <span class="fu">st_bbox</span>()</span>
-<span id="cb2-29"><a href="#cb2-29"></a>xrange <span class="ot">&lt;-</span> ors_subset<span class="sc">$</span>xmax <span class="sc">-</span> ors_subset<span class="sc">$</span>xmin</span>
-<span id="cb2-30"><a href="#cb2-30"></a>yrange <span class="ot">&lt;-</span> ors_subset<span class="sc">$</span>ymax <span class="sc">-</span> ors_subset<span class="sc">$</span>ymin</span>
-<span id="cb2-31"><a href="#cb2-31"></a><span class="do">## Expand the bounding box</span></span>
-<span id="cb2-32"><a href="#cb2-32"></a>ors_subset[<span class="dv">1</span>] <span class="ot">&lt;-</span> ors_subset[<span class="dv">1</span>] <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">*</span> xrange) <span class="co"># xmin - left</span></span>
-<span id="cb2-33"><a href="#cb2-33"></a>ors_subset[<span class="dv">3</span>] <span class="ot">&lt;-</span> ors_subset[<span class="dv">3</span>] <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">*</span> xrange) <span class="co"># xmax - right</span></span>
-<span id="cb2-34"><a href="#cb2-34"></a>ors_subset[<span class="dv">2</span>] <span class="ot">&lt;-</span> ors_subset[<span class="dv">2</span>] <span class="sc">-</span> (<span class="dv">2</span> <span class="sc">*</span> yrange) <span class="co"># ymin - bottom</span></span>
-<span id="cb2-35"><a href="#cb2-35"></a>ors_subset[<span class="dv">4</span>] <span class="ot">&lt;-</span> ors_subset[<span class="dv">4</span>] <span class="sc">+</span> (<span class="dv">2</span> <span class="sc">*</span> yrange) <span class="co"># ymax - top</span></span>
-<span id="cb2-36"><a href="#cb2-36"></a><span class="do">## Convert bounding box into polygon</span></span>
-<span id="cb2-37"><a href="#cb2-37"></a>ors_subset_bbox <span class="ot">&lt;-</span> ors_subset <span class="sc">%&gt;%</span>  <span class="co"># </span></span>
-<span id="cb2-38"><a href="#cb2-38"></a>  <span class="fu">st_as_sfc</span>() </span>
-<span id="cb2-39"><a href="#cb2-39"></a></span>
-<span id="cb2-40"><a href="#cb2-40"></a>ors_subset_bbox_manual <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">51.215816</span>,</span>
-<span id="cb2-41"><a href="#cb2-41"></a>                                    <span class="sc">-</span><span class="fl">30.034622</span>,</span>
-<span id="cb2-42"><a href="#cb2-42"></a>                                    <span class="sc">-</span><span class="fl">51.206353</span>,</span>
-<span id="cb2-43"><a href="#cb2-43"></a>                                    <span class="sc">-</span><span class="fl">30.025891</span>) <span class="fu">names</span>(ors_subset_bbox_manual) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"xmin"</span>,<span class="st">"ymin"</span>,<span class="st">"xmax"</span>,<span class="st">"ymax"</span>)</span>
-<span id="cb2-44"><a href="#cb2-44"></a>bbox_manual <span class="ot">&lt;-</span> <span class="fu">st_as_sfc</span>(<span class="fu">st_bbox</span>(ors_subset_bbox_manual, <span class="at">crs=</span><span class="dv">4326</span>))</span>
-<span id="cb2-45"><a href="#cb2-45"></a><span class="do">## Use the polygon to subset the network</span></span>
-<span id="cb2-46"><a href="#cb2-46"></a><span class="fu">sf_use_s2</span>(<span class="cn">FALSE</span>)</span>
-<span id="cb2-47"><a href="#cb2-47"></a>intersection_ors <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_intersection</span>(ors_network, bbox_manual)</span>
-<span id="cb2-48"><a href="#cb2-48"></a>intersection_osm <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_intersection</span>(<span class="fu">st_transform</span>(osm_network,<span class="dv">4326</span>), bbox_manual)</span>
-<span id="cb2-49"><a href="#cb2-49"></a><span class="do">## Mapview maps</span></span>
-<span id="cb2-50"><a href="#cb2-50"></a><span class="fu">library</span>(mapview)</span>
-<span id="cb2-51"><a href="#cb2-51"></a><span class="fu">library</span>(leafpop)</span>
-<span id="cb2-52"><a href="#cb2-52"></a>m1 <span class="ot">&lt;-</span> <span class="fu">mapview</span>(intersection_osm, </span>
-<span id="cb2-53"><a href="#cb2-53"></a>              <span class="at">color=</span><span class="st">"#6e93ff"</span>,</span>
-<span id="cb2-54"><a href="#cb2-54"></a>              <span class="at">layer.name =</span><span class="st">"OpenStreetMap - Geometry"</span>,</span>
-<span id="cb2-55"><a href="#cb2-55"></a>              <span class="at">popup=</span>leafpop<span class="sc">::</span><span class="fu">popupTable</span>(intersection_osm, </span>
-<span id="cb2-56"><a href="#cb2-56"></a>                               <span class="at">zcol=</span><span class="fu">c</span>(<span class="st">"osm_id"</span>,<span class="st">"name"</span>,<span class="st">"way"</span>)))</span>
-<span id="cb2-57"><a href="#cb2-57"></a>m2 <span class="ot">&lt;-</span> <span class="fu">mapview</span>(intersection_ors,</span>
-<span id="cb2-58"><a href="#cb2-58"></a>              <span class="at">color =</span><span class="st">"#d50038"</span>,</span>
-<span id="cb2-59"><a href="#cb2-59"></a>              <span class="at">layer.name=</span><span class="st">"OpenRouteService -Graph"</span>,</span>
-<span id="cb2-60"><a href="#cb2-60"></a>              <span class="at">popup=</span><span class="fu">popupTable</span>(intersection_ors))</span>
-<span id="cb2-61"><a href="#cb2-61"></a><span class="fu">library</span>(leafsync)</span>
-<span id="cb2-62"><a href="#cb2-62"></a><span class="fu">sync</span>(m1,m2) </span>
-<span id="cb2-63"><a href="#cb2-63"></a><span class="in">```</span></span>
-<span id="cb2-64"><a href="#cb2-64"></a></span>
-<span id="cb2-65"><a href="#cb2-65"></a>Once this lane is finished, the pre-processing phase is ove providing the main objects of the study, the flood extent, municipalities, road network and hospitals. We used these objects in the next phase of centrality and accessibility analysis</span>
+<span id="cb2-14"><a href="#cb2-14"></a><span class="in">&lt;figure&gt;</span></span>
+<span id="cb2-15"><a href="#cb2-15"></a><span class="in">&lt;iframe width="780" height="500" src="data/media/ors_osm_network.html" title="Quarto Documentation"&gt;&lt;/iframe&gt;</span></span>
+<span id="cb2-16"><a href="#cb2-16"></a><span class="in">&lt;figcaption&gt; A comparison between the original OSM network and its transformation into a routable graph by ORS</span></span>
+<span id="cb2-17"><a href="#cb2-17"></a><span class="in">&lt;/figcaption&gt;</span></span>
+<span id="cb2-18"><a href="#cb2-18"></a><span class="in">&lt;/figure&gt;</span></span>
+<span id="cb2-19"><a href="#cb2-19"></a><span class="in">```</span></span>
+<span id="cb2-20"><a href="#cb2-20"></a></span>
+<span id="cb2-23"><a href="#cb2-23"></a><span class="in">```{r}</span></span>
+<span id="cb2-24"><a href="#cb2-24"></a><span class="co">#| eval: false</span></span>
+<span id="cb2-25"><a href="#cb2-25"></a><span class="co">#| echo: true</span></span>
+<span id="cb2-26"><a href="#cb2-26"></a><span class="co">#| code-summary: "How to create comparison visualization map"</span></span>
+<span id="cb2-27"><a href="#cb2-27"></a></span>
+<span id="cb2-28"><a href="#cb2-28"></a><span class="do">## Load data</span></span>
+<span id="cb2-29"><a href="#cb2-29"></a>ors_network <span class="ot">&lt;-</span> <span class="fu">st_read</span>(postgresql_connection, DBI<span class="sc">::</span><span class="fu">Id</span>(<span class="at">schema=</span><span class="st">"agile_gis_2025_rs"</span>, <span class="st">"ors_raw_network"</span>))</span>
+<span id="cb2-30"><a href="#cb2-30"></a>osm_network <span class="ot">&lt;-</span> <span class="fu">st_read</span>(postgresql_connection, <span class="at">layer=</span><span class="st">"planet_osm_line"</span>)</span>
+<span id="cb2-31"><a href="#cb2-31"></a><span class="do">## Create subset using a bounding box</span></span>
+<span id="cb2-32"><a href="#cb2-32"></a>ors_subset <span class="ot">&lt;-</span> ors_network <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(undrctI <span class="sc">==</span><span class="dv">62320</span>) <span class="sc">|&gt;</span> <span class="fu">st_bbox</span>()</span>
+<span id="cb2-33"><a href="#cb2-33"></a>xrange <span class="ot">&lt;-</span> ors_subset<span class="sc">$</span>xmax <span class="sc">-</span> ors_subset<span class="sc">$</span>xmin</span>
+<span id="cb2-34"><a href="#cb2-34"></a>yrange <span class="ot">&lt;-</span> ors_subset<span class="sc">$</span>ymax <span class="sc">-</span> ors_subset<span class="sc">$</span>ymin</span>
+<span id="cb2-35"><a href="#cb2-35"></a><span class="do">## Expand the bounding box</span></span>
+<span id="cb2-36"><a href="#cb2-36"></a>ors_subset[<span class="dv">1</span>] <span class="ot">&lt;-</span> ors_subset[<span class="dv">1</span>] <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">*</span> xrange) <span class="co"># xmin - left</span></span>
+<span id="cb2-37"><a href="#cb2-37"></a>ors_subset[<span class="dv">3</span>] <span class="ot">&lt;-</span> ors_subset[<span class="dv">3</span>] <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">*</span> xrange) <span class="co"># xmax - right</span></span>
+<span id="cb2-38"><a href="#cb2-38"></a>ors_subset[<span class="dv">2</span>] <span class="ot">&lt;-</span> ors_subset[<span class="dv">2</span>] <span class="sc">-</span> (<span class="dv">2</span> <span class="sc">*</span> yrange) <span class="co"># ymin - bottom</span></span>
+<span id="cb2-39"><a href="#cb2-39"></a>ors_subset[<span class="dv">4</span>] <span class="ot">&lt;-</span> ors_subset[<span class="dv">4</span>] <span class="sc">+</span> (<span class="dv">2</span> <span class="sc">*</span> yrange) <span class="co"># ymax - top</span></span>
+<span id="cb2-40"><a href="#cb2-40"></a><span class="do">## Convert bounding box into polygon</span></span>
+<span id="cb2-41"><a href="#cb2-41"></a>ors_subset_bbox <span class="ot">&lt;-</span> ors_subset <span class="sc">%&gt;%</span>  <span class="co"># </span></span>
+<span id="cb2-42"><a href="#cb2-42"></a>  <span class="fu">st_as_sfc</span>() </span>
+<span id="cb2-43"><a href="#cb2-43"></a></span>
+<span id="cb2-44"><a href="#cb2-44"></a>ors_subset_bbox_manual <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">51.215816</span>,</span>
+<span id="cb2-45"><a href="#cb2-45"></a>                                    <span class="sc">-</span><span class="fl">30.034622</span>,</span>
+<span id="cb2-46"><a href="#cb2-46"></a>                                    <span class="sc">-</span><span class="fl">51.206353</span>,</span>
+<span id="cb2-47"><a href="#cb2-47"></a>                                    <span class="sc">-</span><span class="fl">30.025891</span>) <span class="fu">names</span>(ors_subset_bbox_manual) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"xmin"</span>,<span class="st">"ymin"</span>,<span class="st">"xmax"</span>,<span class="st">"ymax"</span>)</span>
+<span id="cb2-48"><a href="#cb2-48"></a>bbox_manual <span class="ot">&lt;-</span> <span class="fu">st_as_sfc</span>(<span class="fu">st_bbox</span>(ors_subset_bbox_manual, <span class="at">crs=</span><span class="dv">4326</span>))</span>
+<span id="cb2-49"><a href="#cb2-49"></a><span class="do">## Use the polygon to subset the network</span></span>
+<span id="cb2-50"><a href="#cb2-50"></a><span class="fu">sf_use_s2</span>(<span class="cn">FALSE</span>)</span>
+<span id="cb2-51"><a href="#cb2-51"></a>intersection_ors <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_intersection</span>(ors_network, bbox_manual)</span>
+<span id="cb2-52"><a href="#cb2-52"></a>intersection_osm <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_intersection</span>(<span class="fu">st_transform</span>(osm_network,<span class="dv">4326</span>), bbox_manual)</span>
+<span id="cb2-53"><a href="#cb2-53"></a><span class="do">## Mapview maps</span></span>
+<span id="cb2-54"><a href="#cb2-54"></a><span class="fu">library</span>(mapview)</span>
+<span id="cb2-55"><a href="#cb2-55"></a><span class="fu">library</span>(leafpop)</span>
+<span id="cb2-56"><a href="#cb2-56"></a>m1 <span class="ot">&lt;-</span> <span class="fu">mapview</span>(intersection_osm, </span>
+<span id="cb2-57"><a href="#cb2-57"></a>              <span class="at">color=</span><span class="st">"#6e93ff"</span>,</span>
+<span id="cb2-58"><a href="#cb2-58"></a>              <span class="at">layer.name =</span><span class="st">"OpenStreetMap - Geometry"</span>,</span>
+<span id="cb2-59"><a href="#cb2-59"></a>              <span class="at">popup=</span>leafpop<span class="sc">::</span><span class="fu">popupTable</span>(intersection_osm, </span>
+<span id="cb2-60"><a href="#cb2-60"></a>                               <span class="at">zcol=</span><span class="fu">c</span>(<span class="st">"osm_id"</span>,<span class="st">"name"</span>,<span class="st">"way"</span>)))</span>
+<span id="cb2-61"><a href="#cb2-61"></a>m2 <span class="ot">&lt;-</span> <span class="fu">mapview</span>(intersection_ors,</span>
+<span id="cb2-62"><a href="#cb2-62"></a>              <span class="at">color =</span><span class="st">"#d50038"</span>,</span>
+<span id="cb2-63"><a href="#cb2-63"></a>              <span class="at">layer.name=</span><span class="st">"OpenRouteService -Graph"</span>,</span>
+<span id="cb2-64"><a href="#cb2-64"></a>              <span class="at">popup=</span><span class="fu">popupTable</span>(intersection_ors))</span>
+<span id="cb2-65"><a href="#cb2-65"></a><span class="fu">library</span>(leafsync)</span>
+<span id="cb2-66"><a href="#cb2-66"></a><span class="fu">sync</span>(m1,m2) </span>
+<span id="cb2-67"><a href="#cb2-67"></a><span class="in">```</span></span>
+<span id="cb2-68"><a href="#cb2-68"></a></span>
+<span id="cb2-69"><a href="#cb2-69"></a>Once this lane is finished, the pre-processing phase is ove providing the main objects of the study, the flood extent, municipalities, road network and hospitals. We used these objects in the next phase of centrality and accessibility analysis</span>
 </code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

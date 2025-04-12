@@ -29,7 +29,7 @@ Having obtained the OpenStreetMap (OSM) road network of the AOI, we run the dock
 
 Firstly, in the _ors-config.yml_ from OpenRotueService (ORS), the “source file” parameter located in the line 102 is set to find the directory containing the OSM road network (See Fig 1B). In this case, we set the directory to _/home/ors/files/porto_alegre_urban_center.osm.pbf_ (See Fig 1A). Secondly, before running the docker, we added the file "porto_alegre_urban_center.osm.pbf" obtained in the lane obtain routable network to the directory files inside the docker. 
 
-![Fig 1](data/figures/ors_config_data.png)
+![Fig 1. On the left hand, the directory where the OSM data is stored within the ORS docker. On the right hand, the ORS configuration file where the parameter source file is set to the OSM data](data/figures/ors_config_data.png)
 
 
 The last step is to run the ORS docker using th following command [ORN-1] `docker compose up` in the terminal where the file _docker-compose.yml_ is located. Do not close this window or run the docker with the parameter -d.
@@ -45,7 +45,7 @@ The last step is to run the ORS docker using th following command [ORN-1] `docke
 
 OpenRouteService (ORS) created a routable network with costs and adding information for each node such as the origin, “fromId”, and the destination, “toId”. We named _ors_raw_network_ to the table containing this network made up of 109653 edges and 83202 nodes.
 
-![Fig 2: ](data/figures/openrouteservice.png)
+![Fig 2: Transforming the OSM geometry road network data into the ORS graph data took 38 seconds for the AoI](data/figures/openrouteservice.png)
 
 
 ```{r}
@@ -215,7 +215,7 @@ SELECT * FROM all_component_net;
 ---time:  4238.637 ms
 ```
 
-![Fig.1 Length from the networks' components](data/figures/components_length_network.svg)
+![Fig.1 The largest component of the road network in orange represented 96% of the total length of the AoI](data/figures/components_length_network.svg)
 
 ```{r}
 #| echo: true
@@ -590,6 +590,8 @@ kbl(slice(table_rq_1_2_net, 1:5))
 ```
 
 # Obtain post-disaster network
+
+We repeated the code ORN-6 obtaining the IC connectivity limited to each municipality after the flooding. From the lines 3 to 12, we created a table in the database. Then, the loop located between the lines 14 and 114 created the road network and filtered the largest component. Creating the road network is located between the lines 26 and 41, while filtering the largest road network component is situated from 43 to 100. Lastly, we used the function pgr_createverticestables() to each of these largest road network generating a routable network based on the ORS graph. 
 
 ```{r}
 #| echo: true

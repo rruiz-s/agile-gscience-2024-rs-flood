@@ -7,11 +7,16 @@ This section describes the lane of the workflow that analyse centrality and resi
 * We <span class="font-color">**calculate connectivity**</span> using the centrality indicator edge betweenness. A weighted sampling based on the built-up volumen on a intracity scale for each municipality and on a core metropolitan scale for the whole AoI identified urban arteries of the road network. 
 * We <span class="font-color">**calculate redundancy**</span> on the hospital access using regular sampling on isochrones from each of the hospitals found in the AoI.
 
+![Fig.1 The lane analyse centrality and resilience calculated the connectivity of the road network and the accesibility of the healthcare facilities. For the centrality, we used a weighted OD matrix based on the building density identifying the urban arteries. For the hospital accesibility, we used isochrones from ORS and a regular OD to measure the resilience component of redundancy. ](data/figures/analyse_centrality_resilience.png)
 
-![Fig.1 Flowchart](data/figures/analyse_centrality_resilience.png)
 The Research Questions (RQ) asked in the introduction were the following:
 
-* RQ1: _"How is road connectivity affected in pre-disasteer and post-disaster scenarios based on edge betweenness centrality?"_. The centrality results that shown the main urban arteries supported the answers given.
-* RQ2: _"Which municipalities were most affected by the flood based on the edge betweenness centrality metric?"_. The aggregation of the centrality results on both scales provided the basis for the answer to this RQ.
-* RQ3: _Which healthcare facility was less resilient in terms of lack of redundancy?_. The comparison between three alternative paths to the hospitals' access revealed their lack of redundancy, giving the argumentation to answer this RQ.
+* <span class="font-color">**RQ1**:</span> _"How is road connectivity affected in pre-disasteer and post-disaster scenarios based on edge betweenness centrality?"_. <br>
+The centrality results that shown the main urban arteries supported the answers given.
+
+* <span class="font-color">**RQ2:**</span> _"Which municipalities were most affected by the flood based on the edge betweenness centrality metric?"_. <br>
+The aggregation of the centrality results on both scales provided the basis for the answer to this RQ.
+
+* <span class="font-color">**RQ3:**</span> _Which healthcare facility was less resilient in terms of lack of redundancy?_.  <br>
+The comparison between three alternative paths to the hospitals' access revealed their lack of redundancy, giving the argumentation to answer this RQ.
 

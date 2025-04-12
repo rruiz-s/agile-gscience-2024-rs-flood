@@ -128,8 +128,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./data/AGILE_porto_alegre_study_anonymised.pdf"> 
-<span class="menu-text">Full paper</span></a>
+    <a class="nav-link" href="./data/AGILE_porto_alegre_study_latex_official_v2.pdf"> <i class="bi bi-filetype-pdf" role="img">
+</i> 
+<span class="menu-text">Paper official</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./data/quarto_script_rs_paper_v2.Rmd"> <i class="bi bi-file-earmark-code-fill" role="img">
+</i> 
+<span class="menu-text">Paper rmarkdown</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="https://github.com/rruiz-s/agile-gscience-2024-rs-flood" target="_blank"> <i class="bi bi-github" role="img">
@@ -311,11 +317,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>We <span class="font-color"><strong>calculate connectivity</strong></span> using the centrality indicator edge betweenness. A weighted sampling based on the built-up volumen on a intracity scale for each municipality and on a core metropolitan scale for the whole AoI identified urban arteries of the road network.</li>
 <li>We <span class="font-color"><strong>calculate redundancy</strong></span> on the hospital access using regular sampling on isochrones from each of the hospitals found in the AoI.</li>
 </ul>
-<p><img src="data/figures/analyse_centrality_resilience.png" class="img-fluid" alt="Fig.1 Flowchart"> The Research Questions (RQ) asked in the introduction were the following:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="data/figures/analyse_centrality_resilience.png" class="img-fluid figure-img"></p>
+<figcaption>Fig.1 The lane analyse centrality and resilience calculated the connectivity of the road network and the accesibility of the healthcare facilities. For the centrality, we used a weighted OD matrix based on the building density identifying the urban arteries. For the hospital accesibility, we used isochrones from ORS and a regular OD to measure the resilience component of redundancy.</figcaption>
+</figure>
+</div>
+<p>The Research Questions (RQ) asked in the introduction were the following:</p>
 <ul>
-<li>RQ1: <em>“How is road connectivity affected in pre-disasteer and post-disaster scenarios based on edge betweenness centrality?”</em>. The centrality results that shown the main urban arteries supported the answers given.</li>
-<li>RQ2: <em>“Which municipalities were most affected by the flood based on the edge betweenness centrality metric?”</em>. The aggregation of the centrality results on both scales provided the basis for the answer to this RQ.</li>
-<li>RQ3: <em>Which healthcare facility was less resilient in terms of lack of redundancy?</em>. The comparison between three alternative paths to the hospitals’ access revealed their lack of redundancy, giving the argumentation to answer this RQ.</li>
+<li><p><span class="font-color"><strong>RQ1</strong>:</span> <em>“How is road connectivity affected in pre-disasteer and post-disaster scenarios based on edge betweenness centrality?”</em>. <br> The centrality results that shown the main urban arteries supported the answers given.</p></li>
+<li><p><span class="font-color"><strong>RQ2:</strong></span> <em>“Which municipalities were most affected by the flood based on the edge betweenness centrality metric?”</em>. <br> The aggregation of the centrality results on both scales provided the basis for the answer to this RQ.</p></li>
+<li><p><span class="font-color"><strong>RQ3:</strong></span> <em>Which healthcare facility was less resilient in terms of lack of redundancy?</em>. <br> The comparison between three alternative paths to the hospitals’ access revealed their lack of redundancy, giving the argumentation to answer this RQ.</p></li>
 </ul>
 
 
@@ -815,13 +827,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb1-7"><a href="#cb1-7"></a><span class="ss">* </span>We &lt;span class="font-color"&gt;**calculate connectivity**&lt;/span&gt; using the centrality indicator edge betweenness. A weighted sampling based on the built-up volumen on a intracity scale for each municipality and on a core metropolitan scale for the whole AoI identified urban arteries of the road network. </span>
 <span id="cb1-8"><a href="#cb1-8"></a><span class="ss">* </span>We &lt;span class="font-color"&gt;**calculate redundancy**&lt;/span&gt; on the hospital access using regular sampling on isochrones from each of the hospitals found in the AoI.</span>
 <span id="cb1-9"><a href="#cb1-9"></a></span>
-<span id="cb1-10"><a href="#cb1-10"></a></span>
-<span id="cb1-11"><a href="#cb1-11"></a><span class="al">![Fig.1 Flowchart](data/figures/analyse_centrality_resilience.png)</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="al">![Fig.1 The lane analyse centrality and resilience calculated the connectivity of the road network and the accesibility of the healthcare facilities. For the centrality, we used a weighted OD matrix based on the building density identifying the urban arteries. For the hospital accesibility, we used isochrones from ORS and a regular OD to measure the resilience component of redundancy. ](data/figures/analyse_centrality_resilience.png)</span></span>
+<span id="cb1-11"><a href="#cb1-11"></a></span>
 <span id="cb1-12"><a href="#cb1-12"></a>The Research Questions (RQ) asked in the introduction were the following:</span>
 <span id="cb1-13"><a href="#cb1-13"></a></span>
-<span id="cb1-14"><a href="#cb1-14"></a><span class="ss">* </span>RQ1: _"How is road connectivity affected in pre-disasteer and post-disaster scenarios based on edge betweenness centrality?"_. The centrality results that shown the main urban arteries supported the answers given.</span>
-<span id="cb1-15"><a href="#cb1-15"></a><span class="ss">* </span>RQ2: _"Which municipalities were most affected by the flood based on the edge betweenness centrality metric?"_. The aggregation of the centrality results on both scales provided the basis for the answer to this RQ.</span>
-<span id="cb1-16"><a href="#cb1-16"></a><span class="ss">* </span>RQ3: _Which healthcare facility was less resilient in terms of lack of redundancy?_. The comparison between three alternative paths to the hospitals' access revealed their lack of redundancy, giving the argumentation to answer this RQ.</span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+<span id="cb1-14"><a href="#cb1-14"></a><span class="ss">* </span>&lt;span class="font-color"&gt;**RQ1**:&lt;/span&gt; _"How is road connectivity affected in pre-disasteer and post-disaster scenarios based on edge betweenness centrality?"_. &lt;br&gt;</span>
+<span id="cb1-15"><a href="#cb1-15"></a>The centrality results that shown the main urban arteries supported the answers given.</span>
+<span id="cb1-16"><a href="#cb1-16"></a></span>
+<span id="cb1-17"><a href="#cb1-17"></a><span class="ss">* </span>&lt;span class="font-color"&gt;**RQ2:**&lt;/span&gt; _"Which municipalities were most affected by the flood based on the edge betweenness centrality metric?"_. &lt;br&gt;</span>
+<span id="cb1-18"><a href="#cb1-18"></a>The aggregation of the centrality results on both scales provided the basis for the answer to this RQ.</span>
+<span id="cb1-19"><a href="#cb1-19"></a></span>
+<span id="cb1-20"><a href="#cb1-20"></a><span class="ss">* </span>&lt;span class="font-color"&gt;**RQ3:**&lt;/span&gt; _Which healthcare facility was less resilient in terms of lack of redundancy?_.  &lt;br&gt;</span>
+<span id="cb1-21"><a href="#cb1-21"></a>The comparison between three alternative paths to the hospitals' access revealed their lack of redundancy, giving the argumentation to answer this RQ.</span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
