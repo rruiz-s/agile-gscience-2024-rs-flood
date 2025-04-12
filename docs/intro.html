@@ -163,7 +163,7 @@ div.csl-indent {
 <span class="menu-text">Paper official</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./data/quarto_script_rs_paper_v2.pdf"> <i class="bi bi-file-earmark-code-fill" role="img">
+    <a class="nav-link" href="./data/quarto_script_rs_paper_v2.Rmd"> <i class="bi bi-file-earmark-code-fill" role="img">
 </i> 
 <span class="menu-text">Paper rmarkdown</span></a>
   </li>  
@@ -359,10 +359,11 @@ div.csl-indent {
 
 
 <p>The main objects of the research were the flood extent, road network , the administrative boundaries from the municipalities and hospitals.</p>
+<p>The study area is located in the Federal Unit of Rio Grande do Sul, within the “central core” of the Porto Alegre Metropolitan Region. It includes 9 municipalities classified as dense urban settlement according to the Global Human Settlement SMOD dataset.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="./data/figures/select_aoi_workflow.png" class="img-fluid figure-img"></p>
-<figcaption>Fig 2. Cositas</figcaption>
+<figcaption>Fig 2. The study area is located in the Federal Unit of Rio Grande do Sul, within the “central core” of the Porto Alegre Metropolitan Region. It includes 9 municipalities classified as dense urban settlement according to the Global Human Settlement SMOD dataset</figcaption>
 </figure>
 </div>
 <ul>
@@ -577,8 +578,8 @@ Table&nbsp;1: The AoI contained 9 municipalities
 </figcaption>
 <div aria-describedby="tbl-municipalities-ghs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div class="datatables html-widget html-fill-item" id="htmlwidget-dc60a0ddbba0c7a63201" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-dc60a0ddbba0c7a63201">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9"],[4618,4668,4686,4764,4792,4891,4932,5026,5091],["Alvorada","Cachoeirinha","Canoas","Esteio","Gravataí","Nova Santa Rita","Porto Alegre","Sapucaia do Sul","Viamão"],["56859067B1386586306999","56859067B54299641019683","56859067B11854924468229","56859067B79685081913464","56859067B76792516798439","56859067B48200522919953","56859067B13821039974926","56859067B33945949443498","56859067B37980844021564"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>ogc_fid<\/th>\n      <th>shapename<\/th>\n      <th>shapeid<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":1},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"ogc_fid","targets":1},{"name":"shapename","targets":2},{"name":"shapeid","targets":3}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-b33d6ee94881d89f5a80" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-b33d6ee94881d89f5a80">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9"],[4618,4668,4686,4764,4792,4891,4932,5026,5091],["Alvorada","Cachoeirinha","Canoas","Esteio","Gravataí","Nova Santa Rita","Porto Alegre","Sapucaia do Sul","Viamão"],["56859067B1386586306999","56859067B54299641019683","56859067B11854924468229","56859067B79685081913464","56859067B76792516798439","56859067B48200522919953","56859067B13821039974926","56859067B33945949443498","56859067B37980844021564"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>ogc_fid<\/th>\n      <th>shapename<\/th>\n      <th>shapeid<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":1},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"ogc_fid","targets":1},{"name":"shapename","targets":2},{"name":"shapeid","targets":3}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </figure>
@@ -1172,324 +1173,327 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb8-2"><a href="#cb8-2"></a></span>
 <span id="cb8-3"><a href="#cb8-3"></a>The main objects of the research were the flood extent, road network , the administrative boundaries from the municipalities and hospitals. </span>
 <span id="cb8-4"><a href="#cb8-4"></a></span>
-<span id="cb8-5"><a href="#cb8-5"></a><span class="al">![Fig 2. Cositas](/data/figures/select_aoi_workflow.png)</span></span>
-<span id="cb8-6"><a href="#cb8-6"></a></span>
-<span id="cb8-7"><a href="#cb8-7"></a><span class="ss">* </span>&lt;p&gt; geoBoundaries provided the &lt;span class="font-color"&gt;**administrative units (ADM2)**&lt;/span&gt; of Brazil <span class="co">[</span><span class="ot">@Runfola2020</span><span class="co">]</span>. We subset the data using 9 municipalities defined as the core metropolitan area of Rio Grande do Sul. The reason why we selected these municipalities is that they intersected with the dense urban center 1210 from the Global Human Settlement Layer <span class="co">[</span><span class="ot">@https://doi.org/10.2905/a0df7a6f-49de-46ea-9bde-563437a6e2ba</span><span class="co">]</span>.&lt;/p&gt;</span>
-<span id="cb8-8"><a href="#cb8-8"></a><span class="ss">* </span>&lt;p&gt; The Federal University of Rio Grande do Sul published the &lt;span class="font-color"&gt;**flood extent**&lt;/span&gt; observed from the Skystat, Planet and WorldView-2 satellites and also validated through field surveys <span class="co">[</span><span class="ot">@https://doi.org/10.5281/zenodo.13999016</span><span class="co">]</span>.&lt;/p&gt;</span>
-<span id="cb8-9"><a href="#cb8-9"></a><span class="ss">* </span>&lt;p&gt; The &lt;span class="font-color"&gt;**road network**&lt;/span&gt; is downloaded from GeoFabrik^[<span class="co">[</span><span class="ot">https://download.geofabrik.de/south-america/brazil/sul.html#</span><span class="co">](https://download.geofabrik.de/south-america/brazil/sul.html#)</span>]. &lt;/p&gt;</span>
-<span id="cb8-10"><a href="#cb8-10"></a><span class="ss">* </span>The State Health Department shared the capacity of Intense Care Units (ICU) beds <span class="co">[</span><span class="ot">@https://doi.org/10.7303/syn32211006.1</span><span class="co">]</span>, while the "Secretaria Estadual da Saúde/DGTI" published the &lt;span class="font-color"&gt;**healthcare facilities**&lt;/span&gt; in Rio Grande do Sul with ICU beds using a <span class="co">[</span><span class="ot">WFS</span><span class="co">](https://iede.rs.gov.br/server/rest/services/SES/Hospitais_Leitos_UTI_RS/FeatureServer)</span>.</span>
-<span id="cb8-11"><a href="#cb8-11"></a></span>
-<span id="cb8-12"><a href="#cb8-12"></a><span class="in">```{=html}</span></span>
-<span id="cb8-13"><a href="#cb8-13"></a><span class="in">&lt;iframe width="780" height="500" src="data/media/import_data_v0.html" title="Quarto Documentation"&gt;&lt;/iframe&gt;</span></span>
-<span id="cb8-14"><a href="#cb8-14"></a><span class="in">```</span></span>
-<span id="cb8-15"><a href="#cb8-15"></a></span>
-<span id="cb8-16"><a href="#cb8-16"></a></span>
-<span id="cb8-19"><a href="#cb8-19"></a><span class="in">```{r}</span></span>
-<span id="cb8-20"><a href="#cb8-20"></a><span class="co">#| echo: true</span></span>
-<span id="cb8-21"><a href="#cb8-21"></a><span class="co">#| code-summary: "R code to create interactive map based on leaflet"</span></span>
-<span id="cb8-22"><a href="#cb8-22"></a><span class="co">#| eval: false</span></span>
-<span id="cb8-23"><a href="#cb8-23"></a></span>
-<span id="cb8-24"><a href="#cb8-24"></a><span class="fu">library</span>(leaflet.extras)</span>
-<span id="cb8-25"><a href="#cb8-25"></a><span class="fu">library</span>(leaflet)</span>
-<span id="cb8-26"><a href="#cb8-26"></a><span class="fu">leaflet</span>() <span class="sc">|&gt;</span></span>
-<span id="cb8-27"><a href="#cb8-27"></a>  <span class="fu">addTiles</span>()  <span class="sc">|&gt;</span></span>
-<span id="cb8-28"><a href="#cb8-28"></a>  <span class="fu">addProviderTiles</span>(<span class="st">"OpenStreetMap"</span>, <span class="at">group =</span> <span class="st">"OpenStreetMap"</span>)  <span class="sc">|&gt;</span></span>
-<span id="cb8-29"><a href="#cb8-29"></a>  <span class="fu">addProviderTiles</span>(<span class="st">"Esri.WorldImagery"</span>, <span class="at">group =</span> <span class="st">"Esri.WorldImagery"</span>)  <span class="sc">|&gt;</span></span>
-<span id="cb8-30"><a href="#cb8-30"></a>  <span class="fu">addPolygons</span>(<span class="at">data=</span>municipalities_ghs_leaflet,</span>
-<span id="cb8-31"><a href="#cb8-31"></a>                      <span class="at">weight =</span> <span class="dv">2</span>,</span>
-<span id="cb8-32"><a href="#cb8-32"></a>                      <span class="at">color =</span> <span class="st">"black"</span>,</span>
-<span id="cb8-33"><a href="#cb8-33"></a>                      <span class="at">fillOpacity =</span> <span class="dv">0</span>,</span>
-<span id="cb8-34"><a href="#cb8-34"></a>                      <span class="at">dashArray =</span> <span class="st">"3"</span>,</span>
-<span id="cb8-35"><a href="#cb8-35"></a>                      <span class="at">popup =</span> <span class="sc">~</span><span class="fu">paste0</span>( <span class="st">"&lt;b&gt;Municipality: &lt;/b&gt;"</span>, shapename, <span class="st">"&lt;br/&gt;"</span>,</span>
-<span id="cb8-36"><a href="#cb8-36"></a>                                      <span class="st">"&lt;b&gt;Population affected: &lt;/b&gt;"</span>, Pop.Aff, <span class="st">"&lt;br/&gt;"</span>,</span>
-<span id="cb8-37"><a href="#cb8-37"></a>                                      <span class="st">"&lt;b&gt;PIB per capita: &lt;/b&gt;"</span>, GDP, <span class="st">"&lt;br/&gt;"</span>),</span>
-<span id="cb8-38"><a href="#cb8-38"></a>                                      <span class="at">group=</span> <span class="st">"Municipalities (CMA)"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-39"><a href="#cb8-39"></a>  <span class="fu">addPolygons</span>(<span class="at">data=</span>urban_center_4326_core,</span>
-<span id="cb8-40"><a href="#cb8-40"></a>                    <span class="at">fillColor =</span> <span class="st">"yellow"</span>,</span>
-<span id="cb8-41"><a href="#cb8-41"></a>                    <span class="at">opacity =</span> <span class="fl">0.2</span>,</span>
-<span id="cb8-42"><a href="#cb8-42"></a>                    <span class="at">weight =</span> <span class="dv">2</span>,</span>
-<span id="cb8-43"><a href="#cb8-43"></a>                    <span class="at">color =</span> <span class="st">"black"</span>,</span>
-<span id="cb8-44"><a href="#cb8-44"></a>                    <span class="at">dashArray =</span> <span class="st">"1"</span>,</span>
-<span id="cb8-45"><a href="#cb8-45"></a>                    <span class="at">group=</span> <span class="st">"Dense Urban Center Settlment"</span>,</span>
-<span id="cb8-46"><a href="#cb8-46"></a>                    <span class="at">popup =</span> <span class="sc">~</span><span class="fu">paste0</span>( <span class="st">"&lt;b&gt;Settlment ID: &lt;/b&gt;"</span>, gid, <span class="st">"&lt;br/&gt;"</span>,</span>
-<span id="cb8-47"><a href="#cb8-47"></a>                    <span class="st">"&lt;b&gt;Population: &lt;/b&gt;"</span>, <span class="fu">round</span>(pop_2020), <span class="st">"&lt;br/&gt;"</span>,</span>
-<span id="cb8-48"><a href="#cb8-48"></a>                    <span class="st">"&lt;b&gt;Building Surface (m2): &lt;/b&gt;"</span>, <span class="fu">round</span>(bu_m2_2020))) <span class="sc">|&gt;</span></span>
-<span id="cb8-49"><a href="#cb8-49"></a>                    <span class="fu">addPolygons</span>(<span class="at">data=</span>flooding_simplified_porto_united,</span>
-<span id="cb8-50"><a href="#cb8-50"></a>                    <span class="at">fillColor =</span> <span class="st">"#dec8b7ff"</span>,</span>
-<span id="cb8-51"><a href="#cb8-51"></a>                    <span class="at">fillOpacity =</span> <span class="fl">0.6</span>,</span>
-<span id="cb8-52"><a href="#cb8-52"></a>                    <span class="at">weight =</span> <span class="dv">1</span>,</span>
-<span id="cb8-53"><a href="#cb8-53"></a>                    <span class="at">color =</span> <span class="st">"#4b2609"</span>,</span>
-<span id="cb8-54"><a href="#cb8-54"></a>                    <span class="at">dashArray =</span> <span class="st">"1"</span>,</span>
-<span id="cb8-55"><a href="#cb8-55"></a>                    <span class="at">group=</span> <span class="st">"Flood extent"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-56"><a href="#cb8-56"></a>  <span class="fu">addCircles</span>(<span class="at">data=</span><span class="fu">filter</span>(hospital_bed_aux_leaflet, nat_jur_cat<span class="sc">==</span><span class="st">"Public"</span>),</span>
-<span id="cb8-57"><a href="#cb8-57"></a>                    <span class="at">radius=</span><span class="dv">10</span>,</span>
-<span id="cb8-58"><a href="#cb8-58"></a>                    <span class="at">weight=</span><span class="dv">15</span>,</span>
-<span id="cb8-59"><a href="#cb8-59"></a>                    <span class="at">opacity =</span> <span class="fl">0.6</span>,</span>
-<span id="cb8-60"><a href="#cb8-60"></a>                    <span class="at">color =</span> <span class="st">"#6da991ff"</span>,</span>
-<span id="cb8-61"><a href="#cb8-61"></a>                    <span class="at">popup=</span> <span class="sc">~</span><span class="fu">paste0</span>(<span class="st">"&lt;b&gt;Hospital: &lt;/b&gt;"</span>, stringr<span class="sc">::</span><span class="fu">str_to_title</span>(ds_cnes), <span class="st">"&lt;br/&gt;"</span>,</span>
-<span id="cb8-62"><a href="#cb8-62"></a>                    <span class="st">"&lt;b&gt;Type Jur: &lt;/b&gt;"</span>, nat_jur_cat, <span class="st">"&lt;br/&gt;"</span>,</span>
-<span id="cb8-63"><a href="#cb8-63"></a>                    <span class="st">"&lt;b&gt;Nature Jur: &lt;/b&gt;"</span>, stringr<span class="sc">::</span><span class="fu">str_to_title</span>(nm_razao_s), <span class="st">"&lt;br/&gt;"</span>,</span>
-<span id="cb8-64"><a href="#cb8-64"></a>                    <span class="st">"&lt;b&gt;UCI Beds: &lt;/b&gt;"</span>, beds,<span class="st">"&lt;br/&gt;"</span>,</span>
-<span id="cb8-65"><a href="#cb8-65"></a>                    <span class="st">"&lt;b&gt;Risk: &lt;/b&gt;"</span>, tp_risco),</span>
-<span id="cb8-66"><a href="#cb8-66"></a>                    <span class="at">group=</span><span class="st">"Hospital (public)"</span>)  <span class="sc">|&gt;</span></span>
-<span id="cb8-67"><a href="#cb8-67"></a>  <span class="fu">addCircles</span>(<span class="at">data=</span><span class="fu">filter</span>(hospital_bed_aux_leaflet, nat_jur_cat<span class="sc">==</span><span class="st">"Private"</span>),</span>
-<span id="cb8-68"><a href="#cb8-68"></a>                    <span class="at">radius=</span><span class="dv">10</span>,</span>
-<span id="cb8-69"><a href="#cb8-69"></a>                    <span class="at">weight=</span><span class="dv">15</span>,</span>
-<span id="cb8-70"><a href="#cb8-70"></a>                    <span class="at">opacity =</span> <span class="fl">0.6</span>,</span>
-<span id="cb8-71"><a href="#cb8-71"></a>                    <span class="at">color =</span> <span class="st">"#3f98c3ff"</span>,</span>
-<span id="cb8-72"><a href="#cb8-72"></a>                    <span class="at">popup=</span> <span class="sc">~</span><span class="fu">paste0</span>(<span class="st">"&lt;b&gt;Hospital: &lt;/b&gt;"</span>, stringr<span class="sc">::</span><span class="fu">str_to_title</span>(ds_cnes), <span class="st">"&lt;br/&gt;"</span>,</span>
-<span id="cb8-73"><a href="#cb8-73"></a>                    <span class="st">"&lt;b&gt;Type Jur: &lt;/b&gt;"</span>, nat_jur_cat, <span class="st">"&lt;br/&gt;"</span>,</span>
-<span id="cb8-74"><a href="#cb8-74"></a>                    <span class="st">"&lt;b&gt;Nature Jur: &lt;/b&gt;"</span>, stringr<span class="sc">::</span><span class="fu">str_to_title</span>(nm_razao_s), <span class="st">"&lt;br/&gt;"</span>,</span>
-<span id="cb8-75"><a href="#cb8-75"></a>                    <span class="st">"&lt;b&gt;UCI Beds: &lt;/b&gt;"</span>, beds,<span class="st">"&lt;br/&gt;"</span>,</span>
-<span id="cb8-76"><a href="#cb8-76"></a>                    <span class="st">"&lt;b&gt;Risk: &lt;/b&gt;"</span>, tp_risco),</span>
-<span id="cb8-77"><a href="#cb8-77"></a>                    <span class="at">group=</span><span class="st">"Hospital (private)"</span>)   <span class="sc">|&gt;</span></span>
-<span id="cb8-78"><a href="#cb8-78"></a>  <span class="fu">addRasterImage</span>(building_density_local_aoi_4326_masked,</span>
-<span id="cb8-79"><a href="#cb8-79"></a>                    <span class="at">opacity =</span> <span class="fl">0.5</span>,</span>
-<span id="cb8-80"><a href="#cb8-80"></a>                    <span class="at">group=</span><span class="st">"Building density"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-81"><a href="#cb8-81"></a>                    <span class="fu">addLayersControl</span>(</span>
-<span id="cb8-82"><a href="#cb8-82"></a>                    <span class="at">baseGroups =</span> <span class="fu">c</span>(<span class="st">"OpenStreetMap"</span>,</span>
-<span id="cb8-83"><a href="#cb8-83"></a>                    <span class="st">"Esri.WorldImagery"</span>),</span>
-<span id="cb8-84"><a href="#cb8-84"></a>                    <span class="at">overlayGroups =</span> <span class="fu">c</span>(<span class="st">"Municipalities (CMA)"</span>,</span>
-<span id="cb8-85"><a href="#cb8-85"></a>                    <span class="st">"Hospital (public)"</span>,</span>
-<span id="cb8-86"><a href="#cb8-86"></a>                    <span class="st">"Hospital (private)"</span>,</span>
-<span id="cb8-87"><a href="#cb8-87"></a>                    <span class="st">"Dense Urban Center Settlment"</span>,</span>
-<span id="cb8-88"><a href="#cb8-88"></a>                    <span class="st">"Flood extent"</span>,</span>
-<span id="cb8-89"><a href="#cb8-89"></a>                    <span class="st">"Building density"</span>),</span>
-<span id="cb8-90"><a href="#cb8-90"></a>                    <span class="at">options =</span> <span class="fu">layersControlOptions</span>(<span class="at">collapsed =</span> <span class="cn">FALSE</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb8-91"><a href="#cb8-91"></a>                    <span class="fu">hideGroup</span>(<span class="fu">c</span>(<span class="st">"Dense Urban Center Settlment"</span>,</span>
-<span id="cb8-92"><a href="#cb8-92"></a>                    <span class="st">"Building density"</span>))</span>
-<span id="cb8-93"><a href="#cb8-93"></a><span class="in">```</span></span>
-<span id="cb8-94"><a href="#cb8-94"></a></span>
-<span id="cb8-95"><a href="#cb8-95"></a><span class="fu">## Import data</span></span>
-<span id="cb8-96"><a href="#cb8-96"></a><span class="fu">### Directly to PostgreSQL</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a>The study area is located in the Federal Unit of Rio Grande do Sul, within the "central core" of the Porto Alegre Metropolitan</span>
+<span id="cb8-6"><a href="#cb8-6"></a>Region. It includes 9 municipalities classified as dense urban settlement according to the Global Human Settlement SMOD dataset.</span>
+<span id="cb8-7"><a href="#cb8-7"></a></span>
+<span id="cb8-8"><a href="#cb8-8"></a><span class="al">![Fig 2. The study area is located in the Federal Unit of Rio Grande do Sul, within the "central core" of the Porto Alegre Metropolitan Region. It includes 9 municipalities classified as dense urban settlement according to the Global Human Settlement SMOD dataset](/data/figures/select_aoi_workflow.png)</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a></span>
+<span id="cb8-10"><a href="#cb8-10"></a><span class="ss">* </span>&lt;p&gt; geoBoundaries provided the &lt;span class="font-color"&gt;**administrative units (ADM2)**&lt;/span&gt; of Brazil <span class="co">[</span><span class="ot">@Runfola2020</span><span class="co">]</span>. We subset the data using 9 municipalities defined as the core metropolitan area of Rio Grande do Sul. The reason why we selected these municipalities is that they intersected with the dense urban center 1210 from the Global Human Settlement Layer <span class="co">[</span><span class="ot">@https://doi.org/10.2905/a0df7a6f-49de-46ea-9bde-563437a6e2ba</span><span class="co">]</span>.&lt;/p&gt;</span>
+<span id="cb8-11"><a href="#cb8-11"></a><span class="ss">* </span>&lt;p&gt; The Federal University of Rio Grande do Sul published the &lt;span class="font-color"&gt;**flood extent**&lt;/span&gt; observed from the Skystat, Planet and WorldView-2 satellites and also validated through field surveys <span class="co">[</span><span class="ot">@https://doi.org/10.5281/zenodo.13999016</span><span class="co">]</span>.&lt;/p&gt;</span>
+<span id="cb8-12"><a href="#cb8-12"></a><span class="ss">* </span>&lt;p&gt; The &lt;span class="font-color"&gt;**road network**&lt;/span&gt; is downloaded from GeoFabrik^[<span class="co">[</span><span class="ot">https://download.geofabrik.de/south-america/brazil/sul.html#</span><span class="co">](https://download.geofabrik.de/south-america/brazil/sul.html#)</span>]. &lt;/p&gt;</span>
+<span id="cb8-13"><a href="#cb8-13"></a><span class="ss">* </span>The State Health Department shared the capacity of Intense Care Units (ICU) beds <span class="co">[</span><span class="ot">@https://doi.org/10.7303/syn32211006.1</span><span class="co">]</span>, while the "Secretaria Estadual da Saúde/DGTI" published the &lt;span class="font-color"&gt;**healthcare facilities**&lt;/span&gt; in Rio Grande do Sul with ICU beds using a <span class="co">[</span><span class="ot">WFS</span><span class="co">](https://iede.rs.gov.br/server/rest/services/SES/Hospitais_Leitos_UTI_RS/FeatureServer)</span>.</span>
+<span id="cb8-14"><a href="#cb8-14"></a></span>
+<span id="cb8-15"><a href="#cb8-15"></a><span class="in">```{=html}</span></span>
+<span id="cb8-16"><a href="#cb8-16"></a><span class="in">&lt;iframe width="780" height="500" src="data/media/import_data_v0.html" title="Quarto Documentation"&gt;&lt;/iframe&gt;</span></span>
+<span id="cb8-17"><a href="#cb8-17"></a><span class="in">```</span></span>
+<span id="cb8-18"><a href="#cb8-18"></a></span>
+<span id="cb8-19"><a href="#cb8-19"></a></span>
+<span id="cb8-22"><a href="#cb8-22"></a><span class="in">```{r}</span></span>
+<span id="cb8-23"><a href="#cb8-23"></a><span class="co">#| echo: true</span></span>
+<span id="cb8-24"><a href="#cb8-24"></a><span class="co">#| code-summary: "R code to create interactive map based on leaflet"</span></span>
+<span id="cb8-25"><a href="#cb8-25"></a><span class="co">#| eval: false</span></span>
+<span id="cb8-26"><a href="#cb8-26"></a></span>
+<span id="cb8-27"><a href="#cb8-27"></a><span class="fu">library</span>(leaflet.extras)</span>
+<span id="cb8-28"><a href="#cb8-28"></a><span class="fu">library</span>(leaflet)</span>
+<span id="cb8-29"><a href="#cb8-29"></a><span class="fu">leaflet</span>() <span class="sc">|&gt;</span></span>
+<span id="cb8-30"><a href="#cb8-30"></a>  <span class="fu">addTiles</span>()  <span class="sc">|&gt;</span></span>
+<span id="cb8-31"><a href="#cb8-31"></a>  <span class="fu">addProviderTiles</span>(<span class="st">"OpenStreetMap"</span>, <span class="at">group =</span> <span class="st">"OpenStreetMap"</span>)  <span class="sc">|&gt;</span></span>
+<span id="cb8-32"><a href="#cb8-32"></a>  <span class="fu">addProviderTiles</span>(<span class="st">"Esri.WorldImagery"</span>, <span class="at">group =</span> <span class="st">"Esri.WorldImagery"</span>)  <span class="sc">|&gt;</span></span>
+<span id="cb8-33"><a href="#cb8-33"></a>  <span class="fu">addPolygons</span>(<span class="at">data=</span>municipalities_ghs_leaflet,</span>
+<span id="cb8-34"><a href="#cb8-34"></a>                      <span class="at">weight =</span> <span class="dv">2</span>,</span>
+<span id="cb8-35"><a href="#cb8-35"></a>                      <span class="at">color =</span> <span class="st">"black"</span>,</span>
+<span id="cb8-36"><a href="#cb8-36"></a>                      <span class="at">fillOpacity =</span> <span class="dv">0</span>,</span>
+<span id="cb8-37"><a href="#cb8-37"></a>                      <span class="at">dashArray =</span> <span class="st">"3"</span>,</span>
+<span id="cb8-38"><a href="#cb8-38"></a>                      <span class="at">popup =</span> <span class="sc">~</span><span class="fu">paste0</span>( <span class="st">"&lt;b&gt;Municipality: &lt;/b&gt;"</span>, shapename, <span class="st">"&lt;br/&gt;"</span>,</span>
+<span id="cb8-39"><a href="#cb8-39"></a>                                      <span class="st">"&lt;b&gt;Population affected: &lt;/b&gt;"</span>, Pop.Aff, <span class="st">"&lt;br/&gt;"</span>,</span>
+<span id="cb8-40"><a href="#cb8-40"></a>                                      <span class="st">"&lt;b&gt;PIB per capita: &lt;/b&gt;"</span>, GDP, <span class="st">"&lt;br/&gt;"</span>),</span>
+<span id="cb8-41"><a href="#cb8-41"></a>                                      <span class="at">group=</span> <span class="st">"Municipalities (CMA)"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-42"><a href="#cb8-42"></a>  <span class="fu">addPolygons</span>(<span class="at">data=</span>urban_center_4326_core,</span>
+<span id="cb8-43"><a href="#cb8-43"></a>                    <span class="at">fillColor =</span> <span class="st">"yellow"</span>,</span>
+<span id="cb8-44"><a href="#cb8-44"></a>                    <span class="at">opacity =</span> <span class="fl">0.2</span>,</span>
+<span id="cb8-45"><a href="#cb8-45"></a>                    <span class="at">weight =</span> <span class="dv">2</span>,</span>
+<span id="cb8-46"><a href="#cb8-46"></a>                    <span class="at">color =</span> <span class="st">"black"</span>,</span>
+<span id="cb8-47"><a href="#cb8-47"></a>                    <span class="at">dashArray =</span> <span class="st">"1"</span>,</span>
+<span id="cb8-48"><a href="#cb8-48"></a>                    <span class="at">group=</span> <span class="st">"Dense Urban Center Settlment"</span>,</span>
+<span id="cb8-49"><a href="#cb8-49"></a>                    <span class="at">popup =</span> <span class="sc">~</span><span class="fu">paste0</span>( <span class="st">"&lt;b&gt;Settlment ID: &lt;/b&gt;"</span>, gid, <span class="st">"&lt;br/&gt;"</span>,</span>
+<span id="cb8-50"><a href="#cb8-50"></a>                    <span class="st">"&lt;b&gt;Population: &lt;/b&gt;"</span>, <span class="fu">round</span>(pop_2020), <span class="st">"&lt;br/&gt;"</span>,</span>
+<span id="cb8-51"><a href="#cb8-51"></a>                    <span class="st">"&lt;b&gt;Building Surface (m2): &lt;/b&gt;"</span>, <span class="fu">round</span>(bu_m2_2020))) <span class="sc">|&gt;</span></span>
+<span id="cb8-52"><a href="#cb8-52"></a>                    <span class="fu">addPolygons</span>(<span class="at">data=</span>flooding_simplified_porto_united,</span>
+<span id="cb8-53"><a href="#cb8-53"></a>                    <span class="at">fillColor =</span> <span class="st">"#dec8b7ff"</span>,</span>
+<span id="cb8-54"><a href="#cb8-54"></a>                    <span class="at">fillOpacity =</span> <span class="fl">0.6</span>,</span>
+<span id="cb8-55"><a href="#cb8-55"></a>                    <span class="at">weight =</span> <span class="dv">1</span>,</span>
+<span id="cb8-56"><a href="#cb8-56"></a>                    <span class="at">color =</span> <span class="st">"#4b2609"</span>,</span>
+<span id="cb8-57"><a href="#cb8-57"></a>                    <span class="at">dashArray =</span> <span class="st">"1"</span>,</span>
+<span id="cb8-58"><a href="#cb8-58"></a>                    <span class="at">group=</span> <span class="st">"Flood extent"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-59"><a href="#cb8-59"></a>  <span class="fu">addCircles</span>(<span class="at">data=</span><span class="fu">filter</span>(hospital_bed_aux_leaflet, nat_jur_cat<span class="sc">==</span><span class="st">"Public"</span>),</span>
+<span id="cb8-60"><a href="#cb8-60"></a>                    <span class="at">radius=</span><span class="dv">10</span>,</span>
+<span id="cb8-61"><a href="#cb8-61"></a>                    <span class="at">weight=</span><span class="dv">15</span>,</span>
+<span id="cb8-62"><a href="#cb8-62"></a>                    <span class="at">opacity =</span> <span class="fl">0.6</span>,</span>
+<span id="cb8-63"><a href="#cb8-63"></a>                    <span class="at">color =</span> <span class="st">"#6da991ff"</span>,</span>
+<span id="cb8-64"><a href="#cb8-64"></a>                    <span class="at">popup=</span> <span class="sc">~</span><span class="fu">paste0</span>(<span class="st">"&lt;b&gt;Hospital: &lt;/b&gt;"</span>, stringr<span class="sc">::</span><span class="fu">str_to_title</span>(ds_cnes), <span class="st">"&lt;br/&gt;"</span>,</span>
+<span id="cb8-65"><a href="#cb8-65"></a>                    <span class="st">"&lt;b&gt;Type Jur: &lt;/b&gt;"</span>, nat_jur_cat, <span class="st">"&lt;br/&gt;"</span>,</span>
+<span id="cb8-66"><a href="#cb8-66"></a>                    <span class="st">"&lt;b&gt;Nature Jur: &lt;/b&gt;"</span>, stringr<span class="sc">::</span><span class="fu">str_to_title</span>(nm_razao_s), <span class="st">"&lt;br/&gt;"</span>,</span>
+<span id="cb8-67"><a href="#cb8-67"></a>                    <span class="st">"&lt;b&gt;UCI Beds: &lt;/b&gt;"</span>, beds,<span class="st">"&lt;br/&gt;"</span>,</span>
+<span id="cb8-68"><a href="#cb8-68"></a>                    <span class="st">"&lt;b&gt;Risk: &lt;/b&gt;"</span>, tp_risco),</span>
+<span id="cb8-69"><a href="#cb8-69"></a>                    <span class="at">group=</span><span class="st">"Hospital (public)"</span>)  <span class="sc">|&gt;</span></span>
+<span id="cb8-70"><a href="#cb8-70"></a>  <span class="fu">addCircles</span>(<span class="at">data=</span><span class="fu">filter</span>(hospital_bed_aux_leaflet, nat_jur_cat<span class="sc">==</span><span class="st">"Private"</span>),</span>
+<span id="cb8-71"><a href="#cb8-71"></a>                    <span class="at">radius=</span><span class="dv">10</span>,</span>
+<span id="cb8-72"><a href="#cb8-72"></a>                    <span class="at">weight=</span><span class="dv">15</span>,</span>
+<span id="cb8-73"><a href="#cb8-73"></a>                    <span class="at">opacity =</span> <span class="fl">0.6</span>,</span>
+<span id="cb8-74"><a href="#cb8-74"></a>                    <span class="at">color =</span> <span class="st">"#3f98c3ff"</span>,</span>
+<span id="cb8-75"><a href="#cb8-75"></a>                    <span class="at">popup=</span> <span class="sc">~</span><span class="fu">paste0</span>(<span class="st">"&lt;b&gt;Hospital: &lt;/b&gt;"</span>, stringr<span class="sc">::</span><span class="fu">str_to_title</span>(ds_cnes), <span class="st">"&lt;br/&gt;"</span>,</span>
+<span id="cb8-76"><a href="#cb8-76"></a>                    <span class="st">"&lt;b&gt;Type Jur: &lt;/b&gt;"</span>, nat_jur_cat, <span class="st">"&lt;br/&gt;"</span>,</span>
+<span id="cb8-77"><a href="#cb8-77"></a>                    <span class="st">"&lt;b&gt;Nature Jur: &lt;/b&gt;"</span>, stringr<span class="sc">::</span><span class="fu">str_to_title</span>(nm_razao_s), <span class="st">"&lt;br/&gt;"</span>,</span>
+<span id="cb8-78"><a href="#cb8-78"></a>                    <span class="st">"&lt;b&gt;UCI Beds: &lt;/b&gt;"</span>, beds,<span class="st">"&lt;br/&gt;"</span>,</span>
+<span id="cb8-79"><a href="#cb8-79"></a>                    <span class="st">"&lt;b&gt;Risk: &lt;/b&gt;"</span>, tp_risco),</span>
+<span id="cb8-80"><a href="#cb8-80"></a>                    <span class="at">group=</span><span class="st">"Hospital (private)"</span>)   <span class="sc">|&gt;</span></span>
+<span id="cb8-81"><a href="#cb8-81"></a>  <span class="fu">addRasterImage</span>(building_density_local_aoi_4326_masked,</span>
+<span id="cb8-82"><a href="#cb8-82"></a>                    <span class="at">opacity =</span> <span class="fl">0.5</span>,</span>
+<span id="cb8-83"><a href="#cb8-83"></a>                    <span class="at">group=</span><span class="st">"Building density"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-84"><a href="#cb8-84"></a>                    <span class="fu">addLayersControl</span>(</span>
+<span id="cb8-85"><a href="#cb8-85"></a>                    <span class="at">baseGroups =</span> <span class="fu">c</span>(<span class="st">"OpenStreetMap"</span>,</span>
+<span id="cb8-86"><a href="#cb8-86"></a>                    <span class="st">"Esri.WorldImagery"</span>),</span>
+<span id="cb8-87"><a href="#cb8-87"></a>                    <span class="at">overlayGroups =</span> <span class="fu">c</span>(<span class="st">"Municipalities (CMA)"</span>,</span>
+<span id="cb8-88"><a href="#cb8-88"></a>                    <span class="st">"Hospital (public)"</span>,</span>
+<span id="cb8-89"><a href="#cb8-89"></a>                    <span class="st">"Hospital (private)"</span>,</span>
+<span id="cb8-90"><a href="#cb8-90"></a>                    <span class="st">"Dense Urban Center Settlment"</span>,</span>
+<span id="cb8-91"><a href="#cb8-91"></a>                    <span class="st">"Flood extent"</span>,</span>
+<span id="cb8-92"><a href="#cb8-92"></a>                    <span class="st">"Building density"</span>),</span>
+<span id="cb8-93"><a href="#cb8-93"></a>                    <span class="at">options =</span> <span class="fu">layersControlOptions</span>(<span class="at">collapsed =</span> <span class="cn">FALSE</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb8-94"><a href="#cb8-94"></a>                    <span class="fu">hideGroup</span>(<span class="fu">c</span>(<span class="st">"Dense Urban Center Settlment"</span>,</span>
+<span id="cb8-95"><a href="#cb8-95"></a>                    <span class="st">"Building density"</span>))</span>
+<span id="cb8-96"><a href="#cb8-96"></a><span class="in">```</span></span>
 <span id="cb8-97"><a href="#cb8-97"></a></span>
-<span id="cb8-98"><a href="#cb8-98"></a>We used the ogr2ogr program from GDAL <span class="co">[</span><span class="ot">@GDAL</span><span class="co">]</span> and the shp2pgsql^[<span class="co">[</span><span class="ot">shp2pgsql: https://www.bostongis.com/pgsql2shp_shp2pgsql_quickguide.bqg</span><span class="co">](https://www.bostongis.com/pgsql2shp_shp2pgsql_quickguide.bqg)</span>] from PostGIS ^[<span class="co">[</span><span class="ot">PostGIS: https://postgis.net/</span><span class="co">](https://postgis.net/)</span>] command to import the data directly to PostgreSQL. The parameters from the docker were _docker_ as user (-U), _25432_ for the port (-p) and _localhost_ for the host (-h). We transformed the original coordinate reference system (CRS) 54009 to 4326. We also include three troubleshootings to solve potential errors found during this step. </span>
-<span id="cb8-99"><a href="#cb8-99"></a></span>
-<span id="cb8-102"><a href="#cb8-102"></a><span class="in">```{bash}</span></span>
-<span id="cb8-103"><a href="#cb8-103"></a><span class="co">#| eval: false</span></span>
-<span id="cb8-104"><a href="#cb8-104"></a><span class="co">#| echo: true</span></span>
-<span id="cb8-105"><a href="#cb8-105"></a><span class="co">#| code-summary: "[AoI-1] How to import using ogr2ogr and shp2pgsql"</span></span>
-<span id="cb8-106"><a href="#cb8-106"></a><span class="co"># Urban Center to select core metropolitan area (2.514s). Note: agile_gis_2025_rs is a created schema, by default, the schema public is install. In that case, remove "agile_gis_2025_rs"</span></span>
-<span id="cb8-107"><a href="#cb8-107"></a><span class="bu">time</span> shp2pgsql <span class="at">-D</span> <span class="at">-I</span> <span class="at">-s</span> 54009:4326 GHS_SMOD_E2020_GLOBE_R2023A_54009_1000_UC_V2_0.shp agile_gis_2025_rs.urban_center_4326 <span class="kw">|</span> <span class="ex">psql</span> <span class="at">-p</span> 25432 <span class="at">-U</span> docker <span class="at">-d</span> gis  <span class="at">-h</span> localhost</span>
-<span id="cb8-108"><a href="#cb8-108"></a><span class="co"># Hospitals (0.217s)</span></span>
-<span id="cb8-109"><a href="#cb8-109"></a><span class="bu">time</span> ogr2ogr <span class="at">-f</span> PostgreSQL PG:<span class="st">"host=localhost port= 25432 user=docker password=docker dbname=gis schemas=agile_gis_2025_rs"</span> Hospitais_com_Leitos_de_UTIs_no_RS.geojson <span class="at">-nln</span> hospitals </span>
-<span id="cb8-110"><a href="#cb8-110"></a><span class="co"># Administrative units (5.854s)</span></span>
-<span id="cb8-111"><a href="#cb8-111"></a><span class="bu">time</span> ogr2ogr <span class="at">-f</span> PostgreSQL PG:<span class="st">"host=localhost port= 25432 user=docker password=docker dbname=gis schemas=agile_gis_2025_rs"</span> geoBoundaries-BRA-ADM2.geojson <span class="at">-nln</span> nuts</span>
-<span id="cb8-112"><a href="#cb8-112"></a><span class="co">#  Flood extent (1.008s)</span></span>
-<span id="cb8-113"><a href="#cb8-113"></a><span class="bu">time</span> ogr2ogr <span class="at">-f</span> PostgreSQL PG:<span class="st">"host=localhost port= 25432 user=docker password=docker dbname=gis schemas=agile_gis_2025_rs"</span> rhguaiba_planetskysat_inundacao_obs_20240506.gpkg <span class="at">-nln</span> flooding_raw</span>
-<span id="cb8-114"><a href="#cb8-114"></a><span class="in">```</span></span>
-<span id="cb8-115"><a href="#cb8-115"></a></span>
-<span id="cb8-116"><a href="#cb8-116"></a>**Troubleshooting 1**:</span>
-<span id="cb8-117"><a href="#cb8-117"></a>When shp2pgsql failed to be located despite being installed with postgis, we changed the user permissions in ubuntu to sucessfully find it. Similarly, make sure to be in the directory where the files are to find them. Alternatively, it is required to specifically indicate the file address.</span>
+<span id="cb8-98"><a href="#cb8-98"></a><span class="fu">## Import data</span></span>
+<span id="cb8-99"><a href="#cb8-99"></a><span class="fu">### Directly to PostgreSQL</span></span>
+<span id="cb8-100"><a href="#cb8-100"></a></span>
+<span id="cb8-101"><a href="#cb8-101"></a>We used the ogr2ogr program from GDAL <span class="co">[</span><span class="ot">@GDAL</span><span class="co">]</span> and the shp2pgsql^[<span class="co">[</span><span class="ot">shp2pgsql: https://www.bostongis.com/pgsql2shp_shp2pgsql_quickguide.bqg</span><span class="co">](https://www.bostongis.com/pgsql2shp_shp2pgsql_quickguide.bqg)</span>] from PostGIS ^[<span class="co">[</span><span class="ot">PostGIS: https://postgis.net/</span><span class="co">](https://postgis.net/)</span>] command to import the data directly to PostgreSQL. The parameters from the docker were _docker_ as user (-U), _25432_ for the port (-p) and _localhost_ for the host (-h). We transformed the original coordinate reference system (CRS) 54009 to 4326. We also include three troubleshootings to solve potential errors found during this step. </span>
+<span id="cb8-102"><a href="#cb8-102"></a></span>
+<span id="cb8-105"><a href="#cb8-105"></a><span class="in">```{bash}</span></span>
+<span id="cb8-106"><a href="#cb8-106"></a><span class="co">#| eval: false</span></span>
+<span id="cb8-107"><a href="#cb8-107"></a><span class="co">#| echo: true</span></span>
+<span id="cb8-108"><a href="#cb8-108"></a><span class="co">#| code-summary: "[AoI-1] How to import using ogr2ogr and shp2pgsql"</span></span>
+<span id="cb8-109"><a href="#cb8-109"></a><span class="co"># Urban Center to select core metropolitan area (2.514s). Note: agile_gis_2025_rs is a created schema, by default, the schema public is install. In that case, remove "agile_gis_2025_rs"</span></span>
+<span id="cb8-110"><a href="#cb8-110"></a><span class="bu">time</span> shp2pgsql <span class="at">-D</span> <span class="at">-I</span> <span class="at">-s</span> 54009:4326 GHS_SMOD_E2020_GLOBE_R2023A_54009_1000_UC_V2_0.shp agile_gis_2025_rs.urban_center_4326 <span class="kw">|</span> <span class="ex">psql</span> <span class="at">-p</span> 25432 <span class="at">-U</span> docker <span class="at">-d</span> gis  <span class="at">-h</span> localhost</span>
+<span id="cb8-111"><a href="#cb8-111"></a><span class="co"># Hospitals (0.217s)</span></span>
+<span id="cb8-112"><a href="#cb8-112"></a><span class="bu">time</span> ogr2ogr <span class="at">-f</span> PostgreSQL PG:<span class="st">"host=localhost port= 25432 user=docker password=docker dbname=gis schemas=agile_gis_2025_rs"</span> Hospitais_com_Leitos_de_UTIs_no_RS.geojson <span class="at">-nln</span> hospitals </span>
+<span id="cb8-113"><a href="#cb8-113"></a><span class="co"># Administrative units (5.854s)</span></span>
+<span id="cb8-114"><a href="#cb8-114"></a><span class="bu">time</span> ogr2ogr <span class="at">-f</span> PostgreSQL PG:<span class="st">"host=localhost port= 25432 user=docker password=docker dbname=gis schemas=agile_gis_2025_rs"</span> geoBoundaries-BRA-ADM2.geojson <span class="at">-nln</span> nuts</span>
+<span id="cb8-115"><a href="#cb8-115"></a><span class="co">#  Flood extent (1.008s)</span></span>
+<span id="cb8-116"><a href="#cb8-116"></a><span class="bu">time</span> ogr2ogr <span class="at">-f</span> PostgreSQL PG:<span class="st">"host=localhost port= 25432 user=docker password=docker dbname=gis schemas=agile_gis_2025_rs"</span> rhguaiba_planetskysat_inundacao_obs_20240506.gpkg <span class="at">-nln</span> flooding_raw</span>
+<span id="cb8-117"><a href="#cb8-117"></a><span class="in">```</span></span>
 <span id="cb8-118"><a href="#cb8-118"></a></span>
-<span id="cb8-119"><a href="#cb8-119"></a></span>
-<span id="cb8-120"><a href="#cb8-120"></a>**Troubleshooting 2**:</span>
-<span id="cb8-121"><a href="#cb8-121"></a>When importing the urban center, an error regarding the type of geometry appeared. For this, we can use the code <span class="in">`ogr2ogr -lco GEOMETRY_NAME=geom -t_srs EPSG:4326 -f PostgreSQL PG:"host=localhost port= 25432 user=docker password=docker dbname=gis schemas=agile_gis_2025_rs" GHS_SMOD_E2020_GLOBE_R2023A_54009_1000_UC_V2_0.shp -nlt MULTIPOLYGON -nln urban_center_4326`</span> based on posts ^[<span class="co">[</span><span class="ot">https://gis.stackexchange.com/questions/259442/unable-to-upload-large-vector-file-to-postgis-errorgeometry-type-multisurface</span><span class="co">](https://gis.stackexchange.com/questions/259442/unable-to-upload-large-vector-file-to-postgis-errorgeometry-type-multisurface)</span>] and ^[<span class="co">[</span><span class="ot">https://gis.stackexchange.com/questions/233997/ogr2ogr-filegdb-to-postgis-change-geometry-column-and-srid</span><span class="co">](https://gis.stackexchange.com/questions/233997/ogr2ogr-filegdb-to-postgis-change-geometry-column-and-srid)</span>]</span>
+<span id="cb8-119"><a href="#cb8-119"></a>**Troubleshooting 1**:</span>
+<span id="cb8-120"><a href="#cb8-120"></a>When shp2pgsql failed to be located despite being installed with postgis, we changed the user permissions in ubuntu to sucessfully find it. Similarly, make sure to be in the directory where the files are to find them. Alternatively, it is required to specifically indicate the file address.</span>
+<span id="cb8-121"><a href="#cb8-121"></a></span>
 <span id="cb8-122"><a href="#cb8-122"></a></span>
-<span id="cb8-123"><a href="#cb8-123"></a>**Troubleshooting 3**:  When using functions in the schema agile_gis_2025_rs, some of the functions or tables were not found. For this, we used <span class="in">`GRANT SELECT ON ALL TABLES IN SCHEMA agile_gis_2025_rs TO docker;`</span> ^[<span class="co">[</span><span class="ot">https://stackoverflow.com/questions/12986368/installing-postgresql-extension-to-all-schemas</span><span class="co">](https://stackoverflow.com/questions/12986368/installing-postgresql-extension-to-all-schemas)</span>] and <span class="in">`SET search_path TO agile_gis_2025_rs,public;`</span>^[<span class="co">[</span><span class="ot">https://gis.stackexchange.com/questions/354523/use-postgis-functions-from-an-other-schema-than-public</span><span class="co">](https://gis.stackexchange.com/questions/354523/use-postgis-functions-from-an-other-schema-than-public)</span>]. </span>
-<span id="cb8-124"><a href="#cb8-124"></a></span>
-<span id="cb8-125"><a href="#cb8-125"></a><span class="fu">### Indirectly using R</span></span>
-<span id="cb8-126"><a href="#cb8-126"></a></span>
-<span id="cb8-127"><a href="#cb8-127"></a>The library DBI <span class="co">[</span><span class="ot">@DBI</span><span class="co">]</span> uploaded the information to the server using also RPostgres <span class="co">[</span><span class="ot">@RPostgres</span><span class="co">]</span>. Although there are different methodologies to upload a csv without manually creating the table first in PostgreSQL ^[<span class="co">[</span><span class="ot">https://stackoverflow.com/questions/21018256/can-i-automatically-create-a-table-in-postgresql-from-a-csv-file-with-headers</span><span class="co">](https://stackoverflow.com/questions/21018256/can-i-automatically-create-a-table-in-postgresql-from-a-csv-file-with-headers)</span>], we used R. Another reason was that in later steps R is used to calculate the weighted origin and destination matrix (OD).</span>
-<span id="cb8-128"><a href="#cb8-128"></a></span>
-<span id="cb8-131"><a href="#cb8-131"></a><span class="in">```{r}</span></span>
-<span id="cb8-132"><a href="#cb8-132"></a><span class="co">#| echo: true</span></span>
-<span id="cb8-133"><a href="#cb8-133"></a><span class="co">#| eval: false</span></span>
-<span id="cb8-134"><a href="#cb8-134"></a><span class="co">#| code-summary: "[Aoi-2] How to import using R"</span></span>
-<span id="cb8-135"><a href="#cb8-135"></a></span>
-<span id="cb8-136"><a href="#cb8-136"></a><span class="fu">library</span>(DBI)</span>
-<span id="cb8-137"><a href="#cb8-137"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb8-138"><a href="#cb8-138"></a><span class="fu">library</span>(RPostgres)</span>
-<span id="cb8-139"><a href="#cb8-139"></a><span class="do">## connect to PostgreSQL</span></span>
-<span id="cb8-140"><a href="#cb8-140"></a>connection <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbConnect</span>(RPostgres<span class="sc">::</span><span class="fu">Postgres</span>(),</span>
-<span id="cb8-141"><a href="#cb8-141"></a>                             <span class="at">user=</span><span class="st">"docker"</span>,</span>
-<span id="cb8-142"><a href="#cb8-142"></a>                             <span class="at">password=</span><span class="st">"docker"</span>,</span>
-<span id="cb8-143"><a href="#cb8-143"></a>                             <span class="at">host=</span><span class="st">"localhost"</span>,</span>
-<span id="cb8-144"><a href="#cb8-144"></a>                             <span class="at">dbname=</span><span class="st">"gis"</span>,</span>
-<span id="cb8-145"><a href="#cb8-145"></a>                             <span class="at">port=</span><span class="dv">25432</span>)</span>
-<span id="cb8-146"><a href="#cb8-146"></a><span class="do">## Connect to PostgreSQL to read CSV without defining the table manually in PostgreSQL</span></span>
-<span id="cb8-147"><a href="#cb8-147"></a><span class="fu">library</span>(tictoc)</span>
-<span id="cb8-148"><a href="#cb8-148"></a><span class="fu">tic</span>()</span>
-<span id="cb8-149"><a href="#cb8-149"></a>etlcnes_hospital_selected <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/agile-gscience-2024-rs-flood/data/source_data/ETLCNES_SR_RS_21_12_t.csv"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb8-150"><a href="#cb8-150"></a>                          dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">c</span>(<span class="st">"CNES"</span>,</span>
-<span id="cb8-151"><a href="#cb8-151"></a>                                          <span class="st">"QTLEITP1"</span>,</span>
-<span id="cb8-152"><a href="#cb8-152"></a>                                          <span class="st">"QTLEITP2"</span>,</span>
-<span id="cb8-153"><a href="#cb8-153"></a>                                          <span class="st">"QTLEITP3"</span>,</span>
-<span id="cb8-154"><a href="#cb8-154"></a>                                          <span class="st">"NAT_JUR"</span>))</span>
-<span id="cb8-155"><a href="#cb8-155"></a><span class="fu">toc</span>() <span class="co"># 1.576 sec elapsed</span></span>
-<span id="cb8-156"><a href="#cb8-156"></a><span class="do">## Write table using PostgreSQL connection</span></span>
-<span id="cb8-157"><a href="#cb8-157"></a>DBI<span class="sc">::</span><span class="fu">dbWriteTable</span>(connection,</span>
-<span id="cb8-158"><a href="#cb8-158"></a>                  DBI<span class="sc">::</span><span class="fu">Id</span>(<span class="at">schema=</span><span class="st">"agile_gis_2025_rs"</span>,</span>
-<span id="cb8-159"><a href="#cb8-159"></a>                          <span class="at">table=</span><span class="st">"etlcnes_hospital_selected"</span>),</span>
-<span id="cb8-160"><a href="#cb8-160"></a>                          etlcnes_hospital_selected)</span>
-<span id="cb8-161"><a href="#cb8-161"></a><span class="in">```</span></span>
-<span id="cb8-162"><a href="#cb8-162"></a></span>
-<span id="cb8-163"><a href="#cb8-163"></a></span>
-<span id="cb8-166"><a href="#cb8-166"></a><span class="in">```{r}</span></span>
-<span id="cb8-167"><a href="#cb8-167"></a><span class="co">#| echo: false</span></span>
-<span id="cb8-168"><a href="#cb8-168"></a><span class="co">#| eval: false</span></span>
-<span id="cb8-169"><a href="#cb8-169"></a></span>
-<span id="cb8-170"><a href="#cb8-170"></a>municipalities_ghs_leaflet <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_read</span>(connection, DBI<span class="sc">::</span><span class="fu">Id</span>(<span class="at">schema=</span><span class="st">"agile_gis_2025_rs"</span> ,<span class="st">"municipalities_ghs_leaflet"</span>))</span>
-<span id="cb8-171"><a href="#cb8-171"></a>hospital_bed_aux_leaflet <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_read</span>(connection, DBI<span class="sc">::</span><span class="fu">Id</span>(<span class="at">schema=</span><span class="st">"agile_gis_2025_rs"</span> ,<span class="st">"hospital_bed_aux_leaflet"</span>))</span>
-<span id="cb8-172"><a href="#cb8-172"></a>flooding_simplified_porto_united <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_read</span>(connection, DBI<span class="sc">::</span><span class="fu">Id</span>(<span class="at">schema=</span><span class="st">"agile_gis_2025_rs"</span> ,<span class="st">"flooding_simplified_porto_united"</span>))</span>
-<span id="cb8-173"><a href="#cb8-173"></a>urban_center_4326_core <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_read</span>(connection, DBI<span class="sc">::</span><span class="fu">Id</span>(<span class="at">schema=</span><span class="st">"agile_gis_2025_rs"</span> ,<span class="st">"urban_center_4326_core"</span>))</span>
-<span id="cb8-174"><a href="#cb8-174"></a>municipalities_ghs <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_read</span>(connection, DBI<span class="sc">::</span><span class="fu">Id</span>(<span class="at">schema=</span><span class="st">"agile_gis_2025_rs"</span> ,<span class="st">"municipalities_ghs"</span>))</span>
-<span id="cb8-175"><a href="#cb8-175"></a><span class="in">```</span></span>
-<span id="cb8-176"><a href="#cb8-176"></a></span>
-<span id="cb8-177"><a href="#cb8-177"></a><span class="fu">## Tidy data</span></span>
-<span id="cb8-178"><a href="#cb8-178"></a></span>
-<span id="cb8-179"><a href="#cb8-179"></a><span class="fu">### Global Human Settlement: Model grid</span></span>
-<span id="cb8-180"><a href="#cb8-180"></a></span>
-<span id="cb8-181"><a href="#cb8-181"></a>We filtered the Global Human Settlements (GHS) to the area of interest, the municipality of Porto Alegre. This returned the dense urban center 1210 (gid). Then, we selected those municipalities that intersected with this dense urban center. Although our methodology focused on the impact of floods in the dense urban center, future analysis could easily adapt this methodology to assess the impact of landslides^[<span class="co">[</span><span class="ot">Landslides (red): https://ufrgs.maps.arcgis.com/apps/mapviewer/index.html?webmap=17a2432cbbd84ecf9be28bb8d3f4e450</span><span class="co">](https://ufrgs.maps.arcgis.com/apps/mapviewer/index.html?webmap=17a2432cbbd84ecf9be28bb8d3f4e450)</span>] in other type of settlement such as those located in rural areas. </span>
-<span id="cb8-182"><a href="#cb8-182"></a></span>
-<span id="cb8-185"><a href="#cb8-185"></a><span class="in">```{sql}</span></span>
-<span id="cb8-186"><a href="#cb8-186"></a><span class="co">#| eval: false</span></span>
-<span id="cb8-187"><a href="#cb8-187"></a><span class="co">#| echo: true</span></span>
-<span id="cb8-188"><a href="#cb8-188"></a><span class="co">#| code-summary: Create urban center table for leaflet visualization </span></span>
-<span id="cb8-189"><a href="#cb8-189"></a></span>
-<span id="cb8-190"><a href="#cb8-190"></a><span class="co">---- Dense urban center that intersects with Porto Alegre -&gt; ***Input for leaflet map***</span></span>
-<span id="cb8-191"><a href="#cb8-191"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span></span>
-<span id="cb8-192"><a href="#cb8-192"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> urban_center_4326_core <span class="kw">AS</span></span>
-<span id="cb8-193"><a href="#cb8-193"></a><span class="kw">SELECT</span> </span>
-<span id="cb8-194"><a href="#cb8-194"></a>    duc<span class="ch">.</span><span class="op">*</span> </span>
-<span id="cb8-195"><a href="#cb8-195"></a><span class="kw">FROM</span> </span>
-<span id="cb8-196"><a href="#cb8-196"></a>    urban_center_4326 <span class="kw">AS</span> duc,</span>
-<span id="cb8-197"><a href="#cb8-197"></a>    (<span class="kw">SELECT</span> </span>
-<span id="cb8-198"><a href="#cb8-198"></a>        <span class="op">*</span> </span>
-<span id="cb8-199"><a href="#cb8-199"></a>     <span class="kw">FROM</span> </span>
-<span id="cb8-200"><a href="#cb8-200"></a>        nuts </span>
-<span id="cb8-201"><a href="#cb8-201"></a>     <span class="kw">WHERE</span></span>
-<span id="cb8-202"><a href="#cb8-202"></a>        shapename <span class="op">=</span> <span class="st">'Porto Alegre'</span>) <span class="kw">AS</span> porto_alegre</span>
-<span id="cb8-203"><a href="#cb8-203"></a><span class="kw">WHERE</span></span>
-<span id="cb8-204"><a href="#cb8-204"></a>    st_intersects(</span>
-<span id="cb8-205"><a href="#cb8-205"></a>        duc<span class="ch">.</span>geom,</span>
-<span id="cb8-206"><a href="#cb8-206"></a>        porto_alegre<span class="ch">.</span>wkb_geometry); </span>
-<span id="cb8-207"><a href="#cb8-207"></a><span class="co">--- 13.714 ms</span></span>
-<span id="cb8-208"><a href="#cb8-208"></a></span>
-<span id="cb8-209"><a href="#cb8-209"></a><span class="in">```</span></span>
-<span id="cb8-210"><a href="#cb8-210"></a></span>
-<span id="cb8-211"><a href="#cb8-211"></a><span class="fu">### Municipalities</span></span>
-<span id="cb8-212"><a href="#cb8-212"></a></span>
-<span id="cb8-213"><a href="#cb8-213"></a>Firstly, we created a common table expression (CTE) that contained the GHS-SMOD ^[<span class="co">[</span><span class="ot">https://human-settlement.emergency.copernicus.eu/download.php?ds=smod</span><span class="co">](https://human-settlement.emergency.copernicus.eu/download.php?ds=smod)</span>] (i.e. _urban_center_4326_) dense urban settlement that intersected with the municipality of Porto Alegre. @tbl-municipalities-ghs includes the 9 municipalities found running the query [AoI-3]. We added the PIB per capita from _Instituto Brasileiro de Geografia e Estatistica_ ^[[IBGE: https://www.ibge.gov.br/cidades-e-estados/rs/](https://www.ibge.gov.br/cidades-e-estados/rs/)] and the affected population from _Departamento de Economia e Estatistica_ ^[[DEE-SPGG: https://mup.rs.gov.br/](https://mup.rs.gov.br/)]. We named these 9 municipalities as _municipalities_ghs_, since it is derived from the Global Human Settlment dataset.</span>
-<span id="cb8-214"><a href="#cb8-214"></a></span>
-<span id="cb8-217"><a href="#cb8-217"></a><span class="in">```{sql}</span></span>
-<span id="cb8-218"><a href="#cb8-218"></a><span class="co">#| eval: false</span></span>
-<span id="cb8-219"><a href="#cb8-219"></a><span class="co">#| echo: true</span></span>
-<span id="cb8-220"><a href="#cb8-220"></a><span class="co">#| code-summary: "[AoI-3] How to select the municipalities" </span></span>
-<span id="cb8-221"><a href="#cb8-221"></a></span>
-<span id="cb8-222"><a href="#cb8-222"></a><span class="co">--- Municipalities contained in the urban_center_4326</span></span>
-<span id="cb8-223"><a href="#cb8-223"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span> </span>
-<span id="cb8-224"><a href="#cb8-224"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> municipalities_ghs <span class="kw">AS</span></span>
-<span id="cb8-225"><a href="#cb8-225"></a><span class="kw">WITH</span> porto_alegre_ghs <span class="kw">AS</span>(</span>
-<span id="cb8-226"><a href="#cb8-226"></a>    <span class="kw">SELECT</span> </span>
-<span id="cb8-227"><a href="#cb8-227"></a>       ghs<span class="ch">.</span><span class="op">*</span></span>
-<span id="cb8-228"><a href="#cb8-228"></a>    <span class="kw">FROM</span></span>
-<span id="cb8-229"><a href="#cb8-229"></a>       urban_center_4326 <span class="kw">AS</span> ghs</span>
-<span id="cb8-230"><a href="#cb8-230"></a>    <span class="kw">JOIN</span></span>
-<span id="cb8-231"><a href="#cb8-231"></a>       nuts </span>
-<span id="cb8-232"><a href="#cb8-232"></a>    <span class="kw">ON</span> </span>
-<span id="cb8-233"><a href="#cb8-233"></a>       st_intersects(nuts<span class="ch">.</span>wkb_geometry, ghs<span class="ch">.</span>geom)</span>
-<span id="cb8-234"><a href="#cb8-234"></a>    <span class="kw">WHERE</span> </span>
-<span id="cb8-235"><a href="#cb8-235"></a>        nuts<span class="ch">.</span>shapename <span class="op">=</span> <span class="st">'Porto Alegre'</span>),</span>
-<span id="cb8-236"><a href="#cb8-236"></a>municipalities_ghs_geom <span class="kw">AS</span> (</span>
-<span id="cb8-237"><a href="#cb8-237"></a>    <span class="kw">SELECT</span></span>
-<span id="cb8-238"><a href="#cb8-238"></a>        municipalities<span class="ch">.</span><span class="op">*</span></span>
-<span id="cb8-239"><a href="#cb8-239"></a>    <span class="kw">FROM</span> </span>
-<span id="cb8-240"><a href="#cb8-240"></a>        nuts <span class="kw">AS</span> municipalities,</span>
-<span id="cb8-241"><a href="#cb8-241"></a>        porto_alegre_ghs <span class="kw">AS</span> ghs</span>
-<span id="cb8-242"><a href="#cb8-242"></a>    <span class="kw">WHERE</span></span>
-<span id="cb8-243"><a href="#cb8-243"></a>        st_intersects(municipalities<span class="ch">.</span>wkb_geometry, ghs<span class="ch">.</span>geom))</span>
-<span id="cb8-244"><a href="#cb8-244"></a>    <span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> municipalities_ghs_geom; <span class="co">--- 19.062ms</span></span>
-<span id="cb8-245"><a href="#cb8-245"></a></span>
-<span id="cb8-246"><a href="#cb8-246"></a><span class="in">```</span></span>
-<span id="cb8-247"><a href="#cb8-247"></a></span>
-<span id="cb8-250"><a href="#cb8-250"></a><span class="in">```{r}</span></span>
-<span id="cb8-251"><a href="#cb8-251"></a><span class="co">#| echo: false</span></span>
-<span id="cb8-252"><a href="#cb8-252"></a><span class="co">#| eval: true</span></span>
-<span id="cb8-253"><a href="#cb8-253"></a><span class="co">#| warning: false</span></span>
-<span id="cb8-254"><a href="#cb8-254"></a><span class="co">#| message: false</span></span>
-<span id="cb8-255"><a href="#cb8-255"></a><span class="co">#| label: tbl-municipalities-ghs</span></span>
-<span id="cb8-256"><a href="#cb8-256"></a><span class="co">#| tbl-cap: The AoI contained 9 municipalities</span></span>
-<span id="cb8-257"><a href="#cb8-257"></a></span>
-<span id="cb8-258"><a href="#cb8-258"></a><span class="fu">library</span>(RPostgres)</span>
-<span id="cb8-259"><a href="#cb8-259"></a><span class="fu">library</span>(DBI)</span>
-<span id="cb8-260"><a href="#cb8-260"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb8-261"><a href="#cb8-261"></a><span class="do">## connect to PostgreSQL</span></span>
-<span id="cb8-262"><a href="#cb8-262"></a>connection <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbConnect</span>(RPostgres<span class="sc">::</span><span class="fu">Postgres</span>(),</span>
-<span id="cb8-263"><a href="#cb8-263"></a>                             <span class="at">user=</span><span class="st">"docker"</span>,</span>
-<span id="cb8-264"><a href="#cb8-264"></a>                             <span class="at">password=</span><span class="st">"docker"</span>,</span>
-<span id="cb8-265"><a href="#cb8-265"></a>                             <span class="at">host=</span><span class="st">"localhost"</span>,</span>
-<span id="cb8-266"><a href="#cb8-266"></a>                             <span class="at">dbname=</span><span class="st">"gis"</span>,</span>
-<span id="cb8-267"><a href="#cb8-267"></a>                             <span class="at">port=</span><span class="dv">25432</span>)</span>
-<span id="cb8-268"><a href="#cb8-268"></a>municipalities_ghs <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_read</span>(connection,</span>
-<span id="cb8-269"><a href="#cb8-269"></a>                                  DBI<span class="sc">::</span><span class="fu">Id</span>(<span class="at">schema=</span><span class="st">"agile_gis_2025_rs"</span>,</span>
-<span id="cb8-270"><a href="#cb8-270"></a>                                          <span class="at">table=</span><span class="st">"municipalities_ghs"</span>))</span>
-<span id="cb8-271"><a href="#cb8-271"></a><span class="fu">library</span>(DT)</span>
-<span id="cb8-272"><a href="#cb8-272"></a><span class="fu">library</span>(sf)</span>
-<span id="cb8-273"><a href="#cb8-273"></a>municipalities_ghs <span class="sc">|&gt;</span>  </span>
-<span id="cb8-274"><a href="#cb8-274"></a>        sf<span class="sc">::</span><span class="fu">st_drop_geometry</span>() <span class="sc">|&gt;</span></span>
-<span id="cb8-275"><a href="#cb8-275"></a>        <span class="fu">select</span>(ogc_fid, shapename, shapeid) <span class="sc">|&gt;</span></span>
-<span id="cb8-276"><a href="#cb8-276"></a>        DT<span class="sc">::</span><span class="fu">datatable</span>()</span>
-<span id="cb8-277"><a href="#cb8-277"></a>        </span>
-<span id="cb8-278"><a href="#cb8-278"></a><span class="in">```</span></span>
-<span id="cb8-279"><a href="#cb8-279"></a></span>
-<span id="cb8-280"><a href="#cb8-280"></a><span class="fu">### Core Metropolitan Area</span></span>
-<span id="cb8-281"><a href="#cb8-281"></a></span>
-<span id="cb8-282"><a href="#cb8-282"></a>We created the table _core_metropolitan_area_ that cover the area of study by aggregating the geometry of the 9 municipalities into one single geometry. The road network or built-up density layers used this core metropolitan area as a mask. Defining the area of interest to this mask may exclude important areas located in the boundaries. </span>
-<span id="cb8-283"><a href="#cb8-283"></a></span>
-<span id="cb8-286"><a href="#cb8-286"></a><span class="in">```{sql}</span></span>
-<span id="cb8-287"><a href="#cb8-287"></a><span class="co">#| eval: false</span></span>
-<span id="cb8-288"><a href="#cb8-288"></a><span class="co">#| echo: true</span></span>
-<span id="cb8-289"><a href="#cb8-289"></a><span class="co">#| code-summary: "[AoI-4] How to create the Core Metropolitan Area"</span></span>
-<span id="cb8-290"><a href="#cb8-290"></a></span>
-<span id="cb8-291"><a href="#cb8-291"></a><span class="co">---- Defined core metropolitan area of the municipalities_ghs</span></span>
-<span id="cb8-292"><a href="#cb8-292"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span></span>
-<span id="cb8-293"><a href="#cb8-293"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> core_metropolitan_area <span class="kw">AS</span></span>
-<span id="cb8-294"><a href="#cb8-294"></a><span class="kw">SELECT</span> </span>
-<span id="cb8-295"><a href="#cb8-295"></a>    st_union(wkb_geometry) <span class="kw">AS</span> geom</span>
-<span id="cb8-296"><a href="#cb8-296"></a><span class="kw">FROM</span> </span>
-<span id="cb8-297"><a href="#cb8-297"></a>municipalities_ghs; <span class="co">--- 15.382ms</span></span>
-<span id="cb8-298"><a href="#cb8-298"></a><span class="in">```</span></span>
-<span id="cb8-299"><a href="#cb8-299"></a></span>
-<span id="cb8-300"><a href="#cb8-300"></a></span>
-<span id="cb8-301"><a href="#cb8-301"></a><span class="fu">### Global Human Settlement: Built-up volume</span></span>
+<span id="cb8-123"><a href="#cb8-123"></a>**Troubleshooting 2**:</span>
+<span id="cb8-124"><a href="#cb8-124"></a>When importing the urban center, an error regarding the type of geometry appeared. For this, we can use the code <span class="in">`ogr2ogr -lco GEOMETRY_NAME=geom -t_srs EPSG:4326 -f PostgreSQL PG:"host=localhost port= 25432 user=docker password=docker dbname=gis schemas=agile_gis_2025_rs" GHS_SMOD_E2020_GLOBE_R2023A_54009_1000_UC_V2_0.shp -nlt MULTIPOLYGON -nln urban_center_4326`</span> based on posts ^[<span class="co">[</span><span class="ot">https://gis.stackexchange.com/questions/259442/unable-to-upload-large-vector-file-to-postgis-errorgeometry-type-multisurface</span><span class="co">](https://gis.stackexchange.com/questions/259442/unable-to-upload-large-vector-file-to-postgis-errorgeometry-type-multisurface)</span>] and ^[<span class="co">[</span><span class="ot">https://gis.stackexchange.com/questions/233997/ogr2ogr-filegdb-to-postgis-change-geometry-column-and-srid</span><span class="co">](https://gis.stackexchange.com/questions/233997/ogr2ogr-filegdb-to-postgis-change-geometry-column-and-srid)</span>]</span>
+<span id="cb8-125"><a href="#cb8-125"></a></span>
+<span id="cb8-126"><a href="#cb8-126"></a>**Troubleshooting 3**:  When using functions in the schema agile_gis_2025_rs, some of the functions or tables were not found. For this, we used <span class="in">`GRANT SELECT ON ALL TABLES IN SCHEMA agile_gis_2025_rs TO docker;`</span> ^[<span class="co">[</span><span class="ot">https://stackoverflow.com/questions/12986368/installing-postgresql-extension-to-all-schemas</span><span class="co">](https://stackoverflow.com/questions/12986368/installing-postgresql-extension-to-all-schemas)</span>] and <span class="in">`SET search_path TO agile_gis_2025_rs,public;`</span>^[<span class="co">[</span><span class="ot">https://gis.stackexchange.com/questions/354523/use-postgis-functions-from-an-other-schema-than-public</span><span class="co">](https://gis.stackexchange.com/questions/354523/use-postgis-functions-from-an-other-schema-than-public)</span>]. </span>
+<span id="cb8-127"><a href="#cb8-127"></a></span>
+<span id="cb8-128"><a href="#cb8-128"></a><span class="fu">### Indirectly using R</span></span>
+<span id="cb8-129"><a href="#cb8-129"></a></span>
+<span id="cb8-130"><a href="#cb8-130"></a>The library DBI <span class="co">[</span><span class="ot">@DBI</span><span class="co">]</span> uploaded the information to the server using also RPostgres <span class="co">[</span><span class="ot">@RPostgres</span><span class="co">]</span>. Although there are different methodologies to upload a csv without manually creating the table first in PostgreSQL ^[<span class="co">[</span><span class="ot">https://stackoverflow.com/questions/21018256/can-i-automatically-create-a-table-in-postgresql-from-a-csv-file-with-headers</span><span class="co">](https://stackoverflow.com/questions/21018256/can-i-automatically-create-a-table-in-postgresql-from-a-csv-file-with-headers)</span>], we used R. Another reason was that in later steps R is used to calculate the weighted origin and destination matrix (OD).</span>
+<span id="cb8-131"><a href="#cb8-131"></a></span>
+<span id="cb8-134"><a href="#cb8-134"></a><span class="in">```{r}</span></span>
+<span id="cb8-135"><a href="#cb8-135"></a><span class="co">#| echo: true</span></span>
+<span id="cb8-136"><a href="#cb8-136"></a><span class="co">#| eval: false</span></span>
+<span id="cb8-137"><a href="#cb8-137"></a><span class="co">#| code-summary: "[Aoi-2] How to import using R"</span></span>
+<span id="cb8-138"><a href="#cb8-138"></a></span>
+<span id="cb8-139"><a href="#cb8-139"></a><span class="fu">library</span>(DBI)</span>
+<span id="cb8-140"><a href="#cb8-140"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb8-141"><a href="#cb8-141"></a><span class="fu">library</span>(RPostgres)</span>
+<span id="cb8-142"><a href="#cb8-142"></a><span class="do">## connect to PostgreSQL</span></span>
+<span id="cb8-143"><a href="#cb8-143"></a>connection <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbConnect</span>(RPostgres<span class="sc">::</span><span class="fu">Postgres</span>(),</span>
+<span id="cb8-144"><a href="#cb8-144"></a>                             <span class="at">user=</span><span class="st">"docker"</span>,</span>
+<span id="cb8-145"><a href="#cb8-145"></a>                             <span class="at">password=</span><span class="st">"docker"</span>,</span>
+<span id="cb8-146"><a href="#cb8-146"></a>                             <span class="at">host=</span><span class="st">"localhost"</span>,</span>
+<span id="cb8-147"><a href="#cb8-147"></a>                             <span class="at">dbname=</span><span class="st">"gis"</span>,</span>
+<span id="cb8-148"><a href="#cb8-148"></a>                             <span class="at">port=</span><span class="dv">25432</span>)</span>
+<span id="cb8-149"><a href="#cb8-149"></a><span class="do">## Connect to PostgreSQL to read CSV without defining the table manually in PostgreSQL</span></span>
+<span id="cb8-150"><a href="#cb8-150"></a><span class="fu">library</span>(tictoc)</span>
+<span id="cb8-151"><a href="#cb8-151"></a><span class="fu">tic</span>()</span>
+<span id="cb8-152"><a href="#cb8-152"></a>etlcnes_hospital_selected <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/agile-gscience-2024-rs-flood/data/source_data/ETLCNES_SR_RS_21_12_t.csv"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb8-153"><a href="#cb8-153"></a>                          dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">c</span>(<span class="st">"CNES"</span>,</span>
+<span id="cb8-154"><a href="#cb8-154"></a>                                          <span class="st">"QTLEITP1"</span>,</span>
+<span id="cb8-155"><a href="#cb8-155"></a>                                          <span class="st">"QTLEITP2"</span>,</span>
+<span id="cb8-156"><a href="#cb8-156"></a>                                          <span class="st">"QTLEITP3"</span>,</span>
+<span id="cb8-157"><a href="#cb8-157"></a>                                          <span class="st">"NAT_JUR"</span>))</span>
+<span id="cb8-158"><a href="#cb8-158"></a><span class="fu">toc</span>() <span class="co"># 1.576 sec elapsed</span></span>
+<span id="cb8-159"><a href="#cb8-159"></a><span class="do">## Write table using PostgreSQL connection</span></span>
+<span id="cb8-160"><a href="#cb8-160"></a>DBI<span class="sc">::</span><span class="fu">dbWriteTable</span>(connection,</span>
+<span id="cb8-161"><a href="#cb8-161"></a>                  DBI<span class="sc">::</span><span class="fu">Id</span>(<span class="at">schema=</span><span class="st">"agile_gis_2025_rs"</span>,</span>
+<span id="cb8-162"><a href="#cb8-162"></a>                          <span class="at">table=</span><span class="st">"etlcnes_hospital_selected"</span>),</span>
+<span id="cb8-163"><a href="#cb8-163"></a>                          etlcnes_hospital_selected)</span>
+<span id="cb8-164"><a href="#cb8-164"></a><span class="in">```</span></span>
+<span id="cb8-165"><a href="#cb8-165"></a></span>
+<span id="cb8-166"><a href="#cb8-166"></a></span>
+<span id="cb8-169"><a href="#cb8-169"></a><span class="in">```{r}</span></span>
+<span id="cb8-170"><a href="#cb8-170"></a><span class="co">#| echo: false</span></span>
+<span id="cb8-171"><a href="#cb8-171"></a><span class="co">#| eval: false</span></span>
+<span id="cb8-172"><a href="#cb8-172"></a></span>
+<span id="cb8-173"><a href="#cb8-173"></a>municipalities_ghs_leaflet <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_read</span>(connection, DBI<span class="sc">::</span><span class="fu">Id</span>(<span class="at">schema=</span><span class="st">"agile_gis_2025_rs"</span> ,<span class="st">"municipalities_ghs_leaflet"</span>))</span>
+<span id="cb8-174"><a href="#cb8-174"></a>hospital_bed_aux_leaflet <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_read</span>(connection, DBI<span class="sc">::</span><span class="fu">Id</span>(<span class="at">schema=</span><span class="st">"agile_gis_2025_rs"</span> ,<span class="st">"hospital_bed_aux_leaflet"</span>))</span>
+<span id="cb8-175"><a href="#cb8-175"></a>flooding_simplified_porto_united <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_read</span>(connection, DBI<span class="sc">::</span><span class="fu">Id</span>(<span class="at">schema=</span><span class="st">"agile_gis_2025_rs"</span> ,<span class="st">"flooding_simplified_porto_united"</span>))</span>
+<span id="cb8-176"><a href="#cb8-176"></a>urban_center_4326_core <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_read</span>(connection, DBI<span class="sc">::</span><span class="fu">Id</span>(<span class="at">schema=</span><span class="st">"agile_gis_2025_rs"</span> ,<span class="st">"urban_center_4326_core"</span>))</span>
+<span id="cb8-177"><a href="#cb8-177"></a>municipalities_ghs <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_read</span>(connection, DBI<span class="sc">::</span><span class="fu">Id</span>(<span class="at">schema=</span><span class="st">"agile_gis_2025_rs"</span> ,<span class="st">"municipalities_ghs"</span>))</span>
+<span id="cb8-178"><a href="#cb8-178"></a><span class="in">```</span></span>
+<span id="cb8-179"><a href="#cb8-179"></a></span>
+<span id="cb8-180"><a href="#cb8-180"></a><span class="fu">## Tidy data</span></span>
+<span id="cb8-181"><a href="#cb8-181"></a></span>
+<span id="cb8-182"><a href="#cb8-182"></a><span class="fu">### Global Human Settlement: Model grid</span></span>
+<span id="cb8-183"><a href="#cb8-183"></a></span>
+<span id="cb8-184"><a href="#cb8-184"></a>We filtered the Global Human Settlements (GHS) to the area of interest, the municipality of Porto Alegre. This returned the dense urban center 1210 (gid). Then, we selected those municipalities that intersected with this dense urban center. Although our methodology focused on the impact of floods in the dense urban center, future analysis could easily adapt this methodology to assess the impact of landslides^[<span class="co">[</span><span class="ot">Landslides (red): https://ufrgs.maps.arcgis.com/apps/mapviewer/index.html?webmap=17a2432cbbd84ecf9be28bb8d3f4e450</span><span class="co">](https://ufrgs.maps.arcgis.com/apps/mapviewer/index.html?webmap=17a2432cbbd84ecf9be28bb8d3f4e450)</span>] in other type of settlement such as those located in rural areas. </span>
+<span id="cb8-185"><a href="#cb8-185"></a></span>
+<span id="cb8-188"><a href="#cb8-188"></a><span class="in">```{sql}</span></span>
+<span id="cb8-189"><a href="#cb8-189"></a><span class="co">#| eval: false</span></span>
+<span id="cb8-190"><a href="#cb8-190"></a><span class="co">#| echo: true</span></span>
+<span id="cb8-191"><a href="#cb8-191"></a><span class="co">#| code-summary: Create urban center table for leaflet visualization </span></span>
+<span id="cb8-192"><a href="#cb8-192"></a></span>
+<span id="cb8-193"><a href="#cb8-193"></a><span class="co">---- Dense urban center that intersects with Porto Alegre -&gt; ***Input for leaflet map***</span></span>
+<span id="cb8-194"><a href="#cb8-194"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span></span>
+<span id="cb8-195"><a href="#cb8-195"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> urban_center_4326_core <span class="kw">AS</span></span>
+<span id="cb8-196"><a href="#cb8-196"></a><span class="kw">SELECT</span> </span>
+<span id="cb8-197"><a href="#cb8-197"></a>    duc<span class="ch">.</span><span class="op">*</span> </span>
+<span id="cb8-198"><a href="#cb8-198"></a><span class="kw">FROM</span> </span>
+<span id="cb8-199"><a href="#cb8-199"></a>    urban_center_4326 <span class="kw">AS</span> duc,</span>
+<span id="cb8-200"><a href="#cb8-200"></a>    (<span class="kw">SELECT</span> </span>
+<span id="cb8-201"><a href="#cb8-201"></a>        <span class="op">*</span> </span>
+<span id="cb8-202"><a href="#cb8-202"></a>     <span class="kw">FROM</span> </span>
+<span id="cb8-203"><a href="#cb8-203"></a>        nuts </span>
+<span id="cb8-204"><a href="#cb8-204"></a>     <span class="kw">WHERE</span></span>
+<span id="cb8-205"><a href="#cb8-205"></a>        shapename <span class="op">=</span> <span class="st">'Porto Alegre'</span>) <span class="kw">AS</span> porto_alegre</span>
+<span id="cb8-206"><a href="#cb8-206"></a><span class="kw">WHERE</span></span>
+<span id="cb8-207"><a href="#cb8-207"></a>    st_intersects(</span>
+<span id="cb8-208"><a href="#cb8-208"></a>        duc<span class="ch">.</span>geom,</span>
+<span id="cb8-209"><a href="#cb8-209"></a>        porto_alegre<span class="ch">.</span>wkb_geometry); </span>
+<span id="cb8-210"><a href="#cb8-210"></a><span class="co">--- 13.714 ms</span></span>
+<span id="cb8-211"><a href="#cb8-211"></a></span>
+<span id="cb8-212"><a href="#cb8-212"></a><span class="in">```</span></span>
+<span id="cb8-213"><a href="#cb8-213"></a></span>
+<span id="cb8-214"><a href="#cb8-214"></a><span class="fu">### Municipalities</span></span>
+<span id="cb8-215"><a href="#cb8-215"></a></span>
+<span id="cb8-216"><a href="#cb8-216"></a>Firstly, we created a common table expression (CTE) that contained the GHS-SMOD ^[<span class="co">[</span><span class="ot">https://human-settlement.emergency.copernicus.eu/download.php?ds=smod</span><span class="co">](https://human-settlement.emergency.copernicus.eu/download.php?ds=smod)</span>] (i.e. _urban_center_4326_) dense urban settlement that intersected with the municipality of Porto Alegre. @tbl-municipalities-ghs includes the 9 municipalities found running the query [AoI-3]. We added the PIB per capita from _Instituto Brasileiro de Geografia e Estatistica_ ^[[IBGE: https://www.ibge.gov.br/cidades-e-estados/rs/](https://www.ibge.gov.br/cidades-e-estados/rs/)] and the affected population from _Departamento de Economia e Estatistica_ ^[[DEE-SPGG: https://mup.rs.gov.br/](https://mup.rs.gov.br/)]. We named these 9 municipalities as _municipalities_ghs_, since it is derived from the Global Human Settlment dataset.</span>
+<span id="cb8-217"><a href="#cb8-217"></a></span>
+<span id="cb8-220"><a href="#cb8-220"></a><span class="in">```{sql}</span></span>
+<span id="cb8-221"><a href="#cb8-221"></a><span class="co">#| eval: false</span></span>
+<span id="cb8-222"><a href="#cb8-222"></a><span class="co">#| echo: true</span></span>
+<span id="cb8-223"><a href="#cb8-223"></a><span class="co">#| code-summary: "[AoI-3] How to select the municipalities" </span></span>
+<span id="cb8-224"><a href="#cb8-224"></a></span>
+<span id="cb8-225"><a href="#cb8-225"></a><span class="co">--- Municipalities contained in the urban_center_4326</span></span>
+<span id="cb8-226"><a href="#cb8-226"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span> </span>
+<span id="cb8-227"><a href="#cb8-227"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> municipalities_ghs <span class="kw">AS</span></span>
+<span id="cb8-228"><a href="#cb8-228"></a><span class="kw">WITH</span> porto_alegre_ghs <span class="kw">AS</span>(</span>
+<span id="cb8-229"><a href="#cb8-229"></a>    <span class="kw">SELECT</span> </span>
+<span id="cb8-230"><a href="#cb8-230"></a>       ghs<span class="ch">.</span><span class="op">*</span></span>
+<span id="cb8-231"><a href="#cb8-231"></a>    <span class="kw">FROM</span></span>
+<span id="cb8-232"><a href="#cb8-232"></a>       urban_center_4326 <span class="kw">AS</span> ghs</span>
+<span id="cb8-233"><a href="#cb8-233"></a>    <span class="kw">JOIN</span></span>
+<span id="cb8-234"><a href="#cb8-234"></a>       nuts </span>
+<span id="cb8-235"><a href="#cb8-235"></a>    <span class="kw">ON</span> </span>
+<span id="cb8-236"><a href="#cb8-236"></a>       st_intersects(nuts<span class="ch">.</span>wkb_geometry, ghs<span class="ch">.</span>geom)</span>
+<span id="cb8-237"><a href="#cb8-237"></a>    <span class="kw">WHERE</span> </span>
+<span id="cb8-238"><a href="#cb8-238"></a>        nuts<span class="ch">.</span>shapename <span class="op">=</span> <span class="st">'Porto Alegre'</span>),</span>
+<span id="cb8-239"><a href="#cb8-239"></a>municipalities_ghs_geom <span class="kw">AS</span> (</span>
+<span id="cb8-240"><a href="#cb8-240"></a>    <span class="kw">SELECT</span></span>
+<span id="cb8-241"><a href="#cb8-241"></a>        municipalities<span class="ch">.</span><span class="op">*</span></span>
+<span id="cb8-242"><a href="#cb8-242"></a>    <span class="kw">FROM</span> </span>
+<span id="cb8-243"><a href="#cb8-243"></a>        nuts <span class="kw">AS</span> municipalities,</span>
+<span id="cb8-244"><a href="#cb8-244"></a>        porto_alegre_ghs <span class="kw">AS</span> ghs</span>
+<span id="cb8-245"><a href="#cb8-245"></a>    <span class="kw">WHERE</span></span>
+<span id="cb8-246"><a href="#cb8-246"></a>        st_intersects(municipalities<span class="ch">.</span>wkb_geometry, ghs<span class="ch">.</span>geom))</span>
+<span id="cb8-247"><a href="#cb8-247"></a>    <span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> municipalities_ghs_geom; <span class="co">--- 19.062ms</span></span>
+<span id="cb8-248"><a href="#cb8-248"></a></span>
+<span id="cb8-249"><a href="#cb8-249"></a><span class="in">```</span></span>
+<span id="cb8-250"><a href="#cb8-250"></a></span>
+<span id="cb8-253"><a href="#cb8-253"></a><span class="in">```{r}</span></span>
+<span id="cb8-254"><a href="#cb8-254"></a><span class="co">#| echo: false</span></span>
+<span id="cb8-255"><a href="#cb8-255"></a><span class="co">#| eval: true</span></span>
+<span id="cb8-256"><a href="#cb8-256"></a><span class="co">#| warning: false</span></span>
+<span id="cb8-257"><a href="#cb8-257"></a><span class="co">#| message: false</span></span>
+<span id="cb8-258"><a href="#cb8-258"></a><span class="co">#| label: tbl-municipalities-ghs</span></span>
+<span id="cb8-259"><a href="#cb8-259"></a><span class="co">#| tbl-cap: The AoI contained 9 municipalities</span></span>
+<span id="cb8-260"><a href="#cb8-260"></a></span>
+<span id="cb8-261"><a href="#cb8-261"></a><span class="fu">library</span>(RPostgres)</span>
+<span id="cb8-262"><a href="#cb8-262"></a><span class="fu">library</span>(DBI)</span>
+<span id="cb8-263"><a href="#cb8-263"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb8-264"><a href="#cb8-264"></a><span class="do">## connect to PostgreSQL</span></span>
+<span id="cb8-265"><a href="#cb8-265"></a>connection <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbConnect</span>(RPostgres<span class="sc">::</span><span class="fu">Postgres</span>(),</span>
+<span id="cb8-266"><a href="#cb8-266"></a>                             <span class="at">user=</span><span class="st">"docker"</span>,</span>
+<span id="cb8-267"><a href="#cb8-267"></a>                             <span class="at">password=</span><span class="st">"docker"</span>,</span>
+<span id="cb8-268"><a href="#cb8-268"></a>                             <span class="at">host=</span><span class="st">"localhost"</span>,</span>
+<span id="cb8-269"><a href="#cb8-269"></a>                             <span class="at">dbname=</span><span class="st">"gis"</span>,</span>
+<span id="cb8-270"><a href="#cb8-270"></a>                             <span class="at">port=</span><span class="dv">25432</span>)</span>
+<span id="cb8-271"><a href="#cb8-271"></a>municipalities_ghs <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_read</span>(connection,</span>
+<span id="cb8-272"><a href="#cb8-272"></a>                                  DBI<span class="sc">::</span><span class="fu">Id</span>(<span class="at">schema=</span><span class="st">"agile_gis_2025_rs"</span>,</span>
+<span id="cb8-273"><a href="#cb8-273"></a>                                          <span class="at">table=</span><span class="st">"municipalities_ghs"</span>))</span>
+<span id="cb8-274"><a href="#cb8-274"></a><span class="fu">library</span>(DT)</span>
+<span id="cb8-275"><a href="#cb8-275"></a><span class="fu">library</span>(sf)</span>
+<span id="cb8-276"><a href="#cb8-276"></a>municipalities_ghs <span class="sc">|&gt;</span>  </span>
+<span id="cb8-277"><a href="#cb8-277"></a>        sf<span class="sc">::</span><span class="fu">st_drop_geometry</span>() <span class="sc">|&gt;</span></span>
+<span id="cb8-278"><a href="#cb8-278"></a>        <span class="fu">select</span>(ogc_fid, shapename, shapeid) <span class="sc">|&gt;</span></span>
+<span id="cb8-279"><a href="#cb8-279"></a>        DT<span class="sc">::</span><span class="fu">datatable</span>()</span>
+<span id="cb8-280"><a href="#cb8-280"></a>        </span>
+<span id="cb8-281"><a href="#cb8-281"></a><span class="in">```</span></span>
+<span id="cb8-282"><a href="#cb8-282"></a></span>
+<span id="cb8-283"><a href="#cb8-283"></a><span class="fu">### Core Metropolitan Area</span></span>
+<span id="cb8-284"><a href="#cb8-284"></a></span>
+<span id="cb8-285"><a href="#cb8-285"></a>We created the table _core_metropolitan_area_ that cover the area of study by aggregating the geometry of the 9 municipalities into one single geometry. The road network or built-up density layers used this core metropolitan area as a mask. Defining the area of interest to this mask may exclude important areas located in the boundaries. </span>
+<span id="cb8-286"><a href="#cb8-286"></a></span>
+<span id="cb8-289"><a href="#cb8-289"></a><span class="in">```{sql}</span></span>
+<span id="cb8-290"><a href="#cb8-290"></a><span class="co">#| eval: false</span></span>
+<span id="cb8-291"><a href="#cb8-291"></a><span class="co">#| echo: true</span></span>
+<span id="cb8-292"><a href="#cb8-292"></a><span class="co">#| code-summary: "[AoI-4] How to create the Core Metropolitan Area"</span></span>
+<span id="cb8-293"><a href="#cb8-293"></a></span>
+<span id="cb8-294"><a href="#cb8-294"></a><span class="co">---- Defined core metropolitan area of the municipalities_ghs</span></span>
+<span id="cb8-295"><a href="#cb8-295"></a><span class="kw">EXPLAIN</span> <span class="kw">ANALYZE</span></span>
+<span id="cb8-296"><a href="#cb8-296"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> core_metropolitan_area <span class="kw">AS</span></span>
+<span id="cb8-297"><a href="#cb8-297"></a><span class="kw">SELECT</span> </span>
+<span id="cb8-298"><a href="#cb8-298"></a>    st_union(wkb_geometry) <span class="kw">AS</span> geom</span>
+<span id="cb8-299"><a href="#cb8-299"></a><span class="kw">FROM</span> </span>
+<span id="cb8-300"><a href="#cb8-300"></a>municipalities_ghs; <span class="co">--- 15.382ms</span></span>
+<span id="cb8-301"><a href="#cb8-301"></a><span class="in">```</span></span>
 <span id="cb8-302"><a href="#cb8-302"></a></span>
-<span id="cb8-303"><a href="#cb8-303"></a>After reprojecting the CRS to 4326 from the raster and vector data, we masked the global built-up volume raster to the core metropolitan area. This will be later used to sample the origin and destination based on the built-up volume. More dense areas contained a higher concentration of origin and destination from which connectivity is derived.  </span>
-<span id="cb8-304"><a href="#cb8-304"></a></span>
-<span id="cb8-307"><a href="#cb8-307"></a><span class="in">```{r}</span></span>
-<span id="cb8-308"><a href="#cb8-308"></a><span class="co">#| echo: true</span></span>
-<span id="cb8-309"><a href="#cb8-309"></a><span class="co">#| eval: false</span></span>
-<span id="cb8-310"><a href="#cb8-310"></a><span class="co">#| code-summary: "[Aoi-5] How to import and mask GHS-V"</span></span>
-<span id="cb8-311"><a href="#cb8-311"></a></span>
-<span id="cb8-312"><a href="#cb8-312"></a><span class="co"># Import data</span></span>
-<span id="cb8-313"><a href="#cb8-313"></a><span class="fu">library</span>(sf)  <span class="co"># vector files</span></span>
-<span id="cb8-314"><a href="#cb8-314"></a><span class="fu">library</span>(terra) <span class="co"># raster files</span></span>
-<span id="cb8-315"><a href="#cb8-315"></a><span class="fu">library</span>(tictoc) <span class="co"># timing</span></span>
-<span id="cb8-316"><a href="#cb8-316"></a><span class="fu">tic</span>()</span>
-<span id="cb8-317"><a href="#cb8-317"></a>buildings_density_global <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(</span>
-<span id="cb8-318"><a href="#cb8-318"></a>  <span class="st">'~/GHS_BUILT_V_E2020_GLOBE_R2023A_54009_100_V1_0.tif'</span>)</span>
-<span id="cb8-319"><a href="#cb8-319"></a><span class="fu">toc</span>() <span class="do">## 0.088 sec elapsed</span></span>
-<span id="cb8-320"><a href="#cb8-320"></a><span class="fu">tic</span>()</span>
-<span id="cb8-321"><a href="#cb8-321"></a>municipalities_ghs_transformed <span class="ot">&lt;-</span> municipalities_ghs <span class="sc">|&gt;</span> </span>
-<span id="cb8-322"><a href="#cb8-322"></a>  <span class="fu">st_transform</span>(<span class="fu">crs</span>(buildings_density_global))</span>
-<span id="cb8-323"><a href="#cb8-323"></a><span class="fu">toc</span>() <span class="do">## 0.071 sec elapsed</span></span>
-<span id="cb8-324"><a href="#cb8-324"></a><span class="fu">tic</span>()</span>
-<span id="cb8-325"><a href="#cb8-325"></a>building_density_local_aoi <span class="ot">&lt;-</span> <span class="fu">crop</span>(buildings_density_global,</span>
-<span id="cb8-326"><a href="#cb8-326"></a>                                   municipalities_ghs_transformed)</span>
-<span id="cb8-327"><a href="#cb8-327"></a><span class="fu">toc</span>() <span class="do">## 0.074 sec elapsed</span></span>
-<span id="cb8-328"><a href="#cb8-328"></a><span class="do">## Reproject for sampling</span></span>
-<span id="cb8-329"><a href="#cb8-329"></a><span class="fu">tic</span>()</span>
-<span id="cb8-330"><a href="#cb8-330"></a>building_density_local_aoi_4326 <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">project</span>(building_density_local_aoi,</span>
-<span id="cb8-331"><a href="#cb8-331"></a>                                                  <span class="fu">crs</span>(municipalities_ghs))</span>
-<span id="cb8-332"><a href="#cb8-332"></a><span class="fu">toc</span>() <span class="do">### 0.595 sec elapsed</span></span>
-<span id="cb8-333"><a href="#cb8-333"></a><span class="fu">tic</span>()</span>
-<span id="cb8-334"><a href="#cb8-334"></a>building_density_local_aoi_4326_masked <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">mask</span>(building_density_local_aoi_4326,</span>
-<span id="cb8-335"><a href="#cb8-335"></a>                                                      municipalities_ghs) </span>
-<span id="cb8-336"><a href="#cb8-336"></a><span class="fu">toc</span>() <span class="do">## 0.089 sec elapsed</span></span>
-<span id="cb8-337"><a href="#cb8-337"></a>terra<span class="sc">::</span><span class="fu">writeRaster</span>(building_density_local_aoi_4326_masked, <span class="st">"GHS_BUILT_V_E2020_GLOBE_R2023A_4326_100_V1_0_RioGrandeDoSul.tif"</span>)</span>
-<span id="cb8-338"><a href="#cb8-338"></a><span class="do">### Reclassify values 0 with missing values (NA) to make them transparent in the leaflet map</span></span>
-<span id="cb8-339"><a href="#cb8-339"></a><span class="fu">values</span>(building_density_local_aoi_4326_masked)[<span class="fu">values</span>(building_density_local_aoi_4326_masked) <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">=</span> <span class="cn">NA</span></span>
-<span id="cb8-340"><a href="#cb8-340"></a><span class="in">```</span></span>
+<span id="cb8-303"><a href="#cb8-303"></a></span>
+<span id="cb8-304"><a href="#cb8-304"></a><span class="fu">### Global Human Settlement: Built-up volume</span></span>
+<span id="cb8-305"><a href="#cb8-305"></a></span>
+<span id="cb8-306"><a href="#cb8-306"></a>After reprojecting the CRS to 4326 from the raster and vector data, we masked the global built-up volume raster to the core metropolitan area. This will be later used to sample the origin and destination based on the built-up volume. More dense areas contained a higher concentration of origin and destination from which connectivity is derived.  </span>
+<span id="cb8-307"><a href="#cb8-307"></a></span>
+<span id="cb8-310"><a href="#cb8-310"></a><span class="in">```{r}</span></span>
+<span id="cb8-311"><a href="#cb8-311"></a><span class="co">#| echo: true</span></span>
+<span id="cb8-312"><a href="#cb8-312"></a><span class="co">#| eval: false</span></span>
+<span id="cb8-313"><a href="#cb8-313"></a><span class="co">#| code-summary: "[Aoi-5] How to import and mask GHS-V"</span></span>
+<span id="cb8-314"><a href="#cb8-314"></a></span>
+<span id="cb8-315"><a href="#cb8-315"></a><span class="co"># Import data</span></span>
+<span id="cb8-316"><a href="#cb8-316"></a><span class="fu">library</span>(sf)  <span class="co"># vector files</span></span>
+<span id="cb8-317"><a href="#cb8-317"></a><span class="fu">library</span>(terra) <span class="co"># raster files</span></span>
+<span id="cb8-318"><a href="#cb8-318"></a><span class="fu">library</span>(tictoc) <span class="co"># timing</span></span>
+<span id="cb8-319"><a href="#cb8-319"></a><span class="fu">tic</span>()</span>
+<span id="cb8-320"><a href="#cb8-320"></a>buildings_density_global <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(</span>
+<span id="cb8-321"><a href="#cb8-321"></a>  <span class="st">'~/GHS_BUILT_V_E2020_GLOBE_R2023A_54009_100_V1_0.tif'</span>)</span>
+<span id="cb8-322"><a href="#cb8-322"></a><span class="fu">toc</span>() <span class="do">## 0.088 sec elapsed</span></span>
+<span id="cb8-323"><a href="#cb8-323"></a><span class="fu">tic</span>()</span>
+<span id="cb8-324"><a href="#cb8-324"></a>municipalities_ghs_transformed <span class="ot">&lt;-</span> municipalities_ghs <span class="sc">|&gt;</span> </span>
+<span id="cb8-325"><a href="#cb8-325"></a>  <span class="fu">st_transform</span>(<span class="fu">crs</span>(buildings_density_global))</span>
+<span id="cb8-326"><a href="#cb8-326"></a><span class="fu">toc</span>() <span class="do">## 0.071 sec elapsed</span></span>
+<span id="cb8-327"><a href="#cb8-327"></a><span class="fu">tic</span>()</span>
+<span id="cb8-328"><a href="#cb8-328"></a>building_density_local_aoi <span class="ot">&lt;-</span> <span class="fu">crop</span>(buildings_density_global,</span>
+<span id="cb8-329"><a href="#cb8-329"></a>                                   municipalities_ghs_transformed)</span>
+<span id="cb8-330"><a href="#cb8-330"></a><span class="fu">toc</span>() <span class="do">## 0.074 sec elapsed</span></span>
+<span id="cb8-331"><a href="#cb8-331"></a><span class="do">## Reproject for sampling</span></span>
+<span id="cb8-332"><a href="#cb8-332"></a><span class="fu">tic</span>()</span>
+<span id="cb8-333"><a href="#cb8-333"></a>building_density_local_aoi_4326 <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">project</span>(building_density_local_aoi,</span>
+<span id="cb8-334"><a href="#cb8-334"></a>                                                  <span class="fu">crs</span>(municipalities_ghs))</span>
+<span id="cb8-335"><a href="#cb8-335"></a><span class="fu">toc</span>() <span class="do">### 0.595 sec elapsed</span></span>
+<span id="cb8-336"><a href="#cb8-336"></a><span class="fu">tic</span>()</span>
+<span id="cb8-337"><a href="#cb8-337"></a>building_density_local_aoi_4326_masked <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">mask</span>(building_density_local_aoi_4326,</span>
+<span id="cb8-338"><a href="#cb8-338"></a>                                                      municipalities_ghs) </span>
+<span id="cb8-339"><a href="#cb8-339"></a><span class="fu">toc</span>() <span class="do">## 0.089 sec elapsed</span></span>
+<span id="cb8-340"><a href="#cb8-340"></a>terra<span class="sc">::</span><span class="fu">writeRaster</span>(building_density_local_aoi_4326_masked, <span class="st">"GHS_BUILT_V_E2020_GLOBE_R2023A_4326_100_V1_0_RioGrandeDoSul.tif"</span>)</span>
+<span id="cb8-341"><a href="#cb8-341"></a><span class="do">### Reclassify values 0 with missing values (NA) to make them transparent in the leaflet map</span></span>
+<span id="cb8-342"><a href="#cb8-342"></a><span class="fu">values</span>(building_density_local_aoi_4326_masked)[<span class="fu">values</span>(building_density_local_aoi_4326_masked) <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">=</span> <span class="cn">NA</span></span>
+<span id="cb8-343"><a href="#cb8-343"></a><span class="in">```</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
