@@ -1,0 +1,644 @@
+---
+title: Changes in Road Centrality and Hospital Access Redundancy. Impacts of the 2024 Flood in the Metropolitan Core of Porto Alegre, Brazil
+journal: "`r rticles::copernicus_journal_abbreviations(journal_name = 'communication')`"
+author:
+  - given_name: Ricardo
+    surname: Ruiz Sánchez
+    email: ricardo.ruiz.sanchez@gmail.com
+    corresponding: true
+  - given_name: Marcel
+    surname: Reinmuth
+    affiliation: "1"
+  - given_name: Cristian
+    surname: Albornoz
+    affiliation: "2"
+  - given_name: Sven
+    surname: Lautenbach
+  - given_name: Alexander
+    surname: Zipf
+    affiliation: "1,2"
+    # authors can have multiple affiliations, which can also be used to mark deceased coauthors
+# If you have more than one corresponding author, add them manually using the following structure (note the commas):
+# Two authors: Daniel Nüst (daniel.nuest@uni-muenster.de) and Josiah Carberry (j.carberry@orcid.org)
+# Three authors or more: Daniel Nüst (daniel.nuest@uni-muenster.de), Josiah Carberry (j.carberry@orcid.org), and Markus Konkol (m.konkol@wwu.de)
+# If the following line is uncommented, the "corresponding: true" above are ignored
+#correspongdingauthors: Daniel Nüst (daniel.nuest@uni-muenster.de) and Josiah Carberry (j.carberry@orcid.org)
+# If an author is deceased, please mark the respective author name(s) with a dagger '†' and add a further affiliation; put the decease date in the 'address' field", see 'Nikolaus Copernicus' in template.
+# If authors contributed equally, please mark the respective author names with an asterisk '*' and add a further affiliation: 'These authors contributed equally to this work.'", see template.
+affiliation:
+  - code: 1
+    address: Heidelberg Institute for Geoinformation Technology gGmbH, Schloss-Wolfsbrunnenweg 33, 69118 Heidelberg, Germany
+  - code: 2
+    address: Institute of Geography, Heidelberg University,  Berliner Str. 48, 69120, Heidelberg, Germany
+abstract: |
+  In view of climate change driving extreme events such as floods, assessing urban infrastructure resilience is critical for disaster response and urban planning. We investigated how flooding in Rio Grande do Sul affected road network connectivity and urban resilience in terms of lack of redundancy to healthcare facilities. We performed centrality analysis using the edge betweenness indicator to identify urban arteries critical for connectivity at metropolitan and intracity scales and compared alternative routes to assess healthcare facilities resilience. Understanding how floods disrupt road connectivity and mobility is critical for identifying vulnerable areas and improving disaster response planning. The results revealed that just 71 km—or 2% of the total analysed network—accounted for 12% of core-metropolitan connectivity prior to the floods. These high-centrality urban arteries, including the BR-290 Freeway, were disproportionately affected: they lost approximately 92% of their total centrality after the flooding. Overall, the road network experienced a 59% reduction in betweenness centrality at the core metropolitan scale. At the municipal level, impacts varied. For example, Canoas experienced a 59% loss in intracity connectivity, while Nova Santa lost only 14%, despite a larger flooded area (113 km^2 versus 65 km^2). Regarding the analysis of urban resilience to access healthcare facilities, the results revealed higher deficits in peripheral hospitals, such as Hospital Restinga e Extremo Sul, indicating a lower resilience. These results indicate the importance of multi-scale analyses to reveal spatial disparities and inform disaster risk management. This study provides actionable insights to support decision-makers in improving emergency responses and strengthening infrastructure resilience to future climate-related disasters.
+bibliography: sample.bib
+running:
+  title: R Markdown Template for Copernicus
+  author: Nüst et al.
+# See https://publications.copernicus.org/for_authors/licence_and_copyright.html, normally used for transferring the copyright, if needed. 
+# Note: additional copyright statements for affiliated software or data need to be placed in the data availability section. 
+copyrightstatement: |
+  This project is licensed under Creative Commons Attribution 4.0 International Public License. 
+### The following commands are for the statements about the availability of data sets and/or software code corresponding to the manuscript.
+### It is strongly recommended to make use of these sections in case data sets and/or software code have been part of your research the article is based on.
+### Note: unless stated otherwise, software and data affiliated with the manuscript are assumed to be published under the same licence as the article (currently Creative Commons 4.0)
+availability:
+  #code: |
+  #  use this to add a statement when having only software code available
+  #data: |
+  #  use this to add a statement when having only data sets available
+  codedata: |
+    **Code and data availability**: Code supporting this publication is available in [https://github.com/rruiz-s/agile-gscience-2024-rs-flood](https://github.com/rruiz-s/agile-gscience-2024-rs-flood)
+#  sample: |
+#    use this section when having geoscientific samples available
+videosupplement: |
+  **Technical supplement** A website including a in-depth view of the code and interactive charts is available at [https://rruiz-s.github.io/agile-gscience-2024-rs-flood/](https://rruiz-s.github.io/agile-gscience-2024-rs-flood/) 
+authorcontribution: |
+  **Alexander Zipf**: Project administration, Funding acquisition, Software, Writing - Review. **Cristian Albornoz**: Writing - Original Draft, Writing - Review & Editing. **Marcel Reinmuth**: Conceptualization, Methodology, Software, Investigation, Formal analysis, Resources, Writing - Original Draft, Writing - Review & Editing, Supervision, Project administration. **Ricardo Ruiz Sánchez**: Conceptualization, Methodology, Software, Validation, Formal analysis, Investigation, Resources, Data Curation, Writing - Original Draft,Writing - Review & Editing, Visualization.**Sven Lautenbach**: Draft,Writing - Review & Editing }
+#disclaimer: |
+#  We like Copernicus.
+acknowledgements: |
+  We would like to thank Dr. Monika Kuffer as well as Dr Bárbara Giaccom for providing their insights and constructive feedback, which greatly contributed to improving the article. Furthermore, we would like to extend our gratitude to the team members from HeiGIT Humanitarian Aid team and Tech Operations for their meaningful discussions and assistance. Similarly, we are very grateful for the kind assistance given by Vicky Vergara and Regina Obe on pgRouting. Last but not least, Ricardo would like to thank Mòr  Grommers for its feedback on visualizations.
+appendix: |
+  \section{Figures and tables in appendices}
+  Regarding figures and tables in appendices, the following two options are possible depending on your general handling of figures and tables in the manuscript environment:
+  \subsection{Option 1}
+  If you sorted all figures and tables into the sections of the text, please also sort the appendix figures and appendix tables into the respective appendix sections.
+  They will be correctly named automatically.
+
+output:
+  rticles::copernicus_article: 
+    highlight: NULL
+    keep_tex: true
+  bookdown::pdf_book:
+    base_format: rticles::copernicus_article # for using bookdown features like \@ref()
+---
+
+```{r}
+#| message: false
+#| warning: false
+#| output: false
+#| echo: false
+
+# Load all the temp_data ending in gpkg saving you time
+library(tictoc)
+library(tidyverse)
+library(sf)
+# temp_data
+temp_data <- list.files(path= "C:/agile-gscience-2024-rs-flood/data/temp_data", pattern="\\.gpkg")
+for (i in seq_along(temp_data)) {
+    file_name <- tools::file_path_sans_ext(temp_data[i])
+    assign(file_name, sf::read_sf(paste0("C:/agile-gscience-2024-rs-flood/data/temp_data/", temp_data[i])))
+}
+# result data
+results_data <- list.files(
+  path = "C:/agile-gscience-2024-rs-flood/data/results_data", 
+  pattern = "\\.gpkg$", 
+  recursive = TRUE, 
+  full.names = TRUE
+)
+for (i in seq_along(results_data)) {
+  file_name <- tools::file_path_sans_ext(basename(results_data[i]))
+  assign(file_name, sf::read_sf(results_data[i]))
+}
+# Load non-gpkg files
+centrality_both_sankey_v3 <- read.csv("C:/agile-gscience-2024-rs-flood/data/temp_data/centrality_both_sankey_v3.csv")
+df_centrality_both_sankey <- read.csv("C:/agile-gscience-2024-rs-flood/data/temp_data/df_centrality_both_sankey.csv")
+# Work on flat 
+sf::sf_use_s2(FALSE)
+options(scipen = 999)
+```
+
+\introduction[Introduction]
+
+As climate change intensifies extreme events, it is important to analyse the resilience of urban infrastructure, particularly the connectivity and redundancy of road networks [@petricolaAssessingRoadCriticality2022; @xuEnhancingNetworkResilience2021;@morelliResilienceHighwaysProposal2023;@papilloudFloodExposureAnalysis2020].
+ Identifying safe evacuation routes and ensuring access to critical points such as healthcare facilities is essential for informed spatial decision-making and effective humanitarian assistance during natural disasters, including floods, landslides, and mudslides [@florathRoadAccessibilityNatural2024; @heMobilityResilienceGlobal2022; @romeroSociopoliticalGoalsResponses2016]. 
+
+In fact, in this 21st century alone, at least a dozen floods caused by heavy rains have been recorded in Brazilian cities [@alvesferreiranetoInundacoesUrbanasTecnicas2019; @augustofilhoSimpleRainfallIndices2020].
+Among them, the following stand out: in the states of Santa Catarina in 2008; Rio de Janeiro in 2011; Amazonas in 2012 and in 2021; in the state of Acre in 2021; Rio Grande du Sul in 2024 [@redinvestenaFloodsSouthernBrazil2024;@stevauxFloodsUrbanAreas2009].
+These rains are intensified by climatic and anthropogenic factors, including global climatic phenomena associated with La Niña or El Niño and the tropical Atlantic climate variability [@matospereiraChuvasVeraoSob2021; @townerInfluenceENSOTropical2021].
+This is compounded by deforestation and alteration of the hydrological cycle, as well as urban sprawl and related problems, such as high surface runoff [@alvesferreiranetoInundacoesUrbanasTecnicas2019; @alvino-borbaDESASTRESNATURAISNO2020] or steep slopes and small basins that contribute to flash floods via rapid runoff and short response that links to flash floods [@martin-rayaIdentifyingUrbanProne2024]. 
+
+
+The last major flood in Rio Grande do Sul, occurring on the 29th of April of 2024, is an example of the impact of these torrential rains and the lack of urban resilience in densely populated cities.
+The UN’s Office for the Coordination of Humanitarian Affairs (OCHA) reported that these floods affected nearly 2.4 million of people causing 183 deaths, 27 missing persons and damage in 478 municipalities [@unochaBrazilFloodsRio2024].
+Between 26th April and 5th of May 2024, precipitation was three times higher than the regular monthly climatological distribution of precipitation in Rio Grande do Sul for April and May. This included a maximum precipitation record of 300 mm in a single day [@reboitaMultiScaleAnalysisExtreme2024].
+In addition, the disaster also affected more than 3000 healthcare facilities, including two-thirds of primary care units among them [@rizzottoClimateCrisisNew2024].
+
+Disasters such as the one that occurred in Porto Alegre highlight the need to know the resilience conditions of urban networks in order to make decisions and respond effectively to future disasters, thus supporting rescue and preparing response areas such as healthcare facilities and schools [@liuDisasterInformationService2022]. 
+Understanding how such events disrupt road connectivity and mobility is critical for identifying vulnerable areas and improving disaster response planning [@liuDisasterInformationService2022; @sandovalPostdisasterInstitutionalCommunity2017; @romeroSociopoliticalGoalsResponses2016].
+Urban planning needs to anticipate events to promote the resilience of urban areas [@phuaFosteringUrbanResilience2024]. In the urban context, resilience is understood as a characteristic of the urban system that ensures its ability to persist and thrive in the face of uncertainty, adversity, and change [@abenayakeInnovativeApproachAssess2022].
+
+Based on the 4R model of resilience [@rozerManagingRiskIncreasing2022], we focus our study on redundancy, understood as the availability of alternative routes. This 4R model, first proposed by [@bruneauFrameworkQuantitativelyAssess2003], and later refined to transport resilience by [@tierneyConceptualizingMeasuringResilience2007], characterises resilience through four properties. Robustness and redundancy ensure that the system can withstand damage and provide alternative routes during the disruption phase, while resourcefulness and rapidity define the speed of the recovery phase [@duResilienceConceptsIntegrated2022;@leobonsAssessingUrbanTransportation2019; @liaoTheoryUrbanResilience2012].
+Road networks play a critical role in urban flood scenarios - not only for connecting densely populated areas but also for ensuring access to essential services, emergency response, and critical infrastructure. Existing studies highlight the importance of alternative routes in the context of hazard exposure [@florathRoadAccessibilityNatural2024; @yangBuildingResilientCity2020; @morelliResilienceHighwaysProposal2023 ; @heMobilityResilienceGlobal2022]. 
+
+This study investigates the impact of flooding on the road network and healthcare accessibility in the “central core” of the Porto Alegre Metropolitan Region, which includes 9 of the 34 municipalities that make it up. Geographically, this region located near Lake Guaíba and the Jacuí and Gravataí rivers was severely affected (see Fig. 1). We leverage open data and methods to ensure transparency and reproducibility. The road network was derived from OpenStreetMap (OSM)^[[https://wiki.openstreetmap.org/wiki/Research](https://wiki.openstreetmap.org/wiki/Research)], the primary data source for creating the network graph used in the centrality analysis. The centrality metrics and redundancy assessments were conducted using the openrouteservice (ORS)^[[https://openrouteservice.org](https://openrouteservice.org)] routing engine, combined with flood extent data and healthcare facility locations. These open tools and datasets make this approach accessible for replication and adaptation in other regions. We aim to address the following research questions in this study:
+
+1. How is road connectivity affected in pre-disaster and post-disaster scenarios based on edge betweenness centrality?
+2. Which municipalities were most affected by the flood based on the edge betweenness centrality metrics?
+3. Which healthcare facility was the least resilient in terms of redundancy?
+
+```{r, out.width = "12cm", echo = FALSE, fig.cap = "The study area is located in the Federal Unit of Rio Grande do Sul within the central core of the Porto Alegre Metropolitan Region (RMPA). It includes 9 municipalities classified as dense urban settlement according to the Global Human Settlement SMOD dataset. These municipalities were: 1) Alvorada; 2) Cachoeirinha; 3) Canoas; 4) Esteio; 5) Gravatai; 6) Nova Santa Rita; 7) Porto Alegre; 8) Sapucaia do Sul; 9) Viamão."}
+knitr::include_graphics("C:/agile-gscience-2024-rs-flood/data/figures/area_study_v7.png")
+```
+
+
+# Methodology
+
+In order to assess the impact of the flood on the study area, we analysed the centrality of the road network before and after the flood. Centrality values were aggregated at both the core-metropolitan and intracity scales to identify the most affected areas.
+Additionally, we assessed the resilience of hospitals with intensive care units (ICUs) by measuring the availability of alternative access routes within a 10-minute catchment area to evaluate redundancy.
+Healthcare facilities with ICU beds are the subject of study due to their high demand during disasters, as demonstrated by the studies of @sellersPracticalConsiderationsImplementing2024 and @silvaEmergencyCareGap2021 specifically in Brazil.
+The general methodology workflow shown in Fig. 2, corresponds to the research design based on open-source geospatial tools and open spatial data.
+With this design, we measured the centrality of the network in terms of core-metropolitan connectivity (CM) and intracity connectivity (IC).
+In addition, we included the analysis of alternative paths to assess the redundancy of healthcare facilities.
+The three main lanes or activities were the following: (1) selection of the area of interest, (2) transformation of the road networks to a routable network, and (3) analysis of centrality and redundancy.
+
+```{r, out.width = "12cm", echo = FALSE, fig.cap = "The research design illustrates how three activities are required to calculate centrality and resilience providing the information to answer the question of how the flooding in Rio Grande do Sul affected the road network and hospital in the core-metropolitan area of Porto Alegre. We used open geospatial tools and data such as PostGIS,pgRouting, ORS, R and OSM"}
+knitr::include_graphics("C:/agile-gscience-2024-rs-flood/code/figures/research_design_v6.png")
+```
+
+
+We sourced the road network data from OSM and transformed it into a routable network graph using the ORS engine.
+ORS leverages OSMs raw data by filtering out information relevant to car mobility — such as road conditions, speed limits, and access restrictions—to create a network graph with nodes and edges that include traversal costs.
+This process allowed us to go beyond simple edge length as a proxy for cost, incorporating richer contextual information essential for realistic routing analysis.
+
+To determine the affected parts of the road network, we used a flood extent produced by the Federal University of Rio Grande do Sul [@possanttiBancoDadosCheias2024]. 
+The flood extent was created using Skystat, Planet, WorldView-2, Setinel satellite imagery 2 and field work. 
+The imagery was acquired at May 6th and May 8th. 
+However, it is not known for how long the extent derived was valid. This flood extent was then applied as a mask to identify inaccessible roads in the post-flood road network. 
+Meanwhile, the State Ministry of Health provided information on the healthcare facilities with ICU beds, which was published in the Rio Grande do Sul Spatial Data Platform (IEDE/RS)^[[https://iede.rs.gov.br/server/rest/services/SES/Hospitais_Leitos_UTI_RS/FeatureServer](Hospitais Leitos UTI RS)] and in the National Registry of Health Facilities (CNES, acronym in Portuguese) [@pcdasETLCNES_SRzip2022]. The dataset was filtered to include only facilities with ICU beds.
+
+For the centrality analysis, we aimed to simulate trips through the study area that represent realistic mobility flows.
+Similar studies often use spatial population distribution data to create weighted samples of origin and destination locations [@petricolaAssessingRoadCriticality2022; @klipperFloodImpactAssessment2021].
+A common challenge is the underestimation of the population in informal settlements [@breuerUnseenPopulationWe2024; @abascalMakingUrbanSlum2024].
+GHS-POP underestimates the population in high density residential areas [@kufferMissingMillionsMaps2022] and also underestimates the population in 307 studied rural areas by 85% [@lang-ritterGlobalGriddedPopulation2025]. 
+We addressed this gap using building heights, following the general recommendation of @kufferMissingMillionsMaps2022.
+We therefore used building volume data from the Global Human Settlement Layer \textit{GHS-Built-V} project as a proxy for population distribution [@pesaresiGHSBUILTVR2023AGHS2023].
+
+The network graph, extracted from OpenStreetMap and processed using the ORS engine, was imported into a PostgreSQL database equipped with the pgRouting extension. 
+All centrality measures, including edge betweenness, were computed within this environment.
+
+The remainder of the methodology section details the pre-processing steps used to prepare the data for analysis, including masking of the flood extent and creation of network graphs. 
+Subsequently, we outline the centrality and resilience analysis, specifying the metrics used to assess network connectivity and redundancy. 
+Finally, we describe the availability of the datasets and software used to ensure the transparency and reproducibility of our approach.
+
+## Pre-processing
+
+For the pre-processing, we selected a detected flooded urban human settlement that included Porto Alegre and  9 other municipalities. 
+Their administrative boundaries were obtained from geoboundaries.org  [@runfolaGeoBoundariesGlobalDatabase2020] (Fig. 1).
+After obtaining the road network from OSM, we transformed the road network into a routable graph using ORS, where any pair of vertices had at least one possible connection [@luShp2graphToolsConvert2018].
+We also used ORS to generate the 10-minute-isochrones of each of the hospitals to assess their resilience by determining the lack of redundancy.
+
+This routable graph, obtained from ORS and representing the pre-disaster road network, included costs based on different maximum speeds and considering road type, surface, zones and surface qualities [@orsTravelSpeedsOpenrouteservice2024]. 
+Clipping the pre-disaster graph with the flood extent provided the post-disaster network graph. 
+For this spatial operation, we applied the following optimisation techniques. 
+
+We used a filter-and-refine strategy which included subdividing the complex flood extent into smaller units and excluding those that did not intersect with the road network during the clipping process [@zhaoNOVELAPPROACHINDEXING2017].
+ We also calculated the area of the flood extent to remove the area of unwanted small polygons, also known as sliver polygons [@tolpekinCoreGIScienceSystemsbased2012;@heywoodIntroductionGeographicalInformation2011]. The above results in polygon simplification, which increases the performance of the spatial queries needed to create the post-disaster network [@grippaMappingUrbanLand2018]. 
+ 
+The use of pgrouting was key to calculating the centrality values and to selecting a self-connected network with one component, which is essential for calculating  paths or distances [@luShp2graphToolsConvert2018].
+ As the largest component of the network had a length of `r units::drop_units(round(units::set_units(sf::st_length(sf::st_union(ghs_aoi_net_largest$geom)), "km")))` km (97% of the total network), we decided to exclude the remaining `r length(unique(component_analysis_network_porto_ghs$component))-1` self-connected networks, which are often caused by tagging barriers in the OSM data.
+ 
+## Centrality and resilience analysis
+
+  On this point, we highlight two analyses.
+ The first analysis aims to quantify the change in road network connectivity at the core-metropolitan scale and to aggregate these values for each municipality.
+ Moreover, it evaluates the connectivity on a intracity scale for each municipality.
+ The second analysis focuses on assessing the redundancy of the road network within 10-minute-isochrones of each hospital, emphasising its value for ensuring the overall resilience of the network.
+
+In the first analysis, we used a weighted sampling by applying an origin-destination (OD) matrix with weights determined by building density to measure the centrality, as depicted in Fig. 3.
+@azarSpatialRefinementCensus2010 demonstrated the value of spatial proxies such as impervious surfaces for  estimating population. Similarly, @schugGriddedPopulationMapping2021 showed that building density improves these estimates.
+Therefore, this generated more origins and destinations where the building density was higher. 
+The OD matrix contained 300 points as origins and 300 points as destinations. These OD pairs are used to calculate the shortest paths between each pair based on the cost provided by ORS, rather than just the length of the road [@acheampongUrbanExpansionDifferential2022]. The cost from ORS incorporates factors such as road type and speed limits ^[[https://giscience.github.io/openrouteservice/technical-details/travel-speeds/](https://giscience.github.io/openrouteservice/technical-details/travel-speeds/)], making it more representative of real-world travel behaviour. Increasing the number of OD sampling points could cause memory allocation problems, while decreasing the number would leave out some municipalities.
+
+```{r, fig-weighted-od}
+#| echo: false
+#| out-width: 8.3cm
+#| fig-cap: "The distribution of the origins and destinations to measure the road network connectivity is weighted by building density."
+knitr::include_graphics("C:/agile-gscience-2024-rs-flood/data/figures/weighted_od_v2_positron_overture.png")
+```
+
+We measured the change in connectivity quantitatively by comparing the edge betweenness of the network before and after the flood, at both the core-metropolitan and intracity scales.
+At the core-metropolitan scale, the fastest paths based on ORS weights were used between a pairwise of 300 origin-destination points samples weighted by the built-up density over the entire settlement.
+This represented the core-metropolitan connectivity between cities.
+If we limit it to each of the municipalities, the process shows the connectivity within them, namely its intracity connectivity (IC). 
+
+Following the methodological criterion of @petricolaAssessingRoadCriticality2022, we calculated the centrality between edges in a specific OD matrix, instead of using all the nodes of the network. 
+For this calculation, we used the weight provided by the ORS.
+In this context, we have associated higher centrality values with urban arterial roads. This plays a central role in ensuring movement through the road network, as opposed to secondary or tertiary roads, which are responsible for less movement through the network.
+
+To estimate which municipality was most affected by the floods, we aggregated the change in CM connectivity after the flood per municipality.
+In addition, a map illustrating the local connectivity identified the urban arteries of each municipality revealing changes in the road network pattern when impacted by the flood.
+
+In the second analysis, we used a regularly sampled OD matrix within a 10-minute drive of the hospitals obtained through ORS. 
+The objective is to assess road redundancy as an indicator of a dimension of hospital resilience.
+Fig. 4 shows this regular sampling within the 10-minute-isochrones from each hospital.
+
+```{r, fig-regular-od}
+#| echo: false
+#| out-width: 8.3cm
+#| fig-cap: "The lack of redundancy measures the resilience based on regularly spaced origins and destinations in the 10-minute isochrones of each hospital."
+knitr::include_graphics("C:/agile-gscience-2024-rs-flood/code/figures/snapping_point_isochrone_v5.png")
+```
+
+
+To evaluate the redundancy of paths in the road network, we used an iterative penalty method [@baderAlternativeRouteGraphs2011]. 
+We regularly sampled origin points within the 10-minute-isochrone of each hospital and calculated the fastest path to the facility.
+ This process was repeated three times, with each iteration increasing the cost of edges that were used in the previous step, thereby simulating disruptions and encouraging route alternatives.
+ By comparing how path length and travel cost changed across these iterations, we quantified the availability and viability of alternative routes.
+  Although this analysis focuses on hospital accessibility, it also serves as an indirect measure of network resilience: road networks with more evenly distributed and viable alternatives are better equipped to maintain access when disruptions occur.
+  
+## Metrics
+
+The centrality metric used to determine the importance of each road segment in the network was the sum of betweenness centrality. 
+Betweenness centrality assesses the importance of roads in a network by counting the number of shortest paths that pass through that node. 
+The most common definition of betweenness centrality was introduced by Freeman and it is noted in the Eq.1.
+
+\begin{equation}
+c_{B}(v) = \sum_{\substack{s \neq t \neq v \\ s,t \in V}} \frac{\sigma(s,t|v)}{\sigma(s,t)}
+\label{eq:1}
+\end{equation}
+
+where  $\sigma(s,t|v)$ is the total number of shortest paths between source ($s$) and destination ($t$) that pass through the vertex $v$, and $\sigma(s,t)$ is the total number of shortest paths between s and t (regardless of whether or not they pass through $v$).
+In this study, edges are used instead of vertices.
+Most central roads acting as urban arteries scored high values on $c_{B}(v)$, for example, highways.
+Previous studies included betweenness centrality to assess critical infrastructure [@phuaFosteringUrbanResilience2024;@petricolaAssessingRoadCriticality2022].
+
+To measure the redundancy of the network, we have defined the metric as follows:
+Let $P$ be a starting point to go to hospital $H$. $P$ has three paths to $H$. We define the _cost of the j-th path_ in the Eq.2 as:
+
+\begin{equation}
+\hspace{3cm} C_j = \sum_{i=1}^{N_j}e_i^{(j)}
+\label{eq:2}
+\end{equation}
+
+where $e^{(j)}_{1},...e^{(j)}_{N_{J}}$ are the edges belonging to path $j$, and $j\in {1,2,3}$.
+We calculate the Average Cost of the Differences (_ACD_) for each $P$ as the Eq. 3:
+
+
+\begin{equation}
+\hspace{1cm} \textit{ACD}(P) = \frac{|C_1- C_2| + |C_1-C_3| + | C_2-C_3|}{3}
+\end{equation}
+
+Where $C_j$ is the cost defined at (Eq. 4). 
+
+Then based on the (Eq. 3), we denote _Lack of Redundancy_ for each Hospital $H$ as:
+
+
+$$
+\hspace{1cm} \textit{Lack of Redundancy(H)} = \frac{\sum_{Pstart} \textit{ACD}(P)}{\#  \textit{starting points }}    
+$$
+
+As the lack of redundancy indicator decreases, the road network becomes more resilient, with a small difference between the alternative routes to reach the hospital.
+In contrast, a high value of the lack of redundancy indicator shows a road network where the cost of using an alternative route is high, meaning that the road network is less resilient due to its lower redundancy. 
+In a flood event where routes may be inaccessible, providing alternative routes for users of the road network improves resilience by reducing the impact of disruption [@liuEffectivenessImprovementMeasures2023].
+
+## Data  and Software Availability Section
+
+Open data and open source software were used to assess the centrality and resilience of the road network. 
+The github repository [https://github.com/rruiz-s/agile-gscience-2024-rs-flood.git](https://github.com/rruiz-s/agile-gscience-2024-rs-flood.git) stored the code used to carry out the design research.
+All data is publicly available and processed using open source software.
+
+From pre-processing to obtaining the centrality and resilience results, the post-gis docker file kartzoa ^[[https://github.com/kartoza/docker-postgis?tab=readme-ov-file](https://github.com/kartoza/docker-postgis?tab=readme-ov-file)] provided a PostgreSQL 15.3 image with the extensions PostGIS 16-3.4--v2024.03.17 and pgrouting 3.5 used to handle spatial and routing data respectively.
+The Terra  package [@hijmansTerraSpatialData2024] performed the weighted sampling based on the built-up density used to measure the general and local centrality.
+As a bridge between PostgreSQL and R, the DBI library [@rspecialinterestgroupondatabasesr-sig-dbDBIDatabaseInterface2024] imported and exported data, while the glue library [@hesterGlueInterpretedString2024] facilitated some of the queries using RStudio 2023.06.1+524 "Mountain Hydrangea".
+The R library openrouteservice [@olesOpenrouteserviceOpenrouteserviceAPI2024] facilitated the isochrones through the ORS API ([https://openrouteservice.org/  accessed 07-11-2024](https://openrouteservice.org/], using default speed limits and the vehicle profile.
+Similarly,  QGIS [@qgisdevelopmentteamQGISGeographicInformation2024] was used to create the maps and check the quality of results, facilitating communication with the PostgreSQL database via the DB Manager QGIS plugin.
+
+# Results
+
+## Centrality on the core metropolitan road network
+
+The quantitative analysis of road connectivity before and after the flood revealed an overall connectivity decrease in the analysed `r  units::drop_units(round(sum(sf::st_length(centrality_pre$geom))/1000))` km of urban roads and surrounding `r units::drop_units(round(st_area(flood_extent$geom)/10000))` ha of flood extent.
+We present our findings considering both scales core metropolitcan and intracity.
+
+```{r}
+#| eval: true
+#| echo: false
+#| warning: false
+#| message: false
+library(tidyverse)
+library(BAMMtools)
+natural_jenks_breaks_cmc_pre <- BAMMtools::getJenksBreaks(centrality_both_sankey_v3$centrality_pre, k=5)
+```
+
+The change in centrality values at the core-metropolitan scale before and after the flood is shown in Fig.5.
+Critical urban arteries totalling `r units::drop_units(round(sum(st_length(filter(centrality_pre, centrality >= natural_jenks_breaks_cmc_pre[4])$geom))/1000))` km experienced significant disruption, with `r round((units::drop_units(sum(st_length(filter(centrality_pre, centrality >= natural_jenks_breaks_cmc_pre[4])$geom))) - units::drop_units(sum(st_length(centrality_post[centrality_post$Id %in% filter(centrality_pre, centrality >= natural_jenks_breaks_cmc_pre[4])$Id,]$geom)))) / units::drop_units(sum(st_length(filter(centrality_pre, centrality >= natural_jenks_breaks_cmc_pre[4])$geom))),2)*100`% (`r units::drop_units(round(sum(st_length(filter(centrality_pre, centrality >= natural_jenks_breaks_cmc_pre[4])$geom))/1000)) - units::drop_units(round(sum(st_length(centrality_post[centrality_post$Id %in% filter(centrality_pre, centrality >= natural_jenks_breaks_cmc_pre[4])$Id,]$geom))/1000))` km) becoming inaccessible after flooding.
+The range of values used in Fig. 5 is calculated using the Jenks natural breaks classification method. The urban arteries accounted for `r  round(sum(filter(centrality_pre, centrality >= natural_jenks_breaks_cmc_pre[4])$centrality) / sum(centrality_pre$centrality),2)*100`% of the total CM before the flood and the values were found above the `r round(ecdf(centrality_pre$centrality)(natural_jenks_breaks_cmc_pre[4]),3)` quantile.
+After the flood, the centrality values of the remaining `r suppressWarnings( round(units::drop_units(sum(st_length(filter(centrality_pre, !(Id  %in%  st_intersection(centrality_pre[centrality_pre$Id %in% filter(centrality_pre, centrality >= natural_jenks_breaks_cmc_pre[4])$Id,], flood_extent)$Id) &  centrality >= natural_jenks_breaks_cmc_pre[4])$geom)))/1000))` km of urban arteries fell below `r natural_jenks_breaks_cmc_pre[4]` and were distributed over lower intervals reducing their total CM connectivity by `r  suppressWarnings( abs(round((sum(centrality_post[centrality_post$Id %in% (filter(centrality_pre, !(Id  %in%  st_intersection(centrality_pre[centrality_pre$Id %in% filter(centrality_pre, centrality >= natural_jenks_breaks_cmc_pre[4])$Id,], flood_extent)$Id) &  centrality >= natural_jenks_breaks_cmc_pre[4])$Id),]$centrality)- sum(filter(centrality_pre, centrality >= natural_jenks_breaks_cmc_pre[4])$centrality)) / sum(filter(centrality_pre, centrality >= natural_jenks_breaks_cmc_pre[4])$centrality),2)*100))`%.
+
+```{r, fig-urban-arteries-nosp}
+#| echo: false
+#| out-width: 12cm
+#| fig-cap: "Changes in road centrality at the metropolitan scale before and after flooding, highlighting significantly disrupted critical roads and newly utilized alternative routes."
+knitr::include_graphics("C:/agile-gscience-2024-rs-flood/code/figures/rq1_gc_flow_results_v7.png")
+```
+
+In contrast, the `r units::drop_units(round(sum(st_length(filter(centrality_post, !(Id %in% centrality_pre$Id))$geom))/1000))` km of roads that could be described as "previously inactive", with no connectivity before the flood (= 0), became used and increased in importance. Specifically, `r  units::drop_units(round(sum(st_length(filter(centrality_post, !(Id %in% centrality_pre$Id) & centrality >= natural_jenks_breaks_cmc_pre[2] & centrality <= natural_jenks_breaks_cmc_pre[3])$geom))/1000))` km (`r round((sum(st_length(filter(centrality_post, !(Id %in% centrality_pre$Id) & centrality >= natural_jenks_breaks_cmc_pre[2] & centrality <= natural_jenks_breaks_cmc_pre[3])$geom))/1000) /round(sum(st_length(filter(centrality_post, !(Id %in% centrality_pre$Id))$geom))/1000) * 100)`%) of these newly activated routes became relatively central, with centrality values ranging from `r natural_jenks_breaks_cmc_pre[2]` to `r natural_jenks_breaks_cmc_pre[3]`.
+
+In terms of CM connectivity, the flooding also blocked urban arteries that had a high edge betweenness centrality value, such as Avenida Presidente Castelo Branco and BR-290 Freeway (shown in Fig. 6), resulting in a severe 59% loss of centrality.
+In fact, as a temporary measure in response to the emergency, these two roads were part of a humanitarian corridor to ensure supply and access by emergency vehicles ^ [[https://prefeitura.poa.br/eptc/noticias/cerca-de-24-mil-veiculos-passam-pelo-corredor-humanitario-no-primeiro-dia](https://prefeitura.poa.br/eptc/noticias/cerca-de-24-mil-veiculos-passam-pelo-corredor-humanitario-no-primeiro-dia)]. In contrast, roads away from the River Gravataı́ and located in the inner city, such as Avenida Protásio Alves, maintained or slightly increased their level of connectivity. 
+Given the strategic function of these arterial roads for urban mobility in the metropolitan region of Porto Alegre, the flood reduced the CM connectivity of these roads by a `r  suppressWarnings( abs(round((sum(centrality_post[centrality_post$Id %in% (filter(centrality_pre, !(Id  %in%  st_intersection(centrality_pre[centrality_pre$Id %in% filter(centrality_pre, centrality >= natural_jenks_breaks_cmc_pre[4])$Id,], flood_extent)$Id) &  centrality >= natural_jenks_breaks_cmc_pre[4])$Id),]$centrality)- sum(filter(centrality_pre, centrality >= natural_jenks_breaks_cmc_pre[4])$centrality)) / sum(filter(centrality_pre, centrality >= natural_jenks_breaks_cmc_pre[4])$centrality),2)*100))`%.
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| output: false
+#| include: false 
+
+library(stringr)
+planet_osm_roads <- sf::st_read("C:/agile-gscience-2024-rs-flood/data/results_data/obtain_routable_networks/osm_raw_roads.geojson")
+freeway <- planet_osm_roads[stringr::str_which(planet_osm_roads$name, "Freeway"), ]
+avenida_salgado <- planet_osm_roads[stringr::str_which(planet_osm_roads$name, "Avenida Senador Salgado Filho"), ]
+castelo_branco <- planet_osm_roads[stringr::str_which(planet_osm_roads$name, "Castello Branco"), ]
+pereira_de_vargas <- planet_osm_roads[stringr::str_which(planet_osm_roads$name, "Pereira de Vargas"), ]
+rua_florianopolis <- planet_osm_roads[stringr::str_which(planet_osm_roads$name, "Rua Florianópolis"), ]
+avenida_salgado_buffer <- st_buffer(avenida_salgado, dist = 30)
+freeway_buffer <- st_buffer(freeway, dist = 30)
+castelo_branco_buffer <- st_buffer(castelo_branco, dist = 30)
+pereira_de_vargas_buffer <- st_buffer(pereira_de_vargas, dist = 30)
+rua_florianopolis_buffer <- st_buffer(rua_florianopolis, dist = 30)
+## Freeway
+ic_pre_freeway <-  st_intersection(st_transform(local_connectivity_pre,3857), freeway_buffer)
+ic_post_freeway <-  st_intersection(st_transform(local_connectivity_post,3857), freeway_buffer)
+## avenida_salgado
+ic_pre_avenida_salgado <-  st_intersection(st_transform(local_connectivity_pre,3857), avenida_salgado_buffer)
+ic_post_avenida_salgado <-  st_intersection(st_transform(local_connectivity_post,3857), avenida_salgado_buffer)
+## pereira_de_vargas
+ic_pre_pereira_de_vargas <-  st_intersection(st_transform(local_connectivity_pre,3857), pereira_de_vargas_buffer)
+ic_post_pereira_de_vargas <-  st_intersection(st_transform(local_connectivity_post,3857), pereira_de_vargas_buffer)
+## castelo_branco
+ic_pre_castelo_branco <-  st_intersection(st_transform(local_connectivity_pre,3857), castelo_branco_buffer)
+ic_post_castelo_branco <-  st_intersection(st_transform(local_connectivity_post,3857), castelo_branco_buffer)
+## rua_florianopolis
+ic_pre_rua_florianopolis <-  st_intersection(st_transform(local_connectivity_pre,3857), rua_florianopolis)
+ic_post_rua_florianopolis <-  st_intersection(st_transform(local_connectivity_post,3857), rua_florianopolis)
+
+```
+
+At the municipal level (IC connectivity), the floods caused less disruption than at the CM scale. For example, Senador Salgado Filho Avenue in Viamão remained a key road both before and after the floods, with only a `r abs(round((sum(ic_post_avenida_salgado$centrality) - sum(ic_pre_avenida_salgado$centrality))/sum(ic_pre_avenida_salgado$centrality)*100))`% drop in its centrality. The same was true for João Pereira de Vargas Avenue in Sapucaia do Sul, which experienced a slight decrease of `r abs(round((sum(ic_post_pereira_de_vargas$centrality) - sum(ic_pre_pereira_de_vargas$centrality))/sum(ic_pre_pereira_de_vargas$centrality)*100))`%. This contrast, where IC centrality experienced only slight reductions compared to the major loss in CM centrality, illustrate the importance of multi-scale analysis.
+
+Conversely, there are cases of roads that were completely flooded, such as the central road Rua Florianópolis in Canoas, which was completely flooded, affecting its connectivity with a loss of 100%. Similarly, the flooding of the BR-290 Freeway in Porto Alegre caused an `r abs(round((sum(ic_post_freeway$centrality) - sum(ic_pre_freeway$centrality))/sum(ic_pre_freeway$centrality)*100))`% loss of its IC centrality. These are shown in the Fig. 6. In fact, the analysis showed that the degree of IC loss was not always proportional to the extent of the flooded area. Changes on the IC connectivity of these roads are listed in Annex Table A3.
+
+This imbalance is illustrated by the comparison between two adjacent municipalities in the north of the study area, Nova Santa Rita and Canoas. Although Nova Santa Rita was flooded over an area of `r suppressWarnings(units::drop_units(round(st_area(st_intersection(flood_extent, filter(connectivity_municipality_lc_rq,municipality=="Nova Santa Rita"))$geom)/1000000)))` km² - twice as much as Canoas (`r suppressWarnings(units::drop_units(round(st_area(st_intersection(flood_extent, filter(connectivity_municipality_lc_rq,municipality=="Canoas"))$geom)/1000000)))` km²) - it suffered only a `r abs(round((sum(filter(local_connectivity_post, shapename == "Nova Santa Rita")$centrality) - sum(filter(local_connectivity_pre, shapename == "Nova Santa Rita")$centrality)) /  sum(filter(local_connectivity_pre, shapename == "Nova Santa Rita")$centrality) * 100))`% loss of IC, while Canoas lost `r abs( round((sum(filter(local_connectivity_post, shapename == "Canoas")$centrality) - sum(filter(local_connectivity_pre, shapename == "Canoas")$centrality)) /  sum(filter(local_connectivity_pre, shapename == "Canoas")$centrality) * 100))`%. In addition, population density varies significantly between Nova Santa Rita and Canoas, with 133 and 2658 inhabitants per km² respectively.
+
+```{r, fig-urban-arteries-spatial}
+#| echo: false
+#| out-width: 12cm
+#| fig-cap: "Changes in the road connectivity identifying roads with high  edge betweenness centrality values as urban arteries. The connectivity between all the municipalities (A,B) represents the core metropolitan connectivity. In contrast, the maps (C,D) show the intracity connectivity for each individual municipality.The urban artery BR-290 Freeway in Porto alegre in the post-flooding event, while the urban artery Rua Forianópolis is affected by the flood in the municipality of Canoas "
+knitr::include_graphics("C:/agile-gscience-2024-rs-flood/code/figures/pre_gc_map_v7.png")
+```
+
+## Centrality municipalities
+
+In our assessment of the impact of the floods on network connectivity, we also observed an overall decrease but different changes in centrality between municipalities at the core-metropolitan and intracity scale.
+Table 1 shows the loss of metropolitan and intracity connectivity, population affected and GDP ^ [[https://www.ibge.gov.br/cidades-e-estados.html](https://www.ibge.gov.br/cidades-e-estados.html)] for each of the study municipalities.
+
+\begin{table}[h]
+\caption{The IntraCity (IC) connectivity was more correlated with affected population than the Core-Metropolitan (CM) connectivity  without always maintaining a relationship with the GPD. Canoas faced the highest IC connectivity loss and the highest impacted number of affected residents}
+\begin{tabular}{l l l l l}
+\tophline
+Municipality & Pop.Aff & CM & IC & GDP(R\$) \\
+\middlehline
+Canoas & 157K (45\%) & -83\%  & -59\% & 63K \\
+Porto Alegre & 125K (9\%) & -61\% & -22\% & 55K \\ 
+Alvorada & 26K (29\%) & -64\% & -36\% & 15K \\ 
+Esteio & 20K (26\%) & -70\% & -49\% & 45K \\ 
+Cachoeirinha & 12K  ( 9\%)& -73\% & -9\% & 49K \\ 
+Gravataí & 6K (2\%) & -56\%  & 58\% &  36K \\ 
+Sapucaia do Sul & 6K (4\%) & -63\% &  -07\% & 29K \\ 
+Viamão & 2K (1.0\%) & -52\% & -02\%  & 17K \\
+Nova Santa Rita & 7K (24\%) & -99\% & -14\% & 81K \\ 
+\bottomhline
+\end{tabular}
+\belowtable{Pop.Aff: Population affected \newline MC: Metropolitan Connectivity \newline IC: Intracity connectivity \newline GDP: Gross domestic product per capita (2021)} % Table Footnotes
+\label{tab:1} % Give a unique label
+\end{table}
+
+In terms of length, the  `r round(sum(st_length(porto_ghs_municipalities_street_in$geom))/1000)` km of roads affected by the flood were not evenly distributed among the municipalities studied.
+Porto Alegre faced substantial infrastructure disruption with `r sum(filter(total_network_mun_diff, shapename =="Porto Alegre")$length_total_road_km_flood)` km of flooded roads, whereas Viamão experienced minimal impacts (`r   sum(filter(total_network_mun_diff, shapename =="Viamão")$length_total_road_km_flood)` km lost). 
+The urban typology of these municipalities was heterogeneous, with Viamão characterised by a low population density of `r round(filter(connectivity_municipality_cmc_rq, municipality=="Viamão")$density)` inhabitants per km². This contrasts with the high population density of 2658 inhabitants per km² in Canoas.
+
+The impact of lost roads on centrality varied by municipality. For instance, while Canoas and Porto Alegre both lost approximately `r  round((sum(filter(total_network_mun_diff, shapename =="Porto Alegre")$length_total_road_km_flood) + sum(filter(total_network_mun_diff, shapename =="Canoas")$length_total_road_km_flood))/2)` km of roads, the effect on centrality differed on a `r unlist(regmatches(filter(connectivity_municipality_cmc_rq, municipality=="Canoas")$diff, gregexpr("[0-9]+",filter(connectivity_municipality_cmc_rq, municipality=="Canoas")$diff)))[1]`% loss in Canoas versus `r unlist(regmatches(filter(connectivity_municipality_cmc_rq, municipality=="Porto Alegre")$diff, gregexpr("[0-9]+",filter(connectivity_municipality_cmc_rq, municipality=="Porto Alegre")$diff)))[1]`% in Porto Alegre. This difference underlines how network structure and connectivity patterns influence resilience.
+From an economic and social perspective, we observed a comparable reduction in connectivity in both, high GDP municipalities, such as Porto Alegre, and low GDP municipalities, such as Alvorada.
+The decline in CM connectivity in these municipalities was `r `r unlist(regmatches(filter(connectivity_municipality_cmc_rq, municipality=="Porto Alegre")$diff, gregexpr("[0-9]+",filter(connectivity_municipality_cmc_rq, municipality=="Porto Alegre")$diff)))[1]`% and `r unlist(regmatches(filter(connectivity_municipality_cmc_rq, municipality=="Alvorada")$diff, gregexpr("[0-9]+",filter(connectivity_municipality_cmc_rq, municipality=="Alvorada")$diff)))[1]`% respectively, while the decline in IC connectivity was `r unlist(regmatches(filter(connectivity_municipality_lc_rq, municipality=="Porto Alegre")$diff, gregexpr("[0-9]+",filter(connectivity_municipality_lc_rq, municipality=="Porto Alegre")$diff)))[1]` % and `r unlist(regmatches(filter(connectivity_municipality_lc_rq, municipality=="Alvorada")$diff, gregexpr("[0-9]+",filter(connectivity_municipality_lc_rq, municipality=="Alvorada")$diff)))[1]`% respectively.
+
+In terms of the observed correlations, our findings revealed that high IC connectivity on the post-disaster road network was associated with low population density, with a slope of -726 and a p-value of 0.0978. 
+Consequently, as the population density increased, the post-flood IC connectivity decreased. 
+In contrast, municipalities with low population density per km², such as Viamão with `r round(filter(connectivity_municipality_cmc_rq, municipality=="Viamão")$density)` inhabitants per km², were correlated with higher IC connectivity connectivity in the post-disaster scenario. 
+For the CM connectivity, a regression analysis suggested a weak positive relationship between the connectivity before the flood and the affected population having an intercept estimate of `r round(broom::tidy(summary(lm(pre_gc ~  pop_aff, data=connectivity_municipality_cmc_rq )))$estimate[2])` and a p-value of `r round(broom::tidy(summary(lm(pre_gc ~  pop_aff, data=connectivity_municipality_cmc_rq )))$p.value[2],4)`
+
+Hospital resilience was assessed by analyzing the redundancy of alternative access routes. Among healthcare facilities, the lack of redundancy differed by a factor of `r  round(max(resilience_visintini_table$lack_pre)/min(resilience_visintini_table$lack_pre),2)` between the highest and lowest values.
+A summary of the results to measure the resilience based on the redundancy are shown in table 2, while table A1 shows all the results and table A2 the code used to define the type and juridic nature.
+
+
+\begin{table*}[t]
+\caption{Most of the hospitals located in the urban centre of Porto Alegre with a lower lack of redundancy were more resilient. ICU bed capacity varied unevenly across the different healthcare facilities}
+\begin{tabular}{l p{6cm} l l l}
+\tophline
+Rank & Healthcare facility & Lack of Redundancy (H) & Beds   & Area [hm\textsuperscript{2}] \\
+\middlehline
+1    & (M) Hospital Nossa Senhora Da Conceicao Sa Porto Alegre      & 183   & 824    & 4686 \\
+2    &  (G) Hospital Ernesto Dornelles Porto Alegre        & 198   & 313   & 5463 \\
+3    & (N) Hospital Porto Alegre Porto Alegre      & 205   & 83   &  4772 \\
+4    &  (H) Hospital Femina Sa Porto Alegre     & 211   & 110   & 5379 \\
+5    &  (D) Hospital De Clinicas Porto Alegre     & 222   & 736   & 5156 \\
+18   & (F) Hospital Dom Joao Becker     & 426   & 178  & 9296 \\
+19   & (U) Instituto De Cardiologia Hospital Viamao     & 603   & 171   & 5957 \\
+20   & (I) Hospital Independencia     & 611   & 178  & 4860 \\
+21   & (E) Hospital Divina Providencia     & 728   & 165 & 3009 \\
+22   & (P) Hospital Restinga E Extremo Sul    & 839   & 122  & 2932 \\
+\bottomhline
+\end{tabular}
+\belowtable{This table shows hospitals ranked by resilience indicators, including the \textit{Lack of Redundancy} (average difference in cost between three alternative routes to each hospital; higher values indicate lower resilience), the number of ICU beds, and the size of the 10-minute-isochrone area in hectares (Area), representing the coverage under normal conditions.} % Table Footnotes
+\label{tab:hospital_rankings} % Unique label for referencing
+\end{table*}
+
+Resilient hospitals were mainly located in the centre of Porto Alegre, where the lack of redundancy was low, and provided similar alternative routes.
+This is shown in Fig. 7. 
+In contrast, the lack of redundancy was high in the hospitals located in the two less densely populated municipalities, Viamão and Gravataí, with densities of `r  round(filter(connectivity_municipality_cmc_rq, municipality=="Viamão")$density)` and `r round(filter(connectivity_municipality_cmc_rq, municipality=="Gravataí")$density)` of inhabitants per km² respectively. Out of a total of 22 hospitals, the extent of the flooding intersected with `r suppressWarnings(length(unique(sf::st_filter(resilience_visintini_table, flood_extent)$ds_cnes)))`  hospitals. These flooded hospitals are written in red in Fig. 7.
+With the loss of access to these hospitals, `r suppressWarnings(sum(sf::st_filter(resilience_visintini_table, flood_extent)$beds))` beds were no longer available, `r suppressWarnings(sum(filter(sf::st_filter(resilience_visintini_table, flood_extent), code=="Private")$beds))` of which belong to private hospitals such as `r stringr::str_to_title(filter(sf::st_filter(resilience_visintini_table, flood_extent), code=="Private")$ds_cnes[1])` and `r stringr::str_to_title(filter(sf::st_filter(resilience_visintini_table, flood_extent), code=="Private")$ds_cnes[2])`. 
+The only public hospital with ICU beds in flooded area,the `r suppressWarnings(stringr::str_to_title( filter(sf::st_filter(resilience_visintini_table, flood_extent), code=="Public")$ds_cnes))`, was equipped with `r suppressWarnings(filter(sf::st_filter(resilience_visintini_table, flood_extent), code=="Public")$beds)` beds.
+The municipalities of `r paste0(filter(municipalities_ghs, !shapename %in%  resilience_visintini_table$shapename)$shapename[1], ", ", filter(municipalities_ghs, !shapename %in%  resilience_visintini_table$shapename)$shapename[2], " and ",filter(municipalities_ghs, !shapename %in%  resilience_visintini_table$shapename)$shapename[3])` had no hospitals with ICU beds.
+
+Hospitals further away from Porto Alegre's  district Centro Histórico were less resilient under normal circumstances, as they had a greater lack of redundancy.
+While the `r  length(resilience_visintini_table$ds_cnes[st_contains(st_buffer(st_transform(centro_historico_porto,31982), 3200), st_transform(resilience_visintini_table,31982), sparse= FALSE)])` hospitals within 3.2 km from the Centro Histórico of Porto Alegre scored an average of `r round(mean(resilience_visintini_table$lack_pre[st_contains(st_buffer(st_transform(centro_historico_porto,31982), 3200), st_transform(resilience_visintini_table,31982), sparse= FALSE)]))` in the lack of redundancy, the remaining `r length(resilience_visintini_table$ds_cnes[!st_contains(st_buffer(st_transform(centro_historico_porto,31982), 3200), st_transform(resilience_visintini_table,31982), sparse= FALSE)])` healthcare facilities scored an average of `r round(mean(resilience_visintini_table$lack_pre[!st_contains(st_buffer(st_transform(centro_historico_porto,31982), 3200), st_transform(resilience_visintini_table,31982), sparse= FALSE)]))` reaching the highest lack of redundancy at the hospital `r  stringr::str_to_title(resilience_visintini_table[which(st_distance(centro_historico_porto, resilience_visintini_table)==max(st_distance(centro_historico_porto, resilience_visintini_table))),]$ds_cnes)`, `r units::drop_units(round(max(st_distance(centro_historico_porto, resilience_visintini_table))/1000))` km away from the Centro Histórico of Porto Alegre.  
+
+As Fig. 7 shows, the healthcare facilities with a lower lack of redundancy, located to the right of the x-axis, are in Porto Alegre.  The `r stringr::str_to_title(arrange(resilience_visintini_table,lack_pre)$code[1])` `r stringr::str_to_title(arrange(resilience_visintini_table,lack_pre)$ds_cnes[1])` had the lowest lack of redundancy offering the highest resilience and ranked second in terms of bed capacity, with a total number of `r stringr::str_to_title(arrange(resilience_visintini_table,lack_pre)$beds[1])` beds.
+Considering a 10-minute-isochrone, the `r stringr::str_to_title(arrange(mutate(isochrone_ghs_aoi,area = st_area(isochrone_ghs_aoi$geom)),desc(area))$ds_cnes[1])` with the highest lack of redundancy reached an area that was `r round(arrange(mutate(isochrone_ghs_aoi,area = st_area(isochrone_ghs_aoi$geom)),desc(area))$area[1]/arrange(mutate(isochrone_ghs_aoi,area = st_area(isochrone_ghs_aoi$geom)),area)$area[1],2)` times greater than the size compared to the hospital `r stringr::str_to_title( arrange(mutate(isochrone_ghs_aoi,area = st_area(isochrone_ghs_aoi$geom)),area)$ds_cnes[1])`.
+
+```{r, fig-hospital}
+#| echo: false
+#| out-width: 12cm
+#| fig-cap: "Healthcare facilities in central areas, such as the historic centre of Porto Alegre , were more resilient, with less lack of redundancy, while peripheral facilities had accessibility above the average.ICU beds  were spread heterogeneously distributed. Healthcare facilities in red were flooded"
+knitr::include_graphics("C:/agile-gscience-2024-rs-flood/data/figures/rq3_v7.png")
+```
+
+In the municipality of Porto Alegre, hospitals with the same number of beds
+exhibited differences in the lack of redundancy of their road network within the isochrone.  
+The `r stringr::str_to_title(arrange(filter(resilience_visintini_table, shapename=="Porto Alegre"), lack_pre)$ds_cnes[1])`, with `r  arrange(filter(resilience_visintini_table, shapename=="Porto Alegre"), lack_pre)$beds[1]` beds, was ranked `r filter(mutate(filter(resilience_visintini_table, shapename=="Porto Alegre") ,rank_pre_lack = rank(lack_pre)), ds_cnes == "HOSPITAL NOSSA SENHORA DA CONCEICAO SA")$rank_pre_lack`st as the hospital with the least lack of redundancy, while the `r stringr::str_to_title(filter(resilience_visintini_table, shapename=="Porto Alegre" & beds == 845)$ds_cnes)`, with a similar number of beds (i.e. `r sum(filter(resilience_visintini_table, shapename=="Porto Alegre" & beds == 845)$beds)`), was ranked `r filter(mutate(filter(resilience_visintini_table, shapename=="Porto Alegre"), rank_lack_pre = rev(rank(lack_pre)))   ,ds_cnes=="IRMANDADE DA SANTA CASA DE MISERICORDIA DE PORTO ALEGRE")$rank_lack_pre`th out of `r length(mutate(filter(resilience_visintini_table, shapename=="Porto Alegre"), rank_lack_pre = rev(rank(lack_pre)))$rank_lack_pre)` in the municipality of Porto Alegre.  
+The hospitals most affected by the flood were the `r stringr::str_to_lower(filter(resilience_visintini_table, shapename=="Porto Alegre" & lack_post == 0)$code[1])` `r stringr::str_to_title(filter(resilience_visintini_table, shapename=="Porto Alegre" & lack_post == 0)$ds_cnes[1])` and the `r stringr::str_to_lower(filter(resilience_visintini_table, shapename=="Porto Alegre" & lack_post == 0)$code[2])` `r stringr::str_to_title(filter(resilience_visintini_table, shapename=="Porto Alegre" & lack_post == 0)$ds_cnes[2])`, with `r stringr::str_to_title(filter(resilience_visintini_table, shapename=="Porto Alegre" & lack_post == 0)$beds[1])` and `r stringr::str_to_title(filter(resilience_visintini_table, shapename=="Porto Alegre" & lack_post == 0)$beds[2])` beds respectively.
+In other cases, the flood covered the road network partially reducing the number of OD points, as in the Hospital `r  stringr::str_to_title(na.omit(mutate(resilience_visintini_table,diff_sample = abs(sample_point_post-sample_point_pre))[mutate(resilience_visintini_table,diff_sample = abs(sample_point_post-sample_point_pre))$diff_sample == max(na.omit(mutate(resilience_visintini_table,diff_sample = abs(sample_point_post-sample_point_pre))$diff_sample)),])$ds_cnes)` in Canoas, where `r round(na.omit(mutate(resilience_visintini_table,diff_sample = abs(sample_point_post-sample_point_pre))[mutate(resilience_visintini_table,diff_sample = abs(sample_point_post-sample_point_pre))$diff_sample == max(na.omit(mutate(resilience_visintini_table,diff_sample = abs(sample_point_post-sample_point_pre))$diff_sample)),])$sample_point_post / na.omit(mutate(resilience_visintini_table,diff_sample = abs(sample_point_post-sample_point_pre))[mutate(resilience_visintini_table,diff_sample = abs(sample_point_post-sample_point_pre))$diff_sample == max(na.omit(mutate(resilience_visintini_table,diff_sample = abs(sample_point_post-sample_point_pre))$diff_sample)),])$sample_point_pre,2)*100`% of the OD were flooded, modifying its lack of redundancy after the disaster event.
+
+The flooding in the study area significantly disrupted road connectivity with a `r round((sum(centrality_post$centrality) - sum(centrality_pre$centrality))/sum(centrality_pre$centrality) * 100)`% decrease in edge betweenness centrality at the CM scale. 
+This disruption particularly impacted the metropolitan road network connecting different municipalities (see Fig. 5).
+Before the flood, `r units::drop_units(round(sum(st_length(filter(centrality_pre, centrality >= natural_jenks_breaks_cmc_pre[4])$geom))/1000))` km of urban arteries accounted for `r round(sum(filter(centrality_pre, centrality >= natural_jenks_breaks_cmc_pre[4])$centrality) / sum(centrality_pre$centrality),2)*100`% of CM connectivity, including key routes such as the BR-290 freeway or Avenida Presidente Castelo Branco (see Fig.9).
+Following the flooding, the BR-290 highway became inaccessible, and urban arterials contributing to the CM connectivity fell to `r suppressWarnings(round((sum(centrality_post[centrality_post$Id %in% (filter(centrality_pre, !(Id  %in%  st_intersection(centrality_pre[centrality_pre$Id %in% filter(centrality_pre, centrality >= natural_jenks_breaks_cmc_pre[4])$Id,], flood_extent)$Id) &  centrality >= natural_jenks_breaks_cmc_pre[4])$Id),]$centrality)- sum(filter(centrality_pre, centrality >= natural_jenks_breaks_cmc_pre[4])$centrality)) / sum(filter(centrality_pre, centrality >= natural_jenks_breaks_cmc_pre[4])$centrality)*100*-1))`%.  
+The BR-290/RS road, a major access point to Porto Alegre, has been the focus of previous traffic studies, which have highlighted its strategic importance [@zechinInfluenceRainHighway2020].
+These findings underscore the vulnerability of relying heavily on key urban arteries, which are highly exposed to flooding. 
+By using edge betweenness centrality derived from a population-weighted OD matrix, our method captured how specific roads concentrate urban mobility. 
+This approach proved effective in identifying bottlenecks in a realistic way, thanks to the incorporation of ORS traversal costs instead of simple edge length distance. Such disruptions exacerbate challenges in delivering humanitarian aid and addressing the needs of affected populations.
+Moreover, the cascading effects triggered by the loss of critical infrastructure can amplify the overall impact of disasters, a phenomenon previously documented in similar contexts [@petricolaAssessingRoadCriticality2022].
+
+When evaluating edge betweenness centrality at the IC scale - restricted to movements within individual municipalities - the results reveal heterogeneous effects of the flood on the road network.
+Although the overall reduction in IC connectivity was `r round((sum(local_connectivity_post$centrality) - sum(local_connectivity_pre$centrality))/sum(local_connectivity_pre$centrality) * 100)`%, which was a smaller decline compared to the `r abs(round((sum(centrality_post$centrality) - sum(centrality_pre$centrality))/sum(centrality_pre$centrality) * 100))`% loss in the CM connectivity, the magnitude of this impact varied significantly in different locations. 
+In Canoas, the loss of urban arteries such as Rua Florianópolos caused an overall `r abs( round((sum(centrality_post$centrality) - sum(centrality_pre$centrality))/sum(centrality_pre$centrality) * 100))`% reduction in IC, while Viamão experienced only a `r abs(round(as.numeric(gsub(",", ".", gsub("[^0-9,-]", "", filter(connectivity_municipality_lc_rq, municipality == "Viamão")$diff)))))`% decline.
+Despite this considerable variation, a common pattern emerged: areas with higher built-up density exhibited greater losses in edge betweenness centrality. 
+Similar findings have been reported, with studies emphasising the strong influence of road network structure on flood exposure and its broader impacts [@papilloudFloodExposureAnalysis2020].  
+Examining changes in edge betweenness centrality on an IC scale highlights critical patterns, such as the vulnerability of urban arterials, offering policymakers valuable, localized insights for mitigating flood risks and planning resilient infrastructure.
+
+Unexpectedly, `r round(units::drop_units(sum(st_length(filter(centrality_post, !(Id %in% centrality_pre$Id) & centrality >= natural_jenks_breaks_cmc_pre[2])$geom))/1000))` km (`r round(round(units::drop_units(sum(st_length(filter(centrality_post, !(Id %in% centrality_pre$Id) & centrality > natural_jenks_breaks_cmc_pre[2])$geom))/1000))/ round(units::drop_units(sum(st_length(filter(centrality_post, !(Id %in% centrality_pre$Id))$geom))/1000))*100)`%) of the `r round(units::drop_units(sum(st_length(filter(centrality_post, !(Id %in% centrality_pre$Id))$geom))/1000))` km of unused roads had high centrality values (>`r natural_jenks_breaks_cmc_pre[2]`) after the flood.
+The Top `r round(ecdf(centrality_pre$centrality)(natural_jenks_breaks_cmc_pre[4]),3)` quantile roads, which previously accounted for  `r round(sum(filter(centrality_pre, centrality >= natural_jenks_breaks_cmc_pre[4])$centrality) / sum(centrality_pre$centrality),2)*100`% of CM connectivity, accounted for only `r round(sum(filter(centrality_post, (Id %in% filter(centrality_pre, centrality >= natural_jenks_breaks_cmc_pre[4])$Id))$centrality) / sum(centrality_pre$centrality),2)*100`% after the flood.
+
+## Centrality on Intracity scale
+
+The edge betweenness centrality results revealed notable differences in the impact of flooding across municipalities, influenced by whether the analysis focused on connectivity within individual municipalities (IC) or across the entire core-metropolitan area (CM connectivity). 
+For example, while Porto Alegre’s CM connectivity decreased by `r abs(round(as.numeric(gsub(",", ".", gsub("[^0-9,-]", "", filter(connectivity_municipality_cmc_rq, municipality == "Porto Alegre")$diff)))))`%, its IC connectivity experienced a smaller reduction of `r abs(round(as.numeric(gsub(",", ".", gsub("[^0-9,-]", "", filter(connectivity_municipality_lc_rq, municipality == "Porto Alegre")$diff)))))`%.
+Conversely, `r arrange(mutate(connectivity_municipality_lc_rq, diff_numeric=(post_lc -pre_lc)/pre_lc*100), diff_numeric)$municipality[1]` emerged as the most affected municipality in terms of both IC and CM connectivity. Nova Santa Rita lost nearly all (`r abs(round(as.numeric(gsub(",", ".", gsub("[^0-9,-]", "", filter(connectivity_municipality_cmc_rq, municipality == "Nova Santa Rita")$diff)))))`%) of its CM connectivity as it became encircled by the flood.
+The Canoas results are consistent with data from SPGG-DEE-DEPLAN ^[[https://mup.rs.gov.br/](https://mup.rs.gov.br/)], which reported `r arrange(connectivity_municipality_cmc_rq, desc(pop_aff))$municipality[1]` as the most impacted municipality, with `r arrange(connectivity_municipality_cmc_rq, desc(pop_aff))$pop_aff[1]/1000`K people affected. 
+These disparities between IC and CM connectivity highlight the importance of studying road network disruptions at multiple scales, ensuring a nuanced understanding of local conditions to better facilitate humanitarian aid and crisis management.
+
+However, the size of the affected population alone does not fully capture the magnitude of the impact, as factors such as age and socio-economic conditions also play a critical role.
+For example, @kabiruRelationshipMultipleHazards2023 reported that populations in slum settlements are often located in flood-prone areas with inadequate infrastructure, such as a lack of green spaces that could mitigate flooding by acting as natural sinks. 
+Similarly, @fatmahKnowledgeFloodManagement2024 found that elderly populations face reduced survival rates during disasters due to physical limitations that prevent timely evacuation.
+
+An unexpected finding of this study was the large disparity between the impact on IC and CM connectivity, especially when comparing urban and rural municipalities.
+For example, table 1 shows that Viamão, with a low building density lost half of its CM connectivity.
+However, its IC connectivity only decreased by  `r abs(round(as.numeric(gsub(",", ".", gsub("[^0-9,-]", "", filter(connectivity_municipality_lc_rq, municipality == "Viamão")$diff)))))`%, as only `r round(filter(connectivity_municipality_cmc_rq, municipality == "Viamão")$diff_pop)`% of its population was directly affected.
+A closer examination reveals that the flooded areas in Viamão were predominantly rural, with sparse urban development.
+This limited urban building coverage probably explains the lower loss of IC connectivity and the lower number of people affected. 
+In support of this, @balaianHowUrbanForm2024 suggested that urban building coverage is a key factor influencing flood depth and damage, with denser urban areas being more vulnerable to severe flood impacts. Nevertheless, not only the land  use, but geographical aspects such as proximity to rivers also play a role in the impact of the flood on the connectivity. 
+
+## Hospital resilience
+
+Peripheral health facilities with higher values of lack of redundancy were less resilient to disruptions.
+Our iterative penalty method, inspired by prior studies on alternative route modeling, helped quantify this vulnerability by simulating path variability under stress. 
+This technique offered a practical way to model resilience without requiring dynamic real-time data, making it adaptable to data-scarce environments.
+For instance, the private healthcare facility `r stringr::str_to_title(filter(resilience_visintini_table, lack_pre==min(resilience_visintini_table$lack_pre))$ds_cnes)` in Porto Alegre's Centro Histórico was the most resilient, with a score of `r round(min(resilience_visintini_table$lack_pre))`. Given that the alternative paths are fairly similar in length, the network has a low lack of redundancy - showing that multiple reliable options exist. 
+In contrast, `r stringr::str_to_title(filter(resilience_visintini_table, lack_pre==max(resilience_visintini_table$lack_pre))$ds_cnes)`, located in the periphery of Porto Alegre, scored the highest lack of redundancy at `r round(max(resilience_visintini_table$lack_pre))`. This difference underscores the advantage of hospitals in urban centres, such as those in Centro Histórico, where multiple alternative paths with minimal variation contribute to greater resilience.
+Conversely, rural municipalities further away from the urban core, such as Gravataí and Viamão, exhibited higher lack of redundancy scores with `r round(filter(resilience_visintini_table, shapename %in% c("Gravataí","Viamão"))$lack_pre[1])` and `r round(filter(resilience_visintini_table, shapename %in% c("Gravataí","Viamão"))$lack_pre[2])` respectively, indicating lower level of resilience.
+These findings are in line with studies of accessibility to healthcare facilities in Brazil, which have also reported reduced accessibility in rural areas [@silvaEmergencyCareGap2021].
+
+For example, facilities such as Hospital Dom João Becker in Gravataí and the Instituto de Cardiologia Hospital Viamão were accessible over longer distances [@rochaEffectSocioeconomicInequalities2021]. 
+
+The trend was reversed when measures of accessibility such as the area within a 10-minute drive, were taken into account.
+Healthcare facilities in peripheral areas outperformed those near the Centro Histórico.
+For example,the Hospital Dom Joao Becker (F) in Gravatai  or Instituto De Cardiologia Hospital Viamao (U) were accessible over longer distances (see Fig. 7 ).
+A plausible explanation lies in the higher density of speed limitations in urban centres, which restricts the reachable area within a short time frame.
+In addition, socio-economic vulnerabilities, reflected in the availability of ICU beds, emphasised the significance of peripheral hospitals [@rochaEffectSocioeconomicInequalities2021].
+By combining accessibility, redundancy, and socioeconomic data, the study aimed to pinpoint hospitals with limited alternative paths, informing strategies to prioritize support for the most disadvantaged populations during humanitarian aid efforts.
+
+It was unexpected to find that  some hospitals with high ICU bed capacity, such as Irmandade da Santa Casa de Misericórdia de Porto Alegre and Hospital Nossa Senhora da Conceição, also had a low lack of redundancy, making them both critical and resilient.
+Despite their location in heavily affected Porto Alegre, these hospitals, with 845 and 824 ICU beds respectively, were not directly impacted by the flood. As the lack of redundancy was low, the difference between the three alternative routes was small, offering several viable access options.
+In contrast, Pronto Socorro de Canoas Dep. Nelson Marchezan equipped with 100 beds and one of only two hospitals in Canoas, was flooded. This hospital is located next to the Dique Mathias Velho, whose breach caused the flooding of the west side of Canoas ^[[https://www.canoas.rs.gov.br/noticias/reconstrucao-do-dique-do-mathias-velho-entra-na-etapa-final/](https://www.canoas.rs.gov.br/noticias/reconstrucao-do-dique-do-mathias-velho-entra-na-etapa-final/)].
+Another notable finding is that resilient hospitals do not necessarily have large bed capacities. 
+For instance, Hospital Porto Alegre ranked third in resilience despite having only 83 beds, while Hospital Dornelles ranked second with 313 beds (see Fig. 7). 
+This suggests that disaster preparedness could be improved by equipping resilient hospitals with more ICU beds. 
+Similarly, hospitals with high accessibility but limited ICU beds, such as HPS Porto Alegre, represent prime candidates for investment in network redundancy to enhance resilience.
+Finally, it is worth noting that municipalities like Nova Santa Rita, which lack hospitals entirely, were particularly vulnerable during the flood (see Fig. 1).
+Residents of Nova Santa Rita were left without easy access to emergency services after losing critical links, highlighting the importance of ensuring equitable access to healthcare infrastructure in disaster preparedness and response planning.
+
+While the applied methods provide actionable insights, they also come with certain limitations. 
+The edge betweenness centrality metric, while effective in identifying critical roads, assumes static travel demand and does not account for adaptive human behaviour in response to, not before experienced, disruptions. 
+Similarly, the redundancy analysis relied on a simplified iterative penalty model, which simulates disruption by modifying edge costs but does not fully capture complex cascading failures or real-time road closures. 
+Moreover, the use of a fixed 10-minute-isochrone for hospital access assumes uniform conditions across municipalities, which may overlook terrain or traffic-specific constraints. 
+Despite these limitations, the integration of open-source tools, ORS-based routing costs, and building density as a proxy for population enabled a scalable and reproducible analysis framework that can be adapted to other regions. 
+However, this framework is intended as a decision-support tool rather than a substitute for local knowledge and should ideally be complemented by situational insights from people on the ground.
+
+\conclusions[Conclusions]
+
+This study examined the impact of flooding on road network connectivity and healthcare facility resilience in the metropolitan area of Porto Alegre, with a focus on centrality metrics and redundancy.
+The results revealed significant disruptions to both CM and IC connectivity, emphasising the importance of scale when analysing road network vulnerabilities.
+While CM connectivity decreased substantially, the impacts varied across municipalities and were influenced by factors such as building density, urbanization, and pre-existing road infrastructure.
+
+Our assessment of hospital resilience showed stark contrasts between urban and peripheral facilities. Hospitals located in central areas, such as Porto Alegre’s Centro Histórico, benefited from higher redundancy due to multiple alternative routes, making them more resilient to disruptions.
+Conversely, hospitals in rural municipalities exhibited a higher lack of redundancy, compounding accessibility challenges during emergencies. Considering measures like ICU bed capacity further underscored the disparities, identifying critical gaps in disaster preparedness and response.
+
+The findings underscore the need for targeted interventions, including enhancing redundancy in vulnerable regions, prioritising the retrofitting of key road segments, and addressing inequities in healthcare accessibility. 
+Policymakers can leverage these insights to improve infrastructure resilience, ensuring better emergency response and equitable service delivery during disasters. 
+However this study focused on road networks and healthcare facilities within a single metropolitan area, and its findings may not generalize to regions with different infrastructure or flood dynamics.
+
+Future work should explore additional dimensions, such as incorporating multimodal transport options, analysing time-variant factors such as traffic density, and addressing socioeconomic vulnerabilities. 
+In the same way, using other buildings converted to shelters rather than hospitals could be easily implemented and offer valuable insights.
+Expanding the study to include different flooding scenarios and integrating 3D flood models would provide a more comprehensive understanding of resilience in dynamic urban and rural landscapes.
+
+
+\appendixtables
+
+
+\begin{table*}[t]
+\caption{Healthcare facilities, ICU capacity, and redundancy coverage in the metropolitan core of Porto Alegre}
+\begin{tabular}{c c p{5.5cm} r r l r r}
+\tophline
+ID & Letter & Healthcare Facility & Code & ICU Beds & Municipality & Lack of Redundancy & Coverage (ha) \\
+\middlehline
+1  & A & Associacao Hospitalar Vila Nova Porto Alegre            & 3999 & 521 & Porto Alegre    & 405 & 4577 \\
+2  & B & Hbmpa                                                   & 1236 & 90  & Porto Alegre    & 288 & 2830 \\
+3  & C & Hospital Cristo Redentor Sa                             & 2011 & 226 & Porto Alegre    & 313 & 5269 \\
+4  & D & Hospital De Clinicas                                    & 2011 & 736 & Porto Alegre    & 222 & 5156 \\
+5  & E & Hospital Divina Providencia                             & 3999 & 165 & Porto Alegre    & 728 & 3009 \\
+6  & F & Hospital Dom Joao Becker                                & 3069 & 178 & Gravataí        & 426 & 9296 \\
+7  & G & Hospital Ernesto Dornelles                              & 3999 & 313 & Porto Alegre    & 198 & 5463 \\
+8  & H & Hospital Femina Sa                                      & 2011 & 110 & Porto Alegre    & 211 & 5379 \\
+9  & I & Hospital Independencia                                  & 3999 & 178 & Porto Alegre    & 611 & 4860 \\
+10 & J & Hospital Mae De Deus                                    & 3999 & 295 & Porto Alegre    & 241 & 3428 \\
+11 & K & Hospital Moinhos De Vento                               & 3999 & 367 & Porto Alegre    & 223 & 4473 \\
+12 & L & Hospital Municipal Getulio Vargassapucaia Do Sul        & 1244 & 165 & Sapucaia do Sul & 351 & 5979 \\
+13 & M & Hospital Nossa Senhora Da Conceicao Sa                  & 2011 & 824 & Porto Alegre    & 183 & 4686 \\
+14 & N & Hospital Porto Alegre                                   & 3999 & 83  & Porto Alegre    & 205 & 4772 \\
+15 & O & Hospital Pronto Socorro De Canoas Dep Nelson Marchezan  & 1244 & 100 & Canoas          & 311 & 7074 \\
+16 & P & Hospital Restinga E Extremo Sul                         & 3999 & 122 & Porto Alegre    & 839 & 2932 \\
+17 & Q & Hospital Sao Camiloesteio                               & 1155 & 149 & Esteio          & 271 & 4339 \\
+18 & R & Hospital Sao Lucas Da Pucrs                             & 3999 & 347 & Porto Alegre    & 273 & 4761 \\
+19 & S & Hospital Universitario Ulbra                            & 3999 & 460 & Canoas          & 322 & 7544 \\
+20 & T & Hps Porto Alegre                                        & 1244 & 101 & Porto Alegre    & 274 & 5415 \\
+21 & U & Instituto De Cardiologia Hospital Viamao                & 3069 & 171 & Viamão          & 603 & 5957 \\
+22 & V & Irmandade Da Santa Casa De Misericordia De Porto Alegre & 3069 & 845 & Porto Alegre    & 272 & 3973 \\
+\bottomhline
+\end{tabular}
+\belowtable{Each row corresponds to a healthcare facility in the study area, with indicators related to ICU capacity, spatial redundancy, and coverage.}
+\end{table*}
+
+\begin{table}[h]
+\caption{Classification of entities by type and juridic nature}
+\centering % Center the table
+\begin{tabular}{lll}
+\hline
+Code  & Description               & Juridic Nature               \\ \hline
+2011  & Public Company            & Public Business Entity       \\
+3999  & Private Association       & Private Nonprofit Entity     \\
+3069  & Private Foundation        & Private Nonprofit Entity     \\
+1244  & Municipality              & Public Administration        \\
+1236  & State or Federal District & Public Administration        \\
+1155  & Public Foundation         & Public Administration        \\ \hline
+\end{tabular}
+\label{tab:hospital_code} % Unique label for referencing
+\end{table}
+
+\begin{table}[h]
+\caption{Main roads}
+\centering % Center the table
+\begin{tabular}{p{3cm}lll}
+\hline
+Name  & Change on IC & Municipality \\ \hline
+Avenida Presidente Castello Branco & -100\%    & Porto Alegre \\
+BR-390 Freeway  & -87\% & Porto Alegre \\
+Avenida Senador Salgado Filho  & -4\% & Viamão \\
+Avenida João Pereira de Vargas  & -3\% & Sapucaia do Sul \\
+Rua Florianópolis  & -100\% & Canoas
+\end{tabular}
+\label{tab:roads_ic} % Unique label for referencing
+\end{table}
+

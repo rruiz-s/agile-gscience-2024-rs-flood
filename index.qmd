@@ -1,13 +1,25 @@
 # Welcome {.unnumbered}
 
+```{r setup, include=FALSE}
+remotes::install_github("mitchelloharawild/icons")
+icons::download_fontawesome()
+icons::download_academicons()
+```
+
 The Association of Geographic Information Laboratories in Europe (AGILE) has held annual <span class="font-color">**conferences**</span> focused on Geographic Information Science since 1998. The next [AGILE 2025](https://agile-gi.eu/conference-2025/call-for-papers-2025) conference is held in Dresden, Germany, on 10-13 June 2025. 
 
 
 The conference <span class="font-color">**theme**</span> _“Geographic Information Science responding to Global Challenges”_ recognizes the pivotal role of geospatial data and analysis in informing decision-making for current global issues affecting humanity, the environment, and global resilience.
 
-In this website you can find in detailed how the full paper presented in AGILE 2025 was carried out in [HeiGIT](https://heigit.org/) mostly in the [Geoinformation for Humanitarian Aid](https://heigit.org/geoinformation-for-humanitarian-aid/) department. The goal is to increase transparency,
-reproducibility, and openness of computational GIScience research as stated in the [Reproducible Paper Guidelines](https://osf.io/numa5) from AGILE.
+In this website you can find in detailed how the research design of the paper presented in AGILE 2025 was carried out in [HeiGIT](https://heigit.org/) mostly in the [Geoinformation for Humanitarian Aid](https://heigit.org/geoinformation-for-humanitarian-aid/) department. The goal is to increase transparency,
+reproducibility, and openness of computational GIScience research as stated in the [Reproducible Paper Guidelines](https://osf.io/numa5) from AGILE. For this purpose, the following files are available in the top right-hand corner of the web site:
 
+<ul class="fa-ul" style="list-style-type: none;">
+<li>`r icons::icon_style( icons::academicons("overleaf"), fill="#1FA67A", scale=1.5)` Paper official links to the pdf file of the review paper written in LaTeX using Overleaf, which is available on the github repository folder ["paper_latex"](https://github.com/rruiz-s/agile-gscience-2024-rs-flood/blob/gh-pages/code/paper/paper_latex/AGILE_porto_alegre_study_v2_full_paper_agile.zip). </li>
+<li>`r  icons::icon_style(icons::fontawesome("r-project"), scale = 1.5, fill = "#246ABE")` The paper rmarkdown contains the code to reproduce the results written in the paper, which is fully available in the github repository directory ["paper_rmarkdown"](https://github.com/rruiz-s/agile-gscience-2024-rs-flood/blob/gh-pages/code/paper/paper_rmarkdown/rmarkdown_pdf_paper_v2.zip). The Github repository also contains the rmarkdown file after it has been rendered as a [PDF](https://github.com/rruiz-s/agile-gscience-2024-rs-flood/tree/gh-pages/data/quarto_script_rs_paper_v2.pdf). </li>
+<li>`r  icons::icon_style(icons::fontawesome("github"), scale = 1.5)` The Github repository contains all the data for the creation of this website, the aim of which is to replicate the research methodology and the data produced in the process. </li>
+<li>`r icons::icon_style( icons::academicons("zenodo"), fill="#1c4cab", scale=1.5)` Zenodo keeps a copy of the data needed to replicate the methodology and reproduce the results obtained, mainly the data folder in the github repository. </li>
+</ul>
 
 # Body of Knowledge
 
@@ -16,13 +28,13 @@ The <span class="font-color">**topic**</span> of this study includes _Open Spati
 
 The <span class="font-color">**submission type**</span> of this study is _use case_, while the <span class="font-color">**Body of Knowledge**</span> ([BoK](https://bok.eo4geo.eu/GIST)) is the following:
 
-- [[GIST] Geographic Information Science and Technology](https://bok.eo4geo.eu/GIST)
+- [[GIST](https://bok.eo4geo.eu/GIST)] Geographic Information Science and Technology
   - [[AM](https://bok.eo4geo.eu/AM)] Analytical Methods. We derive analytical results from such as connectivity or redundancy from public Geospatial data.
     - [[AM11](https://bok.eo4geo.eu/AM11)] Network analysis. We used the road network of the Core Metropolitan area of Porto Alegre to derive results based on the graph theory. In the graph theory edges and nodes are represented as a system of intercon- nected networks (Freeman, 1977; Wasserman and Faust, 1994)
       - [[AM11-2](https://bok.eo4geo.eu/AM11-2)] Graph theoretic descriptive measures of networks. We used edge betweenness indicator to measure the level of connectivity on the road network of Porto Alegre
       - [[AM11-3](https://bok.eo4geo.eu/AM11-3)] Least-cost shortest path. We used pgrouting to compute the optimum path through a network with Dijkstras algorithm based on the weights given by OpenRouteService (ORS).
       - [[AM11-7](https://bok.eo4geo.eu/AM11-7)] Accessibility modeling. We defined a method for measuring redundancy on the access to hospitals.
-  - [[[GC4](https://bok.eo4geo.eu/GC4)] Open Science
+  - [[GC4](https://bok.eo4geo.eu/GC4)] Open Science. We used open data such as OpenStreetMap, as well as develop open and reproducible methods.
 
 ![This study is located in the network analysis of the body of knowledge including centrality metrics of the road network and accessibility of the hospitals based on least-cost paths.](data/figures/bok_network.png){width=40%}
 
@@ -96,6 +108,7 @@ computation_agile_dt <- computation_agile |>
                             time_sec = round(time/1000),
                             total_perc=round(time/sum(time)*100,2)) 
 DT::datatable(data=computation_agile_dt,
+              colnames= c("Lane","Activity","Description","time (s)", "time (%)"),
               extensions=c("Buttons",'RowGroup'),
                                  options=list(rowGroup=list(dataSrc= 1),
                                               dom="Bfrtip",

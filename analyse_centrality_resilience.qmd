@@ -12,7 +12,7 @@ This section describes the lane of the workflow that analyse centrality and resi
 The Research Questions (RQ) asked in the introduction were the following:
 
 * <span class="font-color">**RQ1**:</span> _"How is road connectivity affected in pre-disasteer and post-disaster scenarios based on edge betweenness centrality?"_. <br>
-The centrality results that shown the main urban arteries supported the answers given.
+The centrality results, which showed the main urban arteries supported the answers given.
 
 * <span class="font-color">**RQ2:**</span> _"Which municipalities were most affected by the flood based on the edge betweenness centrality metric?"_. <br>
 The aggregation of the centrality results on both scales provided the basis for the answer to this RQ.

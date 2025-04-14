@@ -64,7 +64,7 @@ book:
          city: Heidelberg
          state: Germany
          postal-code: 69118
-  date: "2025/01/01"
+  date: "2025/04/10"
   page-navigation: true
   search: true
   favicon: data/figures/agile_logo-370x206.png

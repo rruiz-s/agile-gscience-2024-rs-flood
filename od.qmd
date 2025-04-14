@@ -26,7 +26,7 @@ We created Origin and Destination (OD) points to create shortest path in each of
 For the centrality, we used the Global Human Settlement Built-up volume raster to obtain a <span class='font-color'>**weighted OD**</span>. Those regions with a higher built-up volume had a higher number of OD. The following map shows the weighted OD based on the building density that were used to calculate the core metropolitan centrality of the AoI (Core Metropolitan Area) and to calculate the intracity connectivity (Municipality).
 
 ```{=html}
-<iframe width= "780" height="500" src="data/media/weighted_od.html" title "Weighted OD"></iframe>
+<iframe width= "780" height="500" src="data/media/weighted_od_v2.html" title "Weighted OD"></iframe>
 ```
 
 
@@ -42,6 +42,8 @@ library(DBI)
 municipalities_ghs <- st_read(connection,
         DBI::Id(schema="agile_gis_2025_rs",
                 table="municipalities_ghs"))
+build_masked <- terra::rast("~/agile-gscience-2024-rs-flood/data/source_data/build_masked.tif")
+build_masked_na <- terra::subst(build_masked, from=0, to=NA)
 core_metropolitan_area <- st_read(connection,
         DBI::Id(schema="agile_gis_2025_rs",
                 table="core_metropolitan_area"))        
@@ -52,6 +54,7 @@ od_300_snapped_v2 <- st_read(
 ## Create interactive map
 ### styles
 library(raster)
+library(leaflet)
 pal <- colorNumeric(c("#faebdd", "#cd1c4e", "#110c24"), values(build_masked),
   na.color = "transparent")
 pal_fct <- colorFactor(
@@ -59,7 +62,6 @@ pal_fct <- colorFactor(
   domain = od_200_each$shapename
 )
 ### map
-library(leaflet)
 leaflet() |>
   addTiles()  |>
   addProviderTiles("CartoDB.Positron", group = "CartoDB.Positron")  |>
@@ -92,7 +94,7 @@ leaflet() |>
                     radius= 3,
                     dashArray = "1",
                     group= "Weighted OD - Municipality") |> 
-  addRasterImage(build_masked,
+  addRasterImage(build_masked_na,
                  opacity=0.7,
                  colors = pal,
                  group="Bulding density") |> 
