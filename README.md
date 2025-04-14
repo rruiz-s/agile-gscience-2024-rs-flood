@@ -12,31 +12,34 @@ The topic of this study includes _Open Spatial Data, Open Science, Open-source G
 We used open-ssource data and software including OpenRouteService (ORS),Pgrouting, PostGIS, R or QGIS. In addition, we mainly used the open-source data from OpenStreetMap (OSM). Based on centrality metrics and alternative paths, we compared the centrality of the road network in the core of the metropolitan area of Rio Grande do Sul before and after the flood event that took place on the 29th of April of 2024. The methodology is mainly conducted in SQL using PostGIS to handle geospatial data and Pgrouting to analyze road networks.
 
 The **submission type** of this study is _use case_, while the **Body of Knowledge** ([BoK](https://bok.eo4geo.eu/GIST)) is the following:
-- [[GIST] Geographic Information Science and Technology](https://bok.eo4geo.eu/GIST)
+- [[GIST](https://bok.eo4geo.eu/GIST)] Geographic Information Science and Technology
     - [[AM](https://bok.eo4geo.eu/AM)] Analytical Methods. We derive analytical results from such as connectivity or redundancy from public Geospatial data. 
         - [[AM11](https://bok.eo4geo.eu/AM11)] Network analysis. We used the road network of the Core Metropolitan area of Porto Alegre to derive results based on the graph theory.
             - [[AM11-2](https://bok.eo4geo.eu/AM11-2)] Graph theoretic descriptive measures of networks. We used edge betweenness indicator to measure the level of connectivity on the road network of Porto Alegre.
             - [[AM11-3](https://bok.eo4geo.eu/AM11-3)] Least-cost shortest path. We used pgrouting to compute the optimum path through a network with Dijkstras algorithm based on the weights given by OpenRouteService (ORS). 
             - [[AM11-7](https://bok.eo4geo.eu/AM11-7)] Accessibility modeling. We defined a method for measuring redundancy on the access to hospitals.
-        - [[[GC4](https://bok.eo4geo.eu/GC4)] Open Science
+        - [[GC4](https://bok.eo4geo.eu/GC4)] Open Science.We used open data such as OpenStreetMap (OSM), as well as services like OpenRouteService (ORS) and developed an open and reproducible methodology using software such as PostGIS, R or QGIS.
 
 # Overview
 
 ```
 project
-|- doc/            # documentation for AGILE 2025 full paper
-|  +- paper/       # manuscript(s)
-|
-|- data            	            
-|  |- source_data/  		      # raw data
-|  |- results_data/ 		      # final data
+|- doc/                              # Research design explained including SQL queries using Quarto
+|- data            	                  
+|  |- source_data/  		              # raw data
+|  |- results_data/ 		              # final data
 |    + - select_area_of_interest/
 |    + - obtain_routable_networks/
 |    + - analyse_centrality_and_resilience
-|  |- temp_data/                      # temp data  	
+|  |- media/          		            # interactive figures used for Quarto website
+|  |- rmarkdown_data/                 # data required to reproduce Rmarkdown  	
+|  |- docker-settings/                # OpenRouteServive docker yml  	
+|  |- figures                         # Figures used for the paper  	
 |- code/                           
-|  |- paper/                          # Reproducible paper using Quarto includes code
-|  | + quarto_script_rs_paper_v0.Rmd  # Quarto file
+|  |- paper/                          # Paper
+|       | paper_latex                 # LaTeX code to reproduce official paper
+|       | paper_rmarkdown             # Reproducible paper using Quarto
+|  | + get_graph.R                    # Code required to export ORS to R
 |  |- figures/                        # diagrams, images, and other non-graph graphics
 |
 |- README                             # the top level description of content

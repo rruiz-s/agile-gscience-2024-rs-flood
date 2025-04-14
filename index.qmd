@@ -34,7 +34,7 @@ The <span class="font-color">**submission type**</span> of this study is _use ca
       - [[AM11-2](https://bok.eo4geo.eu/AM11-2)] Graph theoretic descriptive measures of networks. We used edge betweenness indicator to measure the level of connectivity on the road network of Porto Alegre
       - [[AM11-3](https://bok.eo4geo.eu/AM11-3)] Least-cost shortest path. We used pgrouting to compute the optimum path through a network with Dijkstras algorithm based on the weights given by OpenRouteService (ORS).
       - [[AM11-7](https://bok.eo4geo.eu/AM11-7)] Accessibility modeling. We defined a method for measuring redundancy on the access to hospitals.
-  - [[GC4](https://bok.eo4geo.eu/GC4)] Open Science. We used open data such as OpenStreetMap, as well as develop open and reproducible methods.
+  - [[GC4](https://bok.eo4geo.eu/GC4)] Open Science.We used open data such as OpenStreetMap (OSM), as well as services like OpenRouteService (ORS) and developed an open and reproducible methodology using software such as PostGIS, R or QGIS.
 
 ![This study is located in the network analysis of the body of knowledge including centrality metrics of the road network and accessibility of the hospitals based on least-cost paths.](data/figures/bok_network.png){width=40%}
 
