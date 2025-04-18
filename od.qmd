@@ -690,7 +690,7 @@ FROM
 
 ### Snap regular sampling points
 
-The code chunk ACR-9 snapped the OD to the closest node of the road network of each hospital isochrone. We noticed that the final number of OD may be slightly different from the _temp_data_ of the github repository. This difference was not determinant to draw different conclusions from ours, therefore we acknowledge them and do not consider them.
+The code chunk ACR-9 snapped the OD to the closest node of the road network of each hospital isochrone. We noticed that the final number of OD may be slightly different from the _rmarkdown_data_ of the github repository. This difference was not determinant to draw different conclusions from ours, therefore we acknowledge them and do not consider them.
 
 ```{sql}
 #| eval: false

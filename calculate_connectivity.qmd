@@ -14,19 +14,19 @@
 #| message: false
 #| output: false
 
-# Load all the temp_data ending in gpkg saving you time
+# Load all the rmarkdown_data ending in gpkg saving you time
 library(tictoc)
 library(tidyverse)
 library(sf)
 tic()
-temp_data <- list.files(path= "/home/ricardors/agile-gscience-2024-rs-flood/data/temp_data", pattern="\\.gpkg")
-for (i in seq_along(temp_data)) {
-    file_name <- tools::file_path_sans_ext(temp_data[i])
-    assign(file_name, sf::read_sf(paste0("~/agile-gscience-2024-rs-flood/data/temp_data/", temp_data[i])))
+rmarkdown_data <- list.files(path= "/home/ricardors/agile-gscience-2024-rs-flood/data/rmarkdown_data", pattern="\\.gpkg")
+for (i in seq_along(rmarkdown_data)) {
+    file_name <- tools::file_path_sans_ext(rmarkdown_data[i])
+    assign(file_name, sf::read_sf(paste0("~/agile-gscience-2024-rs-flood/data/rmarkdown_data/", rmarkdown_data[i])))
 }
 # Load non-gpkg files
-centrality_both_sankey_v3 <- read.csv("~/agile-gscience-2024-rs-flood/data/temp_data/centrality_both_sankey_v3.csv")
-df_centrality_both_sankey <- read.csv("~/agile-gscience-2024-rs-flood/data/temp_data/df_centrality_both_sankey.csv")
+centrality_both_sankey_v3 <- read.csv("~/agile-gscience-2024-rs-flood/data/rmarkdown_data/centrality_both_sankey_v3.csv")
+df_centrality_both_sankey <- read.csv("~/agile-gscience-2024-rs-flood/data/rmarkdown_data/df_centrality_both_sankey.csv")
 # Work on flat 
 sf::sf_use_s2(FALSE)
 # Load gpkg files for RQ
@@ -51,7 +51,7 @@ A comparison of the centrality before and after the floods in the core metropoli
 ```{r}
 #| eval: false
 #| echo: true
-#| code-summary: "How to visualiza CM connectivity"
+#| code-summary: "How to visualise CM connectivity"
 
 library(mapview)
 library(leaflet)

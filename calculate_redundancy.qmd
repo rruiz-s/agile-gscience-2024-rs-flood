@@ -7,19 +7,19 @@
 #| message: false
 #| output: false
 
-# Load all the temp_data ending in gpkg saving you time
+# Load all the rmarkdown_data ending in gpkg saving you time
 library(tictoc)
 library(tidyverse)
 library(sf)
 tic()
-temp_data <- list.files(path= "/home/ricardors/agile-gscience-2024-rs-flood/data/temp_data", pattern="\\.gpkg")
-for (i in seq_along(temp_data)) {
-    file_name <- tools::file_path_sans_ext(temp_data[i])
-    assign(file_name, sf::read_sf(paste0("~/agile-gscience-2024-rs-flood/data/temp_data/", temp_data[i])))
+rmarkdown_data <- list.files(path= "/home/ricardors/agile-gscience-2024-rs-flood/data/rmarkdown_data", pattern="\\.gpkg")
+for (i in seq_along(rmarkdown_data)) {
+    file_name <- tools::file_path_sans_ext(rmarkdown_data[i])
+    assign(file_name, sf::read_sf(paste0("~/agile-gscience-2024-rs-flood/data/rmarkdown_data/", rmarkdown_data[i])))
 }
 # Load non-gpkg files
-centrality_both_sankey_v3 <- read.csv("~/agile-gscience-2024-rs-flood/data/temp_data/centrality_both_sankey_v3.csv")
-df_centrality_both_sankey <- read.csv("~/agile-gscience-2024-rs-flood/data/temp_data/df_centrality_both_sankey.csv")
+centrality_both_sankey_v3 <- read.csv("~/agile-gscience-2024-rs-flood/data/rmarkdown_data/centrality_both_sankey_v3.csv")
+df_centrality_both_sankey <- read.csv("~/agile-gscience-2024-rs-flood/data/rmarkdown_data/df_centrality_both_sankey.csv")
 # Work on flat 
 sf::sf_use_s2(FALSE)
 # Load gpkg files for RQ
@@ -63,9 +63,6 @@ group_by(cd_cnes) |>
 
 High lack of redundancy highlights cases like Hospital Restinga e Extremo Sul, where the alternative paths vary greatly in distance. This suggests poor resilience,  where disruptions from the flood result in inefficient and costly. On the contrary, low lack of redundancy values indicates similar distances in the alternative routes to the hospital showing a higher resilience. The most resilient hospitals in terms of lack of redundancy are those located in the quadrant "L/H" with a low lack of redundancy and high accesibility in terms of coverage.
 
-
-
-
 ```{r}
 #| echo: false
 #| eval: true
@@ -76,6 +73,65 @@ High lack of redundancy highlights cases like Hospital Restinga e Extremo Sul, w
 #| width:  780
 
 knitr::include_graphics("~/agile-gscience-2024-rs-flood/data/figures/rq3_v7.png")
+```
+
+```{r}
+#| eval: false
+#| echo: true
+#| message: false
+#| warning: false
+#| code-summary: "How to create the base for Figure 7.1."
+
+## Import data, if it is not already
+isochrone_ghs_aoi <- sf::read_sf("~/agile-gscience-2024-rs-flood/data/rmarkdown_data/isochrone_ghs_aoi.gpkg")
+resilience_visintini_table <- sf::read_sf("~/agile-gscience-2024-rs-flood/data/rmarkdown_data/resilience_visintini_table.gpkg")
+## Data wrangling 
+plot_resilience_v2 <-  resilience_visintini_table |>
+  mutate(rank = rank(resilience_visintini_table$lack_pre),
+         municipality = resilience_visintini_table$shapename,
+         letter = LETTERS[1:length(resilience_visintini_table$ds_cnes)],
+         area_hm_2 = round(st_area(isochrone_ghs_aoi)),
+          lack_norm = (lack_pre - min(lack_pre)) / (max(lack_pre) - min(lack_pre)),
+         ds_cnes=stringr::str_to_title(ds_cnes)) |> 
+  sf::st_drop_geometry() |> 
+  select(c(rank,letter,ds_cnes, municipality, lack_pre,beds, lack_post,lack_norm, beds, code, area_hm_2)) |>
+  arrange(lack_pre)
+## Transform by adding area in hm² and adding mean for both axis.
+plot_resilience_v2$area_hm_2 <-  units::set_units(plot_resilience_v2$area_hm_2, "hm^2") 
+x_mid <- mean(c(max(plot_resilience_v2$lack_pre, na.rm = TRUE), min(plot_resilience_v2$lack_pre, na.rm = TRUE)))
+y_mid <- mean(c(max(plot_resilience_v2$area_hm_2, na.rm = TRUE), min(plot_resilience_v2$area_hm_2, na.rm = TRUE)))
+
+## Visualize data
+ggplot(plot_resilience_v2, aes(x = lack_pre, y = area_hm_2, shape=code, colour=municipality)) +
+    geom_vline(xintercept = x_mid, linetype="dashed", linewidth=0.5, colour="darkgray") +
+    geom_hline(yintercept = y_mid, linetype="dashed", linewidth=0.5, colour="darkgray") +
+    ggplot2::geom_text(aes(label=letter), vjust=-1.5, size=5, show.legend = FALSE) +
+    geom_point(aes(shape = code, colour = municipality, fill=municipality, size = beds)) +
+   scale_size(range = c(3.5,10)) +
+  scale_shape_manual(values = c(23, 24))  +
+  expand_limits(y= units::set_units(c(2800, 9500),"hm^2"), x=c(150,850)) +
+  scale_x_reverse() +
+  annotate("text",
+           x = filter(plot_resilience_v2, lack_post ==0)$lack_pre[1],
+           y = filter(plot_resilience_v2, lack_post ==0)$area_hm_2[1],
+           label=filter(plot_resilience_v2, lack_post ==0)$ds_cnes[1],
+           colour="red") +
+  annotate("text",
+           x = filter(plot_resilience_v2, lack_post ==0)$lack_pre[2],
+           y = filter(plot_resilience_v2, lack_post ==0)$area_hm_2[2],
+           label=filter(plot_resilience_v2, lack_post ==0)$ds_cnes[2],
+           colour="red") +
+    annotate("text",
+           x = filter(plot_resilience_v2, lack_post ==0)$lack_pre[3],
+           y = filter(plot_resilience_v2, lack_post ==0)$area_hm_2[3],
+           label=filter(plot_resilience_v2, lack_post ==0)$ds_cnes[3],
+           colour="red") +
+  xlab("Lack of redundancy") +
+  ylab("10-minutes isochrone coverage") +
+  theme_minimal() +
+  theme(legend.position = "bottom") 
+
+## Manual fine adjustments done with the open-source software Inkscape
 ```
 
 The data is contained in the @tbl-hospitals

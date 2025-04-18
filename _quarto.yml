@@ -3,7 +3,9 @@ project:
   output-dir: docs
 
 book:
-  title: "Centrality analysis on Rio Grande do Sul"
+  title: |
+   Changes in Road Centrality and Hospital Access Redundancy: \
+   Impacts of the 2024 Flood in the Metropolitan Core of Porto Alegre, Brazil
   author:
     - name: Ricardo Ruiz Sánchez
       orcid: 0009-0000-6108-3389
