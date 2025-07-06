@@ -78,6 +78,6 @@ The software OpenRouteService is available in the follwoing [public repository](
 Results are named according to the flowchart shown as Figure 2 in the section 2.1. Pre-processing.
 
 # Contact
-X (x@xxx.com)
+X (ricardo.ruiz.sanchez@gmail.com)
 # License
 This project is licensed under Creative Commons Attribution 4.0 International Public License, see file LICENSE.
